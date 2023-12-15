@@ -1,0 +1,25 @@
+# Set the WAN interface
+WAN_INTERFACE="pppoe0"
+
+if ip link show $INTERFACE > /dev/null 2>&1; then
+  # Check if there is not an IPv6 Source NAT rule for NTP synchronization
+  # If there is not, create an IPv6 Source NAT rule for NTP synchronization
+  NTP_NAT_RULES=$(sudo ip6tables -t nat -L -v -n | grep -c "udp spt:123 to::49152-65535")
+  if [ $NTP_NAT_RULES -eq "0" ]; then
+    logger "There is no IPv6 Source NAT rule for NTP synchronization"
+    sudo ip6tables -t nat -A POSTROUTING -o $WAN_INTERFACE -p udp --sport 123 -j SNAT --to-source :49152-65535
+    logger "IPv6 Source NAT rule for NTP synchronization created"
+  fi
+
+  # Check if NTP synchronization is stuck
+  # If it is, restart the NTP synchronization service
+  SYNCHRONIZED_NTP_SERVERS=$(sudo ntpq -pn | grep -c "*")
+  if [ $SYNCHRONIZED_NTP_SERVERS -eq "0" ]; then
+    logger "There are no NTP servers synchronized"
+    sudo service ntp restart
+    logger "NTP synchronization service restarted"
+  fi
+else
+    logger "Interface $INTERFACE does not exist yet"
+fi
+

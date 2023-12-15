@@ -1,0 +1,437 @@
+firewall {
+    all-ping enable
+    broadcast-ping disable
+    ipv6-name WANv6_IN {
+        default-action drop
+        rule 1666 {
+            action accept
+            description "accept established,related packets"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 3333 {
+            action drop
+            description "drop invalid packets"
+            state {
+                invalid enable
+            }
+        }
+        rule 5000 {
+            action accept
+            description "accept icmpv6 echo request packets"
+            icmpv6 {
+                type 128/0
+            }
+            protocol icmpv6
+        }
+        rule 6666 {
+            action drop
+            description "drop remaining icmpv6 packets"
+            log enable
+            protocol icmpv6
+        }
+        rule 8333 {
+            action drop
+            description "drop tcp syn packets"
+            protocol tcp
+            tcp {
+                flags SYN
+            }
+        }
+    }
+    ipv6-name WANv6_LOCAL {
+        default-action drop
+        rule 1000 {
+            action accept
+            description "accept established,related packets"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 2000 {
+            action drop
+            description "drop invalid packets"
+            state {
+                invalid enable
+            }
+        }
+        rule 3000 {
+            action accept
+            description "accept icmpv6 echo request packets"
+            icmpv6 {
+                type 128/0
+            }
+            protocol icmpv6
+        }
+        rule 4000 {
+            action accept
+            description "accept icmpv6 router solicitation packets"
+            icmpv6 {
+                type 133/0
+            }
+            protocol icmpv6
+            source {
+                address fe80::/10
+            }
+        }
+        rule 5000 {
+            action accept
+            description "accept icmpv6 router advertisement packets"
+            icmpv6 {
+                type 134/0
+            }
+            protocol icmpv6
+            source {
+                address fe80::/10
+            }
+        }
+        rule 6000 {
+            action accept
+            description "accept udp dhcpv6 packets"
+            destination {
+                port 546
+            }
+            protocol udp
+            source {
+                address fe80::/10
+                port 547
+            }
+        }
+        rule 7000 {
+            action drop
+            description "drop remaining icmpv6 packets"
+            log enable
+            protocol icmpv6
+        }
+        rule 8000 {
+            action drop
+            description "drop remaining udp dhcpv6 packets"
+            destination {
+                port 546
+            }
+            log enable
+            protocol udp
+        }
+        rule 9000 {
+            action drop
+            description "drop tcp syn packets"
+            protocol tcp
+            tcp {
+                flags SYN
+            }
+        }
+    }
+    ipv6-receive-redirects disable
+    ipv6-src-route disable
+    ip-src-route disable
+    log-martians enable
+    name WAN_IN {
+        default-action drop
+        rule 3333 {
+            action accept
+            description "accept established,related packets"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 6666 {
+            action drop
+            description "drop invalid packets"
+            state {
+                invalid enable
+            }
+        }
+    }
+    name WAN_LOCAL {
+        default-action drop
+        rule 1666 {
+            action accept
+            description "accept established,related packets"
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 3333 {
+            action drop
+            description "drop invalid packets"
+            state {
+                invalid enable
+            }
+        }
+        rule 5000 {
+            action accept
+            description "accept icmp echo request packets"
+            icmp {
+                code 0
+                type 8
+            }
+            protocol icmp
+        }
+        rule 6666 {
+            action drop
+            description "drop remaining icmp packets"
+            log enable
+            protocol icmp
+        }
+        rule 8333 {
+            action drop
+            description "drop tcp syn packets"
+            protocol tcp
+            tcp {
+                flags SYN
+            }
+        }
+    }
+    options {
+        mss-clamp {
+            mss 1452
+        }
+        mss-clamp6 {
+            mss 1432
+        }
+    }
+    receive-redirects disable
+    send-redirects enable
+    source-validation disable
+    syn-cookies enable
+}
+interfaces {
+    ethernet eth0 {
+        address 192.168.1.1/24
+        duplex auto
+        ipv6 {
+            dup-addr-detect-transmits 1
+            router-advert {
+                cur-hop-limit 64
+                default-preference high
+                link-mtu 1492
+                managed-flag false
+                max-interval 600
+                name-server fe80::d221:f9ff:fee1:34e
+                other-config-flag false
+                prefix ::/64 {
+                    autonomous-flag true
+                    on-link-flag true
+                    valid-lifetime 2592000
+                }
+                reachable-time 0
+                retrans-timer 0
+                send-advert true
+            }
+        }
+        mtu 1500
+        speed auto
+    }
+    ethernet eth1 {
+        disable
+        duplex auto
+        mtu 1500
+        speed auto
+    }
+    ethernet eth2 {
+        disable
+        duplex auto
+        mtu 1500
+        speed auto
+    }
+    ethernet eth3 {
+        disable
+        duplex auto
+        mtu 1500
+        speed auto
+    }
+    ethernet eth4 {
+        address 192.168.15.2/24
+        duplex auto
+        mac C0:3D:D9:25:11:38
+        mtu 1500
+        poe {
+            output off
+        }
+        speed auto
+        vif 600 {
+            pppoe 0 {
+                default-route force
+                dhcpv6-pd {
+                    no-dns
+                    pd 0 {
+                        interface eth0 {
+                            host-address ::4b4a:51ee:4d7e:247a
+                        }
+                        prefix-length /64
+                    }
+                    prefix-only
+                    rapid-commit enable
+                }
+                firewall {
+                    in {
+                        ipv6-name WANv6_IN
+                        name WAN_IN
+                    }
+                    local {
+                        ipv6-name WANv6_LOCAL
+                        name WAN_LOCAL
+                    }
+                }
+                ipv6 {
+                    dup-addr-detect-transmits 1
+                    enable {
+                    }
+                }
+                mtu 1492
+                name-server none
+                password ****************
+                user-id cliente@cliente
+            }
+        }
+    }
+    loopback lo {
+    }
+    switch switch0 {
+        mtu 1500
+    }
+}
+service {
+    dhcp-server {
+        disabled false
+        hostfile-update disable
+        shared-network-name LAN {
+            authoritative enable
+            subnet 192.168.1.0/24 {
+                default-router 192.168.1.1
+                dns-server 192.168.1.1
+                lease 2764800
+                start 192.168.1.2 {
+                    stop 192.168.1.254
+                }
+            }
+        }
+        static-arp disable
+        use-dnsmasq disable
+    }
+    dns {
+        forwarding {
+            cache-size 10000
+            listen-on eth0
+            name-server 2001:4860:4860::8844
+            name-server 2001:4860:4860::8888
+        }
+    }
+    gui {
+        http-port 80
+        https-port 443
+        older-ciphers disable
+    }
+    nat {
+        rule 6250 {
+            outbound-interface pppoe0
+            outside-address {
+                port 49152-65535
+            }
+            protocol udp
+            source {
+                port 123
+            }
+            type masquerade
+        }
+        rule 7500 {
+            outbound-interface pppoe0
+            type masquerade
+        }
+        rule 8750 {
+            outbound-interface eth4
+            type masquerade
+        }
+    }
+    ssh {
+        port 22
+        protocol-version v2
+    }
+    ubnt-discover {
+        disable
+    }
+    unms {
+        disable
+    }
+}
+system {
+    analytics-handler {
+        send-analytics-report false
+    }
+    conntrack {
+        expect-table-size 2048
+        hash-size 32768
+        modules {
+            sip {
+                disable
+            }
+        }
+        table-size 262144
+        timeout {
+            icmp 30
+            other 600
+            tcp {
+                close 10
+                close-wait 60
+                established 432000
+                fin-wait 120
+                last-ack 30
+                syn-recv 60
+                syn-sent 120
+                time-wait 120
+            }
+            udp {
+                other 30
+                stream 180
+            }
+        }
+    }
+    crash-handler {
+        send-crash-report false
+    }
+    host-name Home-Router
+    login {
+        user yuri {
+            authentication {
+                encrypted-password ****************
+                plaintext-password ****************
+            }
+            level admin
+        }
+    }
+    name-server 127.0.0.1
+    ntp {
+        server time.google.com {
+        }
+    }
+    static-host-mapping {
+        host-name router.lan {
+            inet 192.168.1.1
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level notice
+            }
+            facility protocols {
+                level debug
+            }
+        }
+    }
+    task-scheduler {
+        task ntp-synchronization-fixer {
+            executable {
+                path /config/scripts/ntp_synchronization_fixer
+            }
+            interval 1m
+        }
+    }
+    time-zone America/Sao_Paulo
+}
+

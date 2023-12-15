@@ -92,6 +92,38 @@ Idle Latency:     2.72 ms   (jitter: 0.09ms, low: 2.62ms, high: 2.85ms)
   Result URL: https://www.speedtest.net/result/c/17f223a7-c1ba-4e1b-b34b-551da169e60a
 ```
 
+## Path MTU Discovery
+
+### IPv4
+
+```
+$ ping -c 3 -D -M do -O -s 1465 -v -4 google.com
+PING  (142.251.129.142) 1465(1493) bytes of data.
+ping: local error: message too long, mtu=1492
+[1702623904.504416] no answer yet for icmp_seq=1
+ping: local error: message too long, mtu=1492
+[1702623905.528422] no answer yet for icmp_seq=2
+ping: local error: message too long, mtu=1492
+
+---  ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2032ms
+```
+
+### IPv6
+
+```
+$ ping -c 3 -D -M do -O -s 1445 -v -6 google.com
+PING google.com(2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e)) 1445 data bytes
+ping: local error: message too long, mtu: 1492
+[1702623918.360422] no answer yet for icmp_seq=1
+ping: local error: message too long, mtu: 1492
+[1702623919.384403] no answer yet for icmp_seq=2
+ping: local error: message too long, mtu: 1492
+
+--- google.com ping statistics ---
+3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2036ms
+```
+
 ## Other helpful online diagnostics
 
 ### IPv6 & DNSSEC

@@ -1,0 +1,87 @@
+/interface ethernet set [ find default-name=ether1 ] l2mtu=1500 name=ether1-lan
+/interface ethernet set [ find default-name=ether2 ] disabled=yes l2mtu=1500
+/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1500
+/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1500
+/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1500
+/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1500
+/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1500
+/interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=C0:3D:D9:25:11:38 name=ether8-wan
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1500
+/interface vlan add interface=ether8-wan name=ether8-wan-vlan-600 vlan-id=600
+/interface list add name=wan-interface-list
+/interface list add name=masquerade-interface-list
+/interface list add name=lan-interface-list
+/interface wireless security-profiles set [ find default=yes ] supplicant-identity=MikroTik
+/ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
+/ip dhcp-server add address-pool=ip-dhcp-server-pool interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
+/ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
+/interface pppoe-client add add-default-route=yes disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile user=cliente@cliente
+/system logging action set 0 memory-lines=10000
+/system logging action set 1 disk-lines-per-file=10000
+/ip firewall connection tracking set enabled=yes icmp-timeout=30s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m udp-timeout=30s
+/ip neighbor discovery-settings set discover-interface-list=lan-interface-list
+/ip settings set tcp-syncookies=yes
+/interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
+/interface list member add interface=ether8-wan-vlan-600-pppoe-client list=masquerade-interface-list
+/interface list member add interface=ether8-wan list=masquerade-interface-list
+/interface list member add interface=ether1-lan list=lan-interface-list
+/ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
+/ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
+/ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-concurrent-tcp-sessions=200 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns static add address=192.168.1.1 name=router.lan
+/ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan
+/ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan
+/ip firewall filter add action=accept chain=ip-forward-wan comment="accept established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ip-forward-wan comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ip-forward-wan comment="drop remaining packets"
+/ip firewall filter add action=accept chain=ip-input-wan comment="accept established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ip-input-wan comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=accept chain=ip-input-wan comment="accept icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining icmp packets" log=yes protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
+/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
+/ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
+/ip firewall service-port set sip disabled=yes
+/ip service set telnet disabled=yes
+/ip service set ftp disabled=yes
+/ip service set api disabled=yes
+/ip service set api-ssl disabled=yes
+/ip ssh set strong-crypto=yes
+/ipv6 address add address=::4b4a:51ee:4d7e:247a from-pool=ipv6-dhcp-client-pool interface=ether1-lan
+/ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool request=prefix use-peer-dns=no
+/ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan
+/ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan
+/ipv6 firewall filter add action=accept chain=ipv6-forward-wan comment="accept established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop invalid packets" connection-state=invalid
+/ipv6 firewall filter add action=accept chain=ipv6-forward-wan comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop remaining packets"
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop invalid packets" connection-state=invalid
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address=fe80::/10
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept udp dhcpv6 packets" dst-port=546 protocol=udp src-address=fe80::/10 src-port=547
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining udp dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
+/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1433-65535
+/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1433-65535
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
+/ipv6 nd set [ find default=yes ] dns=fe80::4aa9:8aff:fed2:85df hop-limit=64 interface=ether1-lan mtu=1492 ra-preference=high
+/system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
+/system identity set name=Home-Router
+/system note set show-at-login=no
+/system ntp client set enabled=yes
+/system ntp client servers add address=time.google.com
+/tool graphing interface add interface=ether8-wan store-on-disk=no
+/tool graphing interface add interface=ether1-lan store-on-disk=no
+/tool graphing resource add store-on-disk=no
+/tool mac-server set allowed-interface-list=lan-interface-list
+/tool mac-server mac-winbox set allowed-interface-list=lan-interface-list
+
