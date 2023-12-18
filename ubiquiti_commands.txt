@@ -199,7 +199,7 @@ set system crash-handler send-crash-report false
 set system name-server 127.0.0.1
 
 # sudo ls -la /config/scripts
-# scp ./ntp_synchronization_fixer yuri@192.168.1.1:/config/scripts
+# scp ./ntp_synchronization_fixer user925232615@192.168.1.1:/config/scripts
 # sudo ls -la /config/scripts
 # sudo chown root /config/scripts/ntp_synchronization_fixer
 # sudo chmod +x /config/scripts/ntp_synchronization_fixer

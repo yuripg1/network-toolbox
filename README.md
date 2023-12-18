@@ -16,6 +16,12 @@ $ pip3 install dnspython scapy
 $ sudo ./network-toolbox-venv/bin/python3 ./ntp_test.py
 ```
 
+### Teardown
+
+```
+$ deactivate
+```
+
 ## Path MTU Discovery
 
 ### IPv4
