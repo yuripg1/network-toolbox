@@ -1,6 +1,8 @@
 # Set the WAN interface
 WAN_INTERFACE="pppoe0"
 
+# Check if the WAN interface exists
+# If it does, then proceed
 if ip link show $INTERFACE > /dev/null 2>&1; then
   # Check if there is not an IPv6 Source NAT rule for NTP synchronization
   # If there is not, create an IPv6 Source NAT rule for NTP synchronization
@@ -20,6 +22,6 @@ if ip link show $INTERFACE > /dev/null 2>&1; then
     logger "NTP synchronization service restarted"
   fi
 else
-    logger "Interface $INTERFACE does not exist yet"
+  logger "Interface $INTERFACE does not exist yet"
 fi
 

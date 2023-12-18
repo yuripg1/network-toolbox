@@ -197,7 +197,7 @@ firewall {
     }
     receive-redirects disable
     send-redirects enable
-    source-validation disable
+    source-validation strict
     syn-cookies enable
 }
 interfaces {
@@ -212,7 +212,7 @@ interfaces {
                 link-mtu 1492
                 managed-flag false
                 max-interval 600
-                name-server fe80::d221:f9ff:fee1:34e
+                name-server fe80::b9f7:94c9:e252:25c8
                 other-config-flag false
                 prefix ::/64 {
                     autonomous-flag true
@@ -248,7 +248,7 @@ interfaces {
     ethernet eth4 {
         address 192.168.15.2/24
         duplex auto
-        mac C0:3D:D9:25:11:38
+        mac 17:43:3D:0F:13:12
         mtu 1500
         poe {
             output off
@@ -396,7 +396,7 @@ system {
     }
     host-name Home-Router
     login {
-        user yuri {
+        user user925232615 {
             authentication {
                 encrypted-password ****************
                 plaintext-password ****************
@@ -434,4 +434,3 @@ system {
     }
     time-zone America/Sao_Paulo
 }
-

@@ -1,5 +1,5 @@
-set system login user yuri authentication plaintext-password ************
-set system login user yuri level admin
+set system login user user925232615 authentication plaintext-password password478924191
+set system login user user925232615 level admin
 delete system login user ubnt
 
 delete interfaces ethernet eth0 address
@@ -13,7 +13,7 @@ set interfaces ethernet eth2 disable
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth3 disable
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 mac C0:3D:D9:25:11:38
+set interfaces ethernet eth4 mac 17:43:3D:0F:13:12
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
@@ -138,7 +138,7 @@ set interfaces ethernet eth0 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth0 ipv6 router-advert default-preference high
 set interfaces ethernet eth0 ipv6 router-advert link-mtu 1492
 set interfaces ethernet eth0 ipv6 router-advert managed-flag false
-set interfaces ethernet eth0 ipv6 router-advert name-server fe80::d221:f9ff:fee1:34e
+set interfaces ethernet eth0 ipv6 router-advert name-server fe80::b9f7:94c9:e252:25c8
 set interfaces ethernet eth0 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 on-link-flag true
@@ -175,6 +175,7 @@ set system conntrack timeout udp stream 180
 
 set system conntrack modules sip disable
 
+set firewall source-validation strict
 set firewall syn-cookies enable
 
 delete system ntp server
@@ -205,4 +206,3 @@ set system name-server 127.0.0.1
 # sudo ls -la /config/scripts
 set system task-scheduler task ntp-synchronization-fixer executable path "/config/scripts/ntp_synchronization_fixer"
 set system task-scheduler task ntp-synchronization-fixer interval 1m
-

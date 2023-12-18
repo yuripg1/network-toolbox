@@ -16,49 +16,85 @@ $ pip3 install dnspython scapy
 $ sudo ./network-toolbox-venv/bin/python3 ./ntp_test.py
 ```
 
-## MTR
+## Path MTU Discovery
+
+### IPv4
+
+```
+$ ping -c 5 -D -M do -O -s 1465 -v -4 google.com
+PING  (142.251.129.142) 1465(1493) bytes of data.
+[1702918019.220435] From router.lan (192.168.1.1) icmp_seq=1 Frag needed and DF set (mtu = 1492)
+[1702918020.220831] no answer yet for icmp_seq=1
+ping: local error: message too long, mtu=1492
+[1702918021.242078] no answer yet for icmp_seq=2
+ping: local error: message too long, mtu=1492
+[1702918022.266075] no answer yet for icmp_seq=3
+ping: local error: message too long, mtu=1492
+[1702918023.290086] no answer yet for icmp_seq=4
+ping: local error: message too long, mtu=1492
+
+---  ping statistics ---
+5 packets transmitted, 0 received, +5 errors, 100% packet loss, time 4070ms
+```
+
+### IPv6
+
+```
+$ ping -c 5 -D -M do -O -s 1445 -v -6 google.com
+PING google.com(2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e)) 1445 data bytes
+ping: local error: message too long, mtu: 1492
+[1702918029.594045] no answer yet for icmp_seq=1
+ping: local error: message too long, mtu: 1492
+[1702918030.618072] no answer yet for icmp_seq=2
+ping: local error: message too long, mtu: 1492
+[1702918031.642174] no answer yet for icmp_seq=3
+ping: local error: message too long, mtu: 1492
+[1702918032.666085] no answer yet for icmp_seq=4
+ping: local error: message too long, mtu: 1492
+
+--- google.com ping statistics ---
+5 packets transmitted, 0 received, +5 errors, 100% packet loss, time 4098ms
+```
+
+## Traceroute
 
 ### IPv4
 
 ```
 $ mtr -4 --report-wide --report-cycles 100 --show-ips --aslookup google.com
-Start: 2023-12-09T06:47:25-0300
-HOST: pc                                                             Loss%   Snt   Last   Avg  Best  Wrst StDev
-  1. AS???    router.lan (10.138.222.1)                               0.0%   100    0.6   0.5   0.4   0.7   0.1
-  2. AS18881  179.184.126.59                                         22.0%   100    2.4   2.3   1.8   3.0   0.2
-  3. AS18881  191.30.9.227.dynamic.adsl.gvt.net.br (191.30.9.227)     0.0%   100    2.6   2.4   2.2   3.0   0.1
-  4. AS26599  152-255-179-142.user.vivozap.com.br (152.255.179.142)  10.0%   100    2.5   2.3   1.7   3.8   0.2
-  5. AS26599  152-255-183-71.user.vivozap.com.br (152.255.183.71)     9.0%   100    2.3   2.5   2.2   4.1   0.2
-  6. AS???    187-100-57-205.dsl.telesp.net.br (187.100.57.205)      67.0%   100   20.8  20.8  20.5  21.7   0.2
-  7. AS26599  152-255-203-130.user.vivozap.com.br (152.255.203.130)  91.0%   100   23.6  23.6  23.4  23.8   0.1
-  8. AS???    ???                                                    100.0   100    0.0   0.0   0.0   0.0   0.0
-  9. AS15169  72.14.194.130                                           0.0%   100   24.8  24.8  24.3  25.8   0.2
- 10. AS15169  172.253.50.119                                          0.0%   100   23.6  23.8  23.4  26.9   0.6
- 11. AS15169  216.239.51.199                                          0.0%   100   27.5  27.5  27.3  27.8   0.1
- 12. AS15169  gru14s36-in-f14.1e100.net (142.251.132.46)              0.0%   100   23.7  23.5  23.3  23.8   0.1
+Start: 2023-12-18T13:47:17-0300
+HOST: pc                                                           Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1. AS???    router.lan (192.168.1.1)                              0.0%   100    0.6   0.6   0.5   0.7   0.0
+  2. AS18881  179.184.126.59                                        0.0%   100    2.3   2.4   2.1   3.1   0.2
+  3. AS18881  191.30.9.223.dynamic.adsl.gvt.net.br (191.30.9.223)   0.0%   100    2.8   2.6   2.3   3.1   0.2
+  4. AS???    ???                                                  100.0   100    0.0   0.0   0.0   0.0   0.0
+  5. AS15169  72.14.194.130                                         0.0%   100   27.3  27.3  27.0  28.6   0.2
+  6. AS15169  172.253.76.23                                         0.0%   100   29.6  30.3  29.0  84.1   5.5
+  7. AS15169  142.251.78.21                                         0.0%   100   23.8  23.8  23.7  24.1   0.1
+  8. AS15169  gru14s31-in-f14.1e100.net (142.251.129.142)           0.0%   100   23.8  23.8  22.9  24.1   0.1
 ```
 
 ### IPv6
 
 ```
 $ mtr -6 --report-wide --report-cycles 100 --show-ips --aslookup google.com
-Start: 2023-12-09T06:51:11-0300
+Start: 2023-12-18T13:49:09-0300
 HOST: pc                                              Loss%   Snt   Last   Avg  Best  Wrst StDev
-  1. AS18881  2804:7f4:c2b1:464c:4b4a:51ee:4d7e:247a   0.0%   100    0.7   0.6   0.4   0.7   0.1
-  2. AS18881  2804:7f4:2000:1::be                      0.0%   100    3.3   3.3   2.9   4.5   0.3
-  3. AS18881  2804:7f4:2000:1000::8b7                  7.0%   100    3.6   3.5   2.5   4.4   0.3
-  4. AS???    2001:12e0:100:3024:a006:3024:a008:6      0.0%   100    3.2   3.2   2.6   3.8   0.2
-  5. AS???    2001:12e0:100:3004:a002:3024:a006:0      0.0%   100    3.2   3.3   3.0   5.6   0.3
-  6. AS???    2001:12e0:100:3019:a002:3004:a002:12     0.0%   100   21.8  21.7  21.4  22.1   0.1
-  7. AS???    2001:12e0:100:1016:a002:3019:a002:2      4.0%   100   27.5  27.6  27.3  32.7   0.5
-  8. AS???    2001:12e0:100:1017:a001:1016:a002:28     0.0%   100   27.6  27.7  27.3  28.5   0.2
-  9. AS15169  2001:4860:1:1::d84                      38.0%   100   29.9  27.2  26.7  29.9   0.4
- 10. AS15169  2800:3f0:8055::1                         0.0%   100   29.0  29.0  28.7  29.2   0.1
- 11. AS15169  2001:4860:0:1::6082                      0.0%   100   28.9  29.1  28.9  31.2   0.4
- 12. AS15169  2001:4860:0:1::7cc8                      0.0%   100   26.3  27.3  25.8  54.1   3.7
- 13. AS15169  2001:4860:0:1::3f9d                      8.0%   100   30.1  30.5  29.5  87.6   6.0
- 14. AS15169  2001:4860:0:1::d6f                       0.0%   100   28.8  28.8  28.6  29.4   0.2
- 15. AS15169  2800:3f0:4001:833::200e                  0.0%   100   29.3  29.0  28.7  29.4   0.1
+  1. AS18881  2804:7f4:c2b0:5e9e:4b4a:51ee:4d7e:247a   0.0%   100    0.7   0.6   0.5   0.7   0.1
+  2. AS18881  2804:7f4:2000:1::be                      0.0%   100    3.2   3.3   3.0   4.0   0.2
+  3. AS18881  2804:7f4:2000:1000::8bb                 28.0%   100    3.3   3.5   3.2   4.0   0.2
+  4. AS???    2001:12e0:100:3024:a002:3024:a009:2      0.0%   100    3.4   3.2   3.0   3.6   0.1
+  5. AS???    2001:12e0:100:3004:a002:3024:a005:18     0.0%   100    3.2   3.4   3.1   4.0   0.1
+  6. AS???    2001:12e0:100:3019:a002:3004:a002:c      5.0%   100   22.0  21.8  21.5  22.3   0.1
+  7. AS???    2001:12e0:100:1016:a002:3019:a002:6     52.0%   100   27.5  35.3  27.3 204.0  32.7
+  8. AS???    2001:12e0:100:1017:a001:1016:a002:26    30.0%   100   27.7  27.8  27.5  28.7   0.2
+  9. AS15169  2001:4860:1:1::d84                      32.0%   100   29.9  29.9  29.6  30.7   0.2
+ 10. AS15169  2800:3f0:8061::1                         0.0%   100   28.1  28.2  27.9  28.5   0.1
+ 11. AS15169  2001:4860:0:1::57b4                     30.0%   100   30.0  30.0  29.4  33.1   0.6
+ 12. AS15169  2001:4860:0:1::7c84                      5.0%   100   29.1  28.9  28.6  30.0   0.2
+ 13. AS15169  2001:4860:0:1::12e1                      0.0%   100   25.0  25.0  24.2  26.9   0.3
+ 14. AS15169  2001:4860:0:1::3401                      0.0%   100   28.8  28.9  28.6  29.2   0.1
+ 15. AS15169  2800:3f0:4001:82f::200e                  0.0%   100   25.0  24.8  24.5  25.1   0.1
 ```
 
 ## Speedtest CLI
@@ -90,38 +126,6 @@ Idle Latency:     2.72 ms   (jitter: 0.09ms, low: 2.62ms, high: 2.85ms)
                   2.20 ms   (jitter: 12.98ms, low: 1.36ms, high: 212.53ms)
  Packet Loss:     0.0%
   Result URL: https://www.speedtest.net/result/c/17f223a7-c1ba-4e1b-b34b-551da169e60a
-```
-
-## Path MTU Discovery
-
-### IPv4
-
-```
-$ ping -c 3 -D -M do -O -s 1465 -v -4 google.com
-PING  (142.251.129.142) 1465(1493) bytes of data.
-ping: local error: message too long, mtu=1492
-[1702623904.504416] no answer yet for icmp_seq=1
-ping: local error: message too long, mtu=1492
-[1702623905.528422] no answer yet for icmp_seq=2
-ping: local error: message too long, mtu=1492
-
----  ping statistics ---
-3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2032ms
-```
-
-### IPv6
-
-```
-$ ping -c 3 -D -M do -O -s 1445 -v -6 google.com
-PING google.com(2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e)) 1445 data bytes
-ping: local error: message too long, mtu: 1492
-[1702623918.360422] no answer yet for icmp_seq=1
-ping: local error: message too long, mtu: 1492
-[1702623919.384403] no answer yet for icmp_seq=2
-ping: local error: message too long, mtu: 1492
-
---- google.com ping statistics ---
-3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2036ms
 ```
 
 ## Other helpful online diagnostics

@@ -1,6 +1,4 @@
-:delay 15s
-
-/user add group=full name=yuri password=************
+/user add group=full name=user749646300 password=password936275503
 /user remove admin
 
 /interface ethernet set [ find default-name=ether1 ] l2mtu=1500 mtu=1500 name=ether1-lan
@@ -10,7 +8,7 @@
 /interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1500 mtu=1500
 /interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1500 mtu=1500
 /interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1500 mtu=1500
-/interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=C0:3D:D9:25:11:38 mtu=1500 name=ether8-wan
+/interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=D2:33:D8:37:D0:01 mtu=1500 name=ether8-wan
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1500 mtu=1500
 
 /interface list add name=wan-interface-list
@@ -28,20 +26,19 @@
 
 /interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
-/interface pppoe-client add add-default-route=yes disabled=yes interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
-/interface pppoe-client set ether8-wan-vlan-600-pppoe-client disabled=no
 
 /interface list add name=masquerade-interface-list
-/interface list member add interface=ether8-wan-vlan-600-pppoe-client list=masquerade-interface-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
+/interface list member add interface=ether8-wan-vlan-600-pppoe-client list=masquerade-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 
-/ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
 /ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
+/ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
 /ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
 
@@ -63,10 +60,10 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
 
-/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::4aa9:8aff:fed2:85df hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
+/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::bd66:eb3d:ff52:c194 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
-/ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 /ipv6 address add address=::4b4a:51ee:4d7e:247a/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether1-lan no-dad=no
+/ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1433-65535
@@ -77,7 +74,7 @@
 
 /ip firewall service-port set sip disabled=yes
 
-/ip settings set tcp-syncookies=yes
+/ip settings set allow-fast-path=no route-cache=no rp-filter=strict tcp-syncookies=yes
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client set enabled=yes
@@ -108,4 +105,3 @@
 /tool graphing resource add store-on-disk=no
 
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
-
