@@ -29,10 +29,11 @@
 /interface pppoe-client add add-default-route=yes disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
 
-/interface list add name=masquerade-interface-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
+
+/interface list add name=masquerade-interface-list
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=masquerade-interface-list
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
