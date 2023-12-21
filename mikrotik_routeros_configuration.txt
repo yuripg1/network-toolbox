@@ -9,7 +9,7 @@
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1500 mtu=1500
 /interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
 /interface list add name=wan-interface-list
-/interface list add name=masquerade-interface-list
+/interface list add include=wan-interface-list name=masquerade-interface-list
 /interface list add name=lan-interface-list
 /interface wireless security-profiles set [ find default=yes ] supplicant-identity=MikroTik
 /ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
@@ -22,7 +22,6 @@
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list
 /ip settings set allow-fast-path=no route-cache=no rp-filter=strict tcp-syncookies=yes
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
-/interface list member add interface=ether8-wan-vlan-600-pppoe-client list=masquerade-interface-list
 /interface list member add interface=ether8-wan list=masquerade-interface-list
 /interface list member add interface=ether1-lan list=lan-interface-list
 /ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0

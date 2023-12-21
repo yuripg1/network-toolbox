@@ -409,6 +409,10 @@ system {
         server time.google.com {
         }
     }
+    offload {
+        hwnat disable
+        ipsec disable
+    }
     static-host-mapping {
         host-name router.lan {
             inet 192.168.1.1

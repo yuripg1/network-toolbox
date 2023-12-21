@@ -24,24 +24,23 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
-/interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
+/ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
+/ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
+/ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
+
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
+/interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
 /interface pppoe-client add add-default-route=yes disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 
-/interface list add name=masquerade-interface-list
-/interface list member add interface=ether8-wan-vlan-600-pppoe-client list=masquerade-interface-list
+/interface list add include=wan-interface-list name=masquerade-interface-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
-
-/ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
-/ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
-/ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
 
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan
@@ -63,6 +62,7 @@
 
 /ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::bd66:eb3d:ff52:c194 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
+
 /ipv6 address add address=::4b4a:51ee:4d7e:247a/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether1-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
@@ -88,11 +88,13 @@
 
 /system identity set name=Home-Router
 
+/ip ssh set strong-crypto=yes
+
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
-/ip ssh set strong-crypto=yes
+
 /interface list add name=lan-interface-list
 /interface list member add interface=ether1-lan list=lan-interface-list
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list
@@ -101,6 +103,7 @@
 
 /system logging action set 0 memory-lines=10000
 /system logging action set 1 disk-lines-per-file=10000
+
 /tool graphing interface add interface=ether8-wan store-on-disk=no
 /tool graphing interface add interface=ether1-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no

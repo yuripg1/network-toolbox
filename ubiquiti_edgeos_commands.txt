@@ -47,6 +47,12 @@ set firewall name WAN_LOCAL rule 8333 description "drop tcp syn packets"
 set firewall name WAN_LOCAL rule 8333 protocol tcp
 set firewall name WAN_LOCAL rule 8333 tcp flags SYN
 
+set service dhcp-server shared-network-name LAN authoritative enable
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 default-router 192.168.1.1
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 dns-server 192.168.1.1
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 lease 2764800
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 start 192.168.1.2 stop 192.168.1.254
+
 set interfaces ethernet eth4 vif 600 pppoe 0 default-route force
 set interfaces ethernet eth4 vif 600 pppoe 0 firewall in name WAN_IN
 set interfaces ethernet eth4 vif 600 pppoe 0 firewall local name WAN_LOCAL
@@ -65,12 +71,6 @@ set service nat rule 7500 outbound-interface pppoe0
 set service nat rule 7500 type masquerade
 
 set firewall options mss-clamp mss 1452
-
-set service dhcp-server shared-network-name LAN authoritative enable
-set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 default-router 192.168.1.1
-set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 dns-server 192.168.1.1
-set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 lease 2764800
-set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 start 192.168.1.2 stop 192.168.1.254
 
 set firewall ipv6-name WANv6_IN default-action drop
 set firewall ipv6-name WANv6_IN rule 1666 action accept
@@ -144,6 +144,7 @@ set interfaces ethernet eth0 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 on-link-flag true
 set interfaces ethernet eth0 ipv6 router-advert send-advert true
+
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd no-dns
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth0 host-address ::4b4a:51ee:4d7e:247a
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
@@ -192,12 +193,17 @@ set system static-host-mapping host-name router.lan inet 192.168.1.1
 set system host-name Home-Router
 
 set service gui older-ciphers disable
+
 set service ubnt-discover disable
 set service unms disable
 
 set system analytics-handler send-analytics-report false
 set system crash-handler send-crash-report false
+
 set system name-server 127.0.0.1
+
+set system offload hwnat disable
+set system offload ipsec disable
 
 # sudo ls -la /config/scripts
 # scp ./ntp_synchronization_fixer user925232615@192.168.1.1:/config/scripts
