@@ -24,4 +24,3 @@ if ip link show $INTERFACE > /dev/null 2>&1; then
 else
   logger "Interface $INTERFACE does not exist yet"
 fi
-
