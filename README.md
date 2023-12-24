@@ -20,7 +20,7 @@
 ### Resources
 
 * [Source code](./ntp_test.py)
-* [Vivo - Telefônica Brasil (Brazilian ISP) test results](./ntp_test_output_vivo.csv)
+* [Vivo Telefônica Brasil (Brazilian ISP) output](./ntp_test_output_vivo.csv)
 
 ### Setup
 
