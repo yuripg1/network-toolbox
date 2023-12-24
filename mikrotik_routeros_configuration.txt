@@ -15,7 +15,7 @@
 /ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
-/interface pppoe-client add add-default-route=yes disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /system logging action set 0 memory-lines=10000
 /system logging action set 1 disk-lines-per-file=10000
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s

@@ -1,4 +1,26 @@
+## Network diagram
+
+![Network Diagram](./network_diagram.png)
+
+## Router commands & configurations
+
+### Mikrotik RouterOS
+
+* [Commands](./mikrotik_routeros_commands.txt)
+* [Configuration](./mikrotik_routeros_configuration.txt)
+
+### Ubiquiti EdgeOS
+
+* [Commands](./ubiquiti_edgeos_commands.txt)
+* [Configuration](./ubiquiti_edgeos_configuration.txt)
+* [NTP synchronization fixer](./ntp_synchronization_fixer)
+
 ## NTP test script
+
+### Resources
+
+* [Source code](./ntp_test.py)
+* [Vivo - Telefônica Brasil (Brazilian ISP) test results](./ntp_test_output_vivo.csv)
 
 ### Setup
 
