@@ -13,7 +13,7 @@
 /interface list add name=lan-interface-list
 /interface wireless security-profiles set [ find default=yes ] supplicant-identity=MikroTik
 /ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /system logging action set 0 memory-lines=10000
@@ -28,7 +28,7 @@
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
 /ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-concurrent-tcp-sessions=200 servers=2001:4860:4860::8888,2001:4860:4860::8844
-/ip dns static add address=192.168.1.1 name=router.lan
+/ip dns static add address=192.168.1.1 name=router.lan ttl=5m
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan
 /ip firewall filter add action=accept chain=ip-forward-wan comment="accept established,related packets" connection-state=established,related

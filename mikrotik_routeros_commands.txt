@@ -27,7 +27,7 @@
 /ip pool add name=ip-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
 /ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
 /ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
@@ -84,7 +84,7 @@
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
 /interface list member add interface=ether8-wan list=masquerade-interface-list
 
-/ip dns static add address=192.168.1.1 name=router.lan
+/ip dns static add address=192.168.1.1 name=router.lan ttl=5m
 
 /system identity set name=Home-Router
 
