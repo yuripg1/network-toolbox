@@ -60,12 +60,12 @@ def create_ntp_request(csv_writer, max_attempts, sleep, timeout, udp_destination
         create_ntp_request(csv_writer, max_attempts, sleep, timeout, udp_destination_port, ntp_server, ip_address, ntp_version, udp_source_port, attempt_number + 1)
 
 
-def main():
+def ntp_test():
     test_parameters = {
         "random_udp_source_port_min": 49152,
         "random_udp_source_port_max": 65535,
         "max_attempts": 3,
-        "sleep": 3,
+        "sleep": 5,
         "timeout": 15,
         "udp_destination_port": 123,
         "ntp_versions": [3, 4],
@@ -75,5 +75,4 @@ def main():
     iterate_over_ntp_combinations(test_parameters)
 
 
-if __name__ == "__main__":
-    main()
+ntp_test()
