@@ -1,8 +1,5 @@
-from scapy.all import sr1, IP, ICMP, IPv6, ICMPv6EchoRequest, ICMPv6PacketTooBig
+from scapy.all import sr1, IP, ICMP, IPv6, ICMPv6EchoRequest, ICMPv6PacketTooBig, TCP
 import time
-
-target = "google.com"
-initial_mtu = 1500
 
 
 def is_valid_response(response, ip_version):
@@ -17,10 +14,12 @@ def is_valid_response(response, ip_version):
             return True
         return False
     elif ip_version == 6:
+        if response is None:
+            return True
         if response.haslayer(ICMPv6PacketTooBig):
             print("ICMPv6 / Packet too big")
             return False
-        return True
+        return False
 
 
 def test_mtu_per_protocol(target, initial_mtu, sleep, timeout, ip_version):
@@ -38,7 +37,7 @@ def test_mtu_per_protocol(target, initial_mtu, sleep, timeout, ip_version):
     while mtu_to_attempt - overhead > 0:
         payload = 'A' * (mtu_to_attempt - overhead)
         packet = ip_packet / icmp_packet / payload
-        print("IP protocol:", ip_protocol, "| MTU to attempt:", mtu_to_attempt)
+        print("IP protocol:", ip_protocol, "| MTU to attempt:", mtu_to_attempt, "bytes")
         response = sr1(packet, timeout=timeout, verbose=0)
         if is_valid_response(response, ip_version):
             return mtu_to_attempt
@@ -46,15 +45,31 @@ def test_mtu_per_protocol(target, initial_mtu, sleep, timeout, ip_version):
         mtu_to_attempt -= 1
 
 
-def mtu_test():
+def test_tcp_mss_clamping(target, timeout, ip_version, port):
+    if ip_version == 4:
+        ip_packet = IP(dst=target)
+    elif ip_version == 6:
+        ip_packet = IPv6(dst=target)
+    tcp_packet = TCP(dport=port, flags='S')
+    response = sr1(ip_packet / tcp_packet, timeout=timeout, verbose=0)
+    if response and response.haslayer(TCP):
+        for option in response[TCP].options:
+            if option[0] == "MSS":
+                return option[1]
+    return None
+
+
+def mtu_and_mss_test():
     test_parameters = {
-        "target": "google.com",
+        "target": "www.microsoft.com",
         "initial_mtu": 1500,
         "sleep": 1,
         "timeout": 3
     }
-    print("\n\nIPv4 MTU:", test_mtu_per_protocol(test_parameters["target"], test_parameters["initial_mtu"], test_parameters["sleep"], test_parameters["timeout"], 4), "\n\n")
-    print("\n\nIPv6 MTU:", test_mtu_per_protocol(test_parameters["target"], test_parameters["initial_mtu"], test_parameters["sleep"], test_parameters["timeout"], 6), "\n\n")
+    print("\nIPv4 MTU:", test_mtu_per_protocol(test_parameters["target"], test_parameters["initial_mtu"], test_parameters["sleep"], test_parameters["timeout"], 4), "bytes\n")
+    print("\nIPv6 MTU:", test_mtu_per_protocol(test_parameters["target"], test_parameters["initial_mtu"], test_parameters["sleep"], test_parameters["timeout"], 6), "bytes\n")
+    print("\nIPv4 TCP SYN,ACK MSS:", test_tcp_mss_clamping(test_parameters["target"], test_parameters["timeout"], 4, 443), "bytes\n")
+    print("\nIPv6 TCP SYN,ACK MSS:", test_tcp_mss_clamping(test_parameters["target"], test_parameters["timeout"], 6, 443), "bytes\n")
 
 
-mtu_test()
+mtu_and_mss_test()
