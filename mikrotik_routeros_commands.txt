@@ -8,7 +8,7 @@
 /interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1500 mtu=1500
 /interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1500 mtu=1500
 /interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1500 mtu=1500
-/interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=D2:33:D8:37:D0:01 mtu=1500 name=ether8-wan
+/interface ethernet set [ find default-name=ether8 ] l2mtu=1500 mac-address=D2:33:D8:37:D0:01 mtu=1500 name=ether8-wan
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1500 mtu=1500
 
 /interface list add name=wan-interface-list
@@ -30,8 +30,8 @@
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether1-lan lease-time=4w4d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
-/interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 disabled=no interface=ether8-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
+/interface vlan add interface=ether8-wan mtu=1496 name=ether8-wan-vlan-600 vlan-id=600
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 disabled=no interface=ether8-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
@@ -39,8 +39,8 @@
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 
-/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
-/ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1453-65535
+/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1441-65535
+/ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1441-65535
 
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan
@@ -60,14 +60,14 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
 
-/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::bd66:eb3d:ff52:c194 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
+/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::bd66:eb3d:ff52:c194 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
 /ipv6 address add address=::4b4a:51ee:4d7e:247a/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether1-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
-/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1433-65535
-/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1433-65535
+/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1421-65535
+/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=no protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-concurrent-tcp-sessions=200 servers=2001:4860:4860::8888,2001:4860:4860::8844
 

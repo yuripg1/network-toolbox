@@ -189,10 +189,10 @@ firewall {
     }
     options {
         mss-clamp {
-            mss 1452
+            mss 1440
         }
         mss-clamp6 {
-            mss 1432
+            mss 1420
         }
     }
     receive-redirects disable
@@ -209,7 +209,7 @@ interfaces {
             router-advert {
                 cur-hop-limit 64
                 default-preference high
-                link-mtu 1492
+                link-mtu 1480
                 managed-flag false
                 max-interval 600
                 name-server fe80::b9f7:94c9:e252:25c8
@@ -283,7 +283,7 @@ interfaces {
                     enable {
                     }
                 }
-                mtu 1492
+                mtu 1480
                 name-server none
                 password ****************
                 user-id cliente@cliente
