@@ -1,11 +1,13 @@
 set system login user user925232615 authentication plaintext-password password478924191
 set system login user user925232615 level admin
+
 delete system login user ubnt
 
 delete interfaces ethernet eth0 address
 delete interfaces ethernet eth1 address
 delete interfaces switch switch0 mtu
 set interfaces ethernet eth0 address 192.168.1.1/24
+set interfaces ethernet eth0 mac D2:21:F9:F0:0F:36
 set interfaces ethernet eth0 mtu 1500
 set interfaces ethernet eth1 disable
 set interfaces ethernet eth1 mtu 1500
@@ -13,7 +15,7 @@ set interfaces ethernet eth2 disable
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth3 disable
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 mac 17:43:3D:0F:13:12
+set interfaces ethernet eth4 mac D2:21:F9:39:DA:DF
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
@@ -139,7 +141,7 @@ set interfaces ethernet eth0 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth0 ipv6 router-advert default-preference high
 set interfaces ethernet eth0 ipv6 router-advert link-mtu 1480
 set interfaces ethernet eth0 ipv6 router-advert managed-flag false
-set interfaces ethernet eth0 ipv6 router-advert name-server fe80::b9f7:94c9:e252:25c8
+set interfaces ethernet eth0 ipv6 router-advert name-server fe80::d021:f9ff:fef0:0f36
 set interfaces ethernet eth0 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 on-link-flag true

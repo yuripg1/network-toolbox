@@ -212,7 +212,7 @@ interfaces {
                 link-mtu 1480
                 managed-flag false
                 max-interval 600
-                name-server fe80::b9f7:94c9:e252:25c8
+                name-server fe80::d021:f9ff:fef0:0f36
                 other-config-flag false
                 prefix ::/64 {
                     autonomous-flag true
@@ -224,6 +224,7 @@ interfaces {
                 send-advert true
             }
         }
+        mac D2:21:F9:F0:0F:36
         mtu 1500
         speed auto
     }
@@ -248,7 +249,7 @@ interfaces {
     ethernet eth4 {
         address 192.168.15.2/24
         duplex auto
-        mac 17:43:3D:0F:13:12
+        mac D2:21:F9:39:DA:DF
         mtu 1500
         poe {
             output off
