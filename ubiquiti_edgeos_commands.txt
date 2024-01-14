@@ -159,10 +159,9 @@ set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 enable
 
 set firewall options mss-clamp6 mss 1420
 
-set service dns forwarding cache-size 10000
 set service dns forwarding listen-on eth0
-set service dns forwarding name-server 2001:4860:4860::8844
-set service dns forwarding name-server 2001:4860:4860::8888
+set service dns forwarding name-server 8.8.4.4
+set service dns forwarding name-server 8.8.8.8
 
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
@@ -180,7 +179,7 @@ set system conntrack timeout udp stream 180
 set system conntrack modules sip disable
 
 set firewall source-validation strict
-set firewall syn-cookies enable
+set firewall syn-cookies disable
 
 delete system ntp server
 set system time-zone America/Sao_Paulo

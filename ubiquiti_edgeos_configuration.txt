@@ -198,7 +198,7 @@ firewall {
     receive-redirects disable
     send-redirects enable
     source-validation strict
-    syn-cookies enable
+    syn-cookies disable
 }
 interfaces {
     ethernet eth0 {
@@ -319,8 +319,8 @@ service {
         forwarding {
             cache-size 10000
             listen-on eth0
-            name-server 2001:4860:4860::8844
-            name-server 2001:4860:4860::8888
+            name-server 8.8.4.4
+            name-server 8.8.8.8
         }
     }
     gui {
