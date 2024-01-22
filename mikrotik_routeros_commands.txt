@@ -32,7 +32,7 @@
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface vlan add interface=ether8-wan mtu=1496 name=ether8-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 disabled=no interface=ether8-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether8-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
@@ -65,8 +65,8 @@
 /ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe67:4432 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
-/ipv6 address add address=::4b4a:51ee:4d7e:247a/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether1-lan no-dad=no
-/ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
+/ipv6 address add address=::4b4a:51ee:4d7e:247a/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether1-lan no-dad=no
+/ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-wan-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=clamp-to-pmtu passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=clamp-to-pmtu out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
