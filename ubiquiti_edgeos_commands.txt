@@ -74,6 +74,10 @@ set service nat rule 7500 type masquerade
 
 set firewall options mss-clamp mss 1440
 
+set service dns forwarding listen-on eth0
+set service dns forwarding name-server 8.8.4.4
+set service dns forwarding name-server 8.8.8.8
+
 set firewall ipv6-name WANv6_IN default-action drop
 set firewall ipv6-name WANv6_IN rule 1666 action accept
 set firewall ipv6-name WANv6_IN rule 1666 description "accept established,related packets"
@@ -158,10 +162,6 @@ set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 enable
 
 set firewall options mss-clamp6 mss 1420
-
-set service dns forwarding listen-on eth0
-set service dns forwarding name-server 8.8.4.4
-set service dns forwarding name-server 8.8.8.8
 
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
