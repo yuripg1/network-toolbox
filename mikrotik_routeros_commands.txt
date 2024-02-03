@@ -79,7 +79,7 @@
 
 /ip firewall service-port set sip disabled=yes
 
-/ip settings set allow-fast-path=no rp-filter=strict tcp-syncookies=no
+/ip settings set allow-fast-path=no arp-timeout=5m rp-filter=strict tcp-syncookies=no
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client set enabled=yes
