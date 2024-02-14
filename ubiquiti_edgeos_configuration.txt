@@ -202,7 +202,7 @@ firewall {
 }
 interfaces {
     ethernet eth0 {
-        address 192.168.1.1/24
+        address 10.108.50.1/24
         duplex auto
         ipv6 {
             dup-addr-detect-transmits 1
@@ -262,7 +262,7 @@ interfaces {
                     no-dns
                     pd 0 {
                         interface eth0 {
-                            host-address ::4b4a:51ee:4d7e:247a
+                            host-address ::de40:216f:fc1d:7199
                         }
                         prefix-length /64
                     }
@@ -303,12 +303,12 @@ service {
         hostfile-update disable
         shared-network-name LAN {
             authoritative enable
-            subnet 192.168.1.0/24 {
-                default-router 192.168.1.1
-                dns-server 192.168.1.1
+            subnet 10.108.50.0/24 {
+                default-router 10.108.50.1
+                dns-server 10.108.50.1
                 lease 2764800
-                start 192.168.1.2 {
-                    stop 192.168.1.254
+                start 10.108.50.2 {
+                    stop 10.108.50.254
                 }
             }
         }
@@ -416,7 +416,7 @@ system {
     }
     static-host-mapping {
         host-name router.lan {
-            inet 192.168.1.1
+            inet 10.108.50.1
         }
     }
     syslog {

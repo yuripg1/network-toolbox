@@ -12,6 +12,8 @@
 /interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=4A:A9:8A:11:91:F9 mtu=1500 name=ether8-wan
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 mtu=1500
 
+/ip address add address=10.26.50.1/24 interface=ether1-lan network=10.26.50.0
+
 /interface list add name=wan-interface-list
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan
@@ -25,9 +27,8 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
-/ip pool add name=ip-lan-dhcp-server-pool ranges=192.168.1.2-192.168.1.254
-/ip address add address=192.168.1.1/24 interface=ether1-lan network=192.168.1.0
-/ip dhcp-server network add address=192.168.1.0/24 dns-server=192.168.1.1 gateway=192.168.1.1
+/ip pool add name=ip-lan-dhcp-server-pool ranges=10.26.50.2-10.26.50.254
+/ip dhcp-server network add address=10.26.50.0/24 dns-server=10.26.50.1 gateway=10.26.50.1
 /ip dhcp-server add address-pool=ip-lan-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether1-lan lease-time=4w4d name=ip-lan-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
@@ -67,7 +68,7 @@
 /ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe67:4432 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
-/ipv6 address add address=::4b4a:51ee:4d7e:247a/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether1-lan no-dad=no
+/ipv6 address add address=::5fec:9474:5f07:0f19/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether1-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-wan-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
@@ -88,7 +89,7 @@
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
 /interface list member add interface=ether8-wan list=masquerade-interface-list
 
-/ip dns static add address=192.168.1.1 name=router.lan ttl=5m
+/ip dns static add address=10.26.50.1 name=router.lan ttl=5m
 
 /system identity set name=Home-Router
 
@@ -96,6 +97,7 @@
 
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
+/ip service set ssh disabled=yes
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
 
