@@ -3,7 +3,6 @@ set system login user user925232615 level admin
 
 delete system login user ubnt
 
-delete interfaces ethernet eth1 address
 delete interfaces switch switch0 mtu
 set interfaces ethernet eth0 mac D2:21:F9:F0:0F:36
 set interfaces ethernet eth0 mtu 1500
@@ -18,6 +17,7 @@ set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
 delete interfaces ethernet eth0 address
+delete interfaces ethernet eth1 address
 set interfaces ethernet eth0 address 10.108.50.1/24
 
 set firewall name WAN_IN default-action drop
@@ -73,6 +73,7 @@ set service nat rule 6250 type masquerade
 set service nat rule 7500 outbound-interface pppoe0
 set service nat rule 7500 type masquerade
 
+set firewall options mss-clamp interface-type pppoe
 set firewall options mss-clamp mss 1440
 
 set service dns forwarding listen-on eth0
@@ -162,6 +163,7 @@ set interfaces ethernet eth4 vif 600 pppoe 0 firewall local ipv6-name WANv6_LOCA
 set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 enable
 
+set firewall options mss-clamp6 interface-type pppoe
 set firewall options mss-clamp6 mss 1420
 
 set system conntrack timeout icmp 30
