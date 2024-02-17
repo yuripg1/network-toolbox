@@ -5,6 +5,7 @@ delete system login user ubnt
 
 delete interfaces ethernet eth1 address
 delete interfaces switch switch0 mtu
+set interfaces ethernet eth0 description eth0-lan
 set interfaces ethernet eth0 mac D2:21:F9:DD:C8:50
 set interfaces ethernet eth0 mtu 1500
 set interfaces ethernet eth1 disable
@@ -13,6 +14,7 @@ set interfaces ethernet eth2 disable
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth3 disable
 set interfaces ethernet eth3 mtu 1500
+set interfaces ethernet eth4 description eth4-wan
 set interfaces ethernet eth4 mac D2:21:F9:48:20:D2
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
@@ -56,7 +58,9 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-serve
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 2764800
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
 
+set interfaces ethernet eth4 vif 600 description eth4-wan-vif600
 set interfaces ethernet eth4 vif 600 pppoe 0 default-route force
+set interfaces ethernet eth4 vif 600 pppoe 0 description eth4-wan-vif600-pppoe0
 set interfaces ethernet eth4 vif 600 pppoe 0 firewall in name WAN_IN
 set interfaces ethernet eth4 vif 600 pppoe 0 firewall local name WAN_LOCAL
 set interfaces ethernet eth4 vif 600 pppoe 0 mtu 1480

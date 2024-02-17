@@ -204,7 +204,8 @@ firewall {
 }
 interfaces {
     ethernet eth0 {
-        address 10.108.50.1/24
+        address 10.182.186.1/24
+        description eth0-lan
         duplex auto
         ipv6 {
             dup-addr-detect-transmits 1
@@ -214,7 +215,7 @@ interfaces {
                 link-mtu 1480
                 managed-flag false
                 max-interval 600
-                name-server fe80::d021:f9ff:fef0:0f36
+                name-server fe80::d021:f9ff:fedd:c850
                 other-config-flag false
                 prefix ::/64 {
                     autonomous-flag true
@@ -226,7 +227,7 @@ interfaces {
                 send-advert true
             }
         }
-        mac D2:21:F9:F0:0F:36
+        mac D2:21:F9:DD:C8:50
         mtu 1500
         speed auto
     }
@@ -250,21 +251,24 @@ interfaces {
     }
     ethernet eth4 {
         address 192.168.15.2/24
+        description eth4-wan
         duplex auto
-        mac D2:21:F9:39:DA:DF
+        mac D2:21:F9:48:20:D2
         mtu 1500
         poe {
             output off
         }
         speed auto
         vif 600 {
+            description eth4-wan-vif600
             pppoe 0 {
                 default-route force
+                description eth4-wan-vif600-pppoe0
                 dhcpv6-pd {
                     no-dns
                     pd 0 {
                         interface eth0 {
-                            host-address ::de40:216f:fc1d:7199
+                            host-address ::1190:1cd9:750e:8422
                         }
                         prefix-length /64
                     }
@@ -305,12 +309,12 @@ service {
         hostfile-update disable
         shared-network-name LAN {
             authoritative enable
-            subnet 10.108.50.0/24 {
-                default-router 10.108.50.1
-                dns-server 10.108.50.1
+            subnet 10.182.186.0/24 {
+                default-router 10.182.186.1
+                dns-server 10.182.186.1
                 lease 2764800
-                start 10.108.50.2 {
-                    stop 10.108.50.254
+                start 10.182.186.2 {
+                    stop 10.182.186.254
                 }
             }
         }
@@ -321,8 +325,10 @@ service {
         forwarding {
             cache-size 10000
             listen-on eth0
-            name-server 8.8.4.4
-            name-server 8.8.8.8
+            name-server 1.0.0.1
+            name-server 1.1.1.1
+            options bogus-priv
+            options domain-needed
         }
     }
     gui {
@@ -409,7 +415,7 @@ system {
     }
     name-server 127.0.0.1
     ntp {
-        server time.google.com {
+        server time.cloudflare.com {
         }
     }
     offload {
@@ -418,7 +424,7 @@ system {
     }
     static-host-mapping {
         host-name router.lan {
-            inet 10.108.50.1
+            inet 10.182.186.1
         }
     }
     syslog {
