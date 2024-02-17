@@ -1,18 +1,18 @@
-/interface ethernet set [ find default-name=ether1 ] l2mtu=1504 mac-address=4A:A9:8A:67:44:32 mtu=1500 name=ether1-lan
-/interface ethernet set [ find default-name=ether2 ] disabled=yes l2mtu=1504 mtu=1500
+/interface ethernet set [ find default-name=ether1 ] disabled=yes l2mtu=1504 mtu=1500
+/interface ethernet set [ find default-name=ether2 ] l2mtu=1504 mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
 /interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 mtu=1500
 /interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 mtu=1500
 /interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 mtu=1500
 /interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 mtu=1500
 /interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=4A:A9:8A:11:91:F9 mtu=1500 name=ether8-wan
+/interface ethernet set [ find default-name=ether8 ] l2mtu=1504 mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether8-wan
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 mtu=1500
 /interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
 /interface list add name=wan-interface-list
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /interface list add name=lan-interface-list
-/ip pool add name=ip-lan-dhcp-server-pool ranges=10.26.50.2-10.26.50.254
-/ip dhcp-server add address-pool=ip-lan-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether1-lan lease-time=4w4d name=ip-lan-dhcp-server
+/ip pool add name=ip-lan-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip dhcp-server add address-pool=ip-lan-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=4w4d name=ip-lan-dhcp-server
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether8-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether8-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
@@ -20,12 +20,12 @@
 /ip settings set allow-fast-path=no arp-timeout=5m rp-filter=strict tcp-syncookies=no
 /interface list member add interface=ether8-wan-vlan-600-pppoe-client list=wan-interface-list
 /interface list member add interface=ether8-wan list=masquerade-interface-list
-/interface list member add interface=ether1-lan list=lan-interface-list
-/ip address add address=10.26.50.1/24 interface=ether1-lan network=10.26.50.0
+/interface list member add interface=ether2-lan list=lan-interface-list
+/ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
-/ip dhcp-server network add address=10.26.50.0/24 dns-server=10.26.50.1 gateway=10.26.50.1
-/ip dns set allow-remote-requests=yes servers=8.8.8.8,8.8.4.4
-/ip dns static add address=10.26.50.1 name=router.lan ttl=5m
+/ip dhcp-server network add address=10.175.202.0/24 dns-server=10.175.202.1 gateway=10.175.202.1
+/ip dns set allow-remote-requests=yes servers=1.1.1.1,1.0.0.1
+/ip dns static add address=10.175.202.1 name=router.lan ttl=5m
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan
 /ip firewall filter add action=accept chain=ip-forward-wan comment="accept established,related packets" connection-state=established,related
@@ -48,7 +48,7 @@
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
-/ipv6 address add address=::5fec:9474:5f07:0f19/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether1-lan no-dad=no
+/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether2-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-wan-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan
@@ -71,16 +71,16 @@
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=clamp-to-pmtu passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=clamp-to-pmtu out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
-/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe67:4432 hop-limit=64 interface=ether1-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
+/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
 /system note set show-at-login=no
 /system ntp client set enabled=yes
-/system ntp client servers add address=time.google.com
+/system ntp client servers add address=time.cloudflare.com
 /tool bandwidth-server set enabled=no
 /tool graphing interface add interface=ether8-wan store-on-disk=no
-/tool graphing interface add interface=ether1-lan store-on-disk=no
+/tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
 /tool mac-server set allowed-interface-list=lan-interface-list
 /tool mac-server mac-winbox set allowed-interface-list=lan-interface-list
