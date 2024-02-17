@@ -3,8 +3,9 @@ set system login user user925232615 level admin
 
 delete system login user ubnt
 
+delete interfaces ethernet eth1 address
 delete interfaces switch switch0 mtu
-set interfaces ethernet eth0 mac D2:21:F9:F0:0F:36
+set interfaces ethernet eth0 mac D2:21:F9:DD:C8:50
 set interfaces ethernet eth0 mtu 1500
 set interfaces ethernet eth1 disable
 set interfaces ethernet eth1 mtu 1500
@@ -12,13 +13,12 @@ set interfaces ethernet eth2 disable
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth3 disable
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 mac D2:21:F9:39:DA:DF
+set interfaces ethernet eth4 mac D2:21:F9:48:20:D2
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
 delete interfaces ethernet eth0 address
-delete interfaces ethernet eth1 address
-set interfaces ethernet eth0 address 10.108.50.1/24
+set interfaces ethernet eth0 address 10.182.186.1/24
 
 set firewall name WAN_IN default-action drop
 set firewall name WAN_IN rule 3333 action accept
@@ -51,10 +51,10 @@ set firewall name WAN_LOCAL rule 8333 protocol tcp
 set firewall name WAN_LOCAL rule 8333 tcp flags SYN
 
 set service dhcp-server shared-network-name LAN authoritative enable
-set service dhcp-server shared-network-name LAN subnet 10.108.50.0/24 default-router 10.108.50.1
-set service dhcp-server shared-network-name LAN subnet 10.108.50.0/24 dns-server 10.108.50.1
-set service dhcp-server shared-network-name LAN subnet 10.108.50.0/24 lease 2764800
-set service dhcp-server shared-network-name LAN subnet 10.108.50.0/24 start 10.108.50.2 stop 10.108.50.254
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.182.186.1
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 2764800
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
 
 set interfaces ethernet eth4 vif 600 pppoe 0 default-route force
 set interfaces ethernet eth4 vif 600 pppoe 0 firewall in name WAN_IN
@@ -77,8 +77,10 @@ set firewall options mss-clamp interface-type pppoe
 set firewall options mss-clamp mss 1440
 
 set service dns forwarding listen-on eth0
-set service dns forwarding name-server 8.8.4.4
-set service dns forwarding name-server 8.8.8.8
+set service dns forwarding name-server 1.0.0.1
+set service dns forwarding name-server 1.1.1.1
+set service dns forwarding options bogus-priv
+set service dns forwarding options domain-needed
 
 set firewall ipv6-name WANv6_IN default-action drop
 set firewall ipv6-name WANv6_IN rule 1666 action accept
@@ -147,14 +149,14 @@ set interfaces ethernet eth0 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth0 ipv6 router-advert default-preference high
 set interfaces ethernet eth0 ipv6 router-advert link-mtu 1480
 set interfaces ethernet eth0 ipv6 router-advert managed-flag false
-set interfaces ethernet eth0 ipv6 router-advert name-server fe80::d021:f9ff:fef0:0f36
+set interfaces ethernet eth0 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
 set interfaces ethernet eth0 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 on-link-flag true
 set interfaces ethernet eth0 ipv6 router-advert send-advert true
 
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth0 host-address ::de40:216f:fc1d:7199
+set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth0 host-address ::1190:1cd9:750e:8422
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
@@ -186,13 +188,13 @@ set firewall syn-cookies disable
 
 delete system ntp server
 set system time-zone America/Sao_Paulo
-set system ntp server time.google.com
+set system ntp server time.cloudflare.com
 
 set interfaces ethernet eth4 address 192.168.15.2/24
 set service nat rule 8750 outbound-interface eth4
 set service nat rule 8750 type masquerade
 
-set system static-host-mapping host-name router.lan inet 10.108.50.1
+set system static-host-mapping host-name router.lan inet 10.182.186.1
 
 set system host-name Home-Router
 
@@ -210,7 +212,7 @@ set system offload hwnat disable
 set system offload ipsec disable
 
 # sudo ls -la /config/scripts
-# scp ./ntp_synchronization_fixer user925232615@10.108.50.1:/config/scripts
+# scp ./ntp_synchronization_fixer user925232615@10.182.186.1:/config/scripts
 # sudo ls -la /config/scripts
 # sudo chown root /config/scripts/ntp_synchronization_fixer
 # sudo chmod +x /config/scripts/ntp_synchronization_fixer
