@@ -69,7 +69,7 @@
 /ipv6 nd prefix default set autonomous=yes
 
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether2-lan no-dad=no
-/ipv6 dhcp-client add add-default-route=yes interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-wan-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
+/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-wan-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 
