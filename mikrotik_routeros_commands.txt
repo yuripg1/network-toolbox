@@ -27,9 +27,9 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
-/ip pool add name=ip-lan-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server network add address=10.175.202.0/24 dns-server=10.175.202.1 gateway=10.175.202.1
-/ip dhcp-server add address-pool=ip-lan-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=4w4d name=ip-lan-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=4w4d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
@@ -68,8 +68,8 @@
 /ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
-/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-wan-dhcp-client-pool interface=ether2-lan no-dad=no
-/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-wan-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
+/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
+/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 
@@ -112,3 +112,5 @@
 /tool graphing interface add interface=ether8-wan store-on-disk=no
 /tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
+
+/system logging set 0 topics=info,!dhcp
