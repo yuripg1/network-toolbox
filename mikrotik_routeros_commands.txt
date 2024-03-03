@@ -44,7 +44,7 @@
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=clamp-to-pmtu passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=clamp-to-pmtu out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
 
-/ip dns set allow-remote-requests=yes servers=1.1.1.1,1.0.0.1
+/ip dns set allow-remote-requests=yes max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan
@@ -84,7 +84,10 @@
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client set enabled=yes
-/system ntp client servers add address=time.cloudflare.com
+/system ntp client servers add address=time1.google.com
+/system ntp client servers add address=time2.google.com
+/system ntp client servers add address=time3.google.com
+/system ntp client servers add address=time4.google.com
 
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
 /interface list member add interface=ether8-wan list=masquerade-interface-list

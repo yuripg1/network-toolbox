@@ -81,8 +81,8 @@ set firewall options mss-clamp interface-type pppoe
 set firewall options mss-clamp mss 1440
 
 set service dns forwarding listen-on eth0
-set service dns forwarding name-server 1.0.0.1
-set service dns forwarding name-server 1.1.1.1
+set service dns forwarding name-server 8.8.4.4
+set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
@@ -192,7 +192,10 @@ set firewall syn-cookies disable
 
 delete system ntp server
 set system time-zone America/Sao_Paulo
-set system ntp server time.cloudflare.com
+set system ntp server time1.google.com
+set system ntp server time2.google.com
+set system ntp server time3.google.com
+set system ntp server time4.google.com
 
 set interfaces ethernet eth4 address 192.168.15.2/24
 set service nat rule 8750 outbound-interface eth4
@@ -215,11 +218,8 @@ set system name-server 127.0.0.1
 set system offload hwnat disable
 set system offload ipsec disable
 
-# sudo ls -la /config/scripts
-# scp ./ntp_synchronization_fixer user925232615@10.182.186.1:/config/scripts
-# sudo ls -la /config/scripts
-# sudo chown root /config/scripts/ntp_synchronization_fixer
-# sudo chmod +x /config/scripts/ntp_synchronization_fixer
-# sudo ls -la /config/scripts
-set system task-scheduler task ntp-synchronization-fixer executable path "/config/scripts/ntp_synchronization_fixer"
-set system task-scheduler task ntp-synchronization-fixer interval 1m
+$ scp ./ntp_fixer.sh user925232615@10.182.186.1:/config/scripts
+
+$ sudo mv /config/scripts/ntp_fixer.sh /etc/ppp/ipv6-up.d/ntp_fixer.sh
+$ sudo chown root:root /etc/ppp/ipv6-up.d/ntp_fixer.sh
+$ sudo chmod +x /etc/ppp/ipv6-up.d/ntp_fixer.sh

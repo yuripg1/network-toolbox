@@ -70,7 +70,7 @@ def ntp_test():
         "udp_destination_port": 123,
         "ntp_versions": [3, 4],
         "udp_source_ports": [123],
-        "ntp_servers": ["time.windows.com", "time.nist.gov", "time.google.com", "time.cloudflare.com", "a.ntp.br", "b.ntp.br", "c.ntp.br", "a.st1.ntp.br", "b.st1.ntp.br", "c.st1.ntp.br", "d.st1.ntp.br", "gps.ntp.br", "pool.ntp.org", "br.pool.ntp.org"]
+        "ntp_servers": ["a.ntp.br", "b.ntp.br", "c.ntp.br", "a.st1.ntp.br", "b.st1.ntp.br", "c.st1.ntp.br", "d.st1.ntp.br", "gps.ntp.br", "pool.ntp.br", "0.br.pool.ntp.org", "1.br.pool.ntp.org", "2.br.pool.ntp.org", "3.br.pool.ntp.org", "br.pool.ntp.org", "0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org", "3.pool.ntp.org", "pool.ntp.org", "time1.google.com", "time2.google.com", "time3.google.com", "time4.google.com", "time.google.com", "time.cloudflare.com", "time.windows.com", "time.nist.gov"]
     }
     iterate_over_ntp_combinations(test_parameters)
 

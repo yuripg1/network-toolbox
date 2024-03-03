@@ -325,8 +325,8 @@ service {
         forwarding {
             cache-size 10000
             listen-on eth0
-            name-server 1.0.0.1
-            name-server 1.1.1.1
+            name-server 8.8.4.4
+            name-server 8.8.8.8
             options bogus-priv
             options domain-needed
         }
@@ -415,7 +415,13 @@ system {
     }
     name-server 127.0.0.1
     ntp {
-        server time.cloudflare.com {
+        server time1.google.com {
+        }
+        server time2.google.com {
+        }
+        server time3.google.com {
+        }
+        server time4.google.com {
         }
     }
     offload {
@@ -435,14 +441,6 @@ system {
             facility protocols {
                 level debug
             }
-        }
-    }
-    task-scheduler {
-        task ntp-synchronization-fixer {
-            executable {
-                path /config/scripts/ntp_synchronization_fixer
-            }
-            interval 1m
         }
     }
     time-zone America/Sao_Paulo
