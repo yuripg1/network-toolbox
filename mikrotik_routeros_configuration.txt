@@ -11,6 +11,7 @@
 /interface list add name=wan-interface-list
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /interface list add name=lan-interface-list
+/ip dhcp-server option add code=26 name=ip-interface-mtu-option value="'1480'"
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=4w4d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
@@ -23,7 +24,7 @@
 /interface list member add interface=ether2-lan list=lan-interface-list
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
-/ip dhcp-server network add address=10.175.202.0/24 dns-server=10.175.202.1 gateway=10.175.202.1
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ip-interface-mtu-option dns-server=10.175.202.1 gateway=10.175.202.1
 /ip dns set allow-remote-requests=yes max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 /ip dns static add address=10.175.202.1 name=router.lan ttl=5m
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan
@@ -47,7 +48,6 @@
 /ip service set ssh disabled=yes
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
-/ip ssh set strong-crypto=yes
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether8-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
@@ -62,10 +62,11 @@
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept link-local icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept link-local udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining udp dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining link-local packets" log=yes src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=clamp-to-pmtu passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535

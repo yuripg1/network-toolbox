@@ -28,7 +28,8 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
-/ip dhcp-server network add address=10.175.202.0/24 dns-server=10.175.202.1 gateway=10.175.202.1
+/ip dhcp-server option add code=26 name=ip-interface-mtu-option value="'1480'"
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ip-interface-mtu-option dns-server=10.175.202.1 gateway=10.175.202.1
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=4w4d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
@@ -58,10 +59,11 @@
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept link-local icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept link-local udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining udp dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining link-local packets" log=yes src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
 
@@ -95,8 +97,6 @@
 /ip dns static add address=10.175.202.1 name=router.lan ttl=5m
 
 /system identity set name=Home-Router
-
-/ip ssh set strong-crypto=yes
 
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
