@@ -112,6 +112,8 @@
 /tool mac-server set allowed-interface-list=lan-interface-list
 /tool mac-server mac-winbox set allowed-interface-list=lan-interface-list
 
+/ip smb set enabled=no
+
 /tool bandwidth-server set enabled=no
 
 /tool graphing interface add interface=ether8-wan store-on-disk=no
