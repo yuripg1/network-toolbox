@@ -43,7 +43,7 @@ firewall {
     }
     ipv6-name WANv6_LOCAL {
         default-action drop
-        rule 1000 {
+        rule 909 {
             action accept
             description "accept established,related packets"
             state {
@@ -51,14 +51,14 @@ firewall {
                 related enable
             }
         }
-        rule 2000 {
+        rule 1818 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 3000 {
+        rule 2727 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -66,9 +66,9 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 4000 {
+        rule 3636 {
             action accept
-            description "accept icmpv6 router solicitation packets"
+            description "accept link-local icmpv6 router solicitation packets"
             icmpv6 {
                 type 133/0
             }
@@ -77,9 +77,9 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 5000 {
+        rule 4545 {
             action accept
-            description "accept icmpv6 router advertisement packets"
+            description "accept link-local icmpv6 router advertisement packets"
             icmpv6 {
                 type 134/0
             }
@@ -88,9 +88,9 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 6000 {
+        rule 5454 {
             action accept
-            description "accept udp dhcpv6 packets"
+            description "accept link-local udp dhcpv6 packets"
             destination {
                 port 546
             }
@@ -100,13 +100,13 @@ firewall {
                 port 547
             }
         }
-        rule 7000 {
+        rule 6363 {
             action drop
             description "drop remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
-        rule 8000 {
+        rule 7272 {
             action drop
             description "drop remaining udp dhcpv6 packets"
             destination {
@@ -115,7 +115,15 @@ firewall {
             log enable
             protocol udp
         }
-        rule 9000 {
+        rule 8181 {
+            action drop
+            description "drop remaining link-local packets"
+            log enable
+            source {
+                address fe80::/10
+            }
+        }
+        rule 9090 {
             action drop
             description "drop tcp syn packets"
             protocol tcp
@@ -312,10 +320,11 @@ service {
             subnet 10.182.186.0/24 {
                 default-router 10.182.186.1
                 dns-server 10.182.186.1
-                lease 2764800
+                lease 172800
                 start 10.182.186.2 {
                     stop 10.182.186.254
                 }
+                subnet-parameters "option interface-mtu 1480;"
             }
         }
         static-arp disable
@@ -327,8 +336,6 @@ service {
             listen-on eth0
             name-server 8.8.4.4
             name-server 8.8.8.8
-            options bogus-priv
-            options domain-needed
         }
     }
     gui {
@@ -444,4 +451,7 @@ system {
         }
     }
     time-zone America/Sao_Paulo
+    traffic-analysis {
+        dpi disable
+    }
 }
