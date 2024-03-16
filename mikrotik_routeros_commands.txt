@@ -28,9 +28,10 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
-/ip dhcp-server option add code=26 name=ip-interface-mtu-option value="'1480'"
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ip-interface-mtu-option dns-server=10.175.202.1 gateway=10.175.202.1
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=4w4d name=ip-dhcp-server
+/ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
+/ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24 ntp-server=10.175.202.1
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface vlan add interface=ether8-wan mtu=1500 name=ether8-wan-vlan-600 vlan-id=600
@@ -67,7 +68,8 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
 
-/ipv6 nd set [ find default=yes ] advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
+/ipv6 nd set [ find default=yes ] disabled=yes
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
@@ -90,6 +92,8 @@
 /system ntp client servers add address=time2.google.com
 /system ntp client servers add address=time3.google.com
 /system ntp client servers add address=time4.google.com
+
+/system ntp server set enabled=yes use-local-clock=no
 
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
 /interface list member add interface=ether8-wan list=masquerade-interface-list
