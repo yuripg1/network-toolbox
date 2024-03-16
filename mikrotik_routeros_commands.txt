@@ -27,10 +27,10 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
-/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24 ntp-server=10.175.202.1
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
+/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
@@ -80,12 +80,6 @@
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=clamp-to-pmtu passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=clamp-to-pmtu out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
-
-/ip firewall service-port set sip disabled=yes
-
-/ip settings set allow-fast-path=no arp-timeout=5m rp-filter=strict tcp-syncookies=no
-
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client set enabled=yes
 /system ntp client servers add address=time1.google.com
@@ -93,7 +87,11 @@
 /system ntp client servers add address=time3.google.com
 /system ntp client servers add address=time4.google.com
 
-/system ntp server set enabled=yes use-local-clock=no
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+
+/ip firewall service-port set sip disabled=yes
+
+/ip settings set allow-fast-path=no arp-timeout=5m rp-filter=strict tcp-syncookies=no
 
 /ip address add address=192.168.15.2/24 interface=ether8-wan network=192.168.15.0
 /interface list member add interface=ether8-wan list=masquerade-interface-list
