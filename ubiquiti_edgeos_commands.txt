@@ -223,8 +223,8 @@ set system offload ipsec disable
 
 set system traffic-analysis dpi disable
 
-$ scp ./ntp_fixer.sh user925232615@10.182.186.1:/config/scripts
+$ scp ./ntp_fixer.sh user925232615@router.lan:/home/user925232615
 
-$ sudo mv /config/scripts/ntp_fixer.sh /etc/ppp/ipv6-up.d/ntp_fixer.sh
+$ sudo mv /home/user925232615/ntp_fixer.sh /etc/ppp/ipv6-up.d/ntp_fixer.sh
 $ sudo chown root:root /etc/ppp/ipv6-up.d/ntp_fixer.sh
 $ sudo chmod +x /etc/ppp/ipv6-up.d/ntp_fixer.sh
