@@ -4,7 +4,7 @@
 
 ## Router commands & configurations
 
-### Mikrotik RouterOS
+### MikroTik RouterOS
 
 * [Commands](./mikrotik_routeros_commands.txt)
 * [Configuration](./mikrotik_routeros_configuration.txt)
