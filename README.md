@@ -44,6 +44,24 @@ $ sudo ./network-toolbox-venv/bin/python3 ./ntp_test.py
 $ deactivate
 ```
 
+## Connectivity
+
+![Connectivity Test Output - Vivo](./connectivity_test_output_vivo.png)
+
+## ICMP
+
+### IPv4
+
+![ICMP Test IPv4 - Output - Vivo - 1](./icmp_test_ipv4_output_vivo_1.png)
+
+![ICMP Test IPv4 - Output - Vivo - 2](./icmp_test_ipv4_output_vivo_2.png)
+
+### IPv6
+
+![ICMP Test IPv6 - Output - Vivo - 1](./icmp_test_ipv6_output_vivo_1.png)
+
+![ICMP Test IPv6 - Output - Vivo - 2](./icmp_test_ipv6_output_vivo_2.png)
+
 ## Path MTU Discovery
 
 ### IPv4
@@ -160,7 +178,7 @@ Idle Latency:     3.76 ms   (jitter: 0.10ms, low: 3.65ms, high: 3.88ms)
   Result URL: https://www.speedtest.net/result/c/eff1c292-bd15-48fd-8d6b-ed6e01fa77e5
 ```
 
-## Other helpful online diagnostics
+## Helpful online diagnostics
 
 ### IPv6 & DNSSEC
 

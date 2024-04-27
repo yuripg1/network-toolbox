@@ -12,7 +12,8 @@
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /interface list add name=lan-interface-list
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
-/ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26
+/ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
+/ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required

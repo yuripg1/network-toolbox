@@ -28,7 +28,8 @@
 /ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
 
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
-/ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26
+/ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
+/ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server

@@ -325,6 +325,7 @@ service {
                     stop 10.182.186.254
                 }
                 subnet-parameters "option interface-mtu 1480;"
+                subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }
         static-arp disable
@@ -336,6 +337,8 @@ service {
             listen-on eth0
             name-server 8.8.4.4
             name-server 8.8.8.8
+            options bogus-priv
+            options domain-needed
         }
     }
     gui {
