@@ -1,6 +1,6 @@
 ## Network diagram
 
-![Network Diagram](./network_diagram.png)
+![Network Diagram](./img/network_diagram.png)
 
 ## Router commands & configurations
 
@@ -46,23 +46,23 @@ $ deactivate
 
 ## Connectivity
 
-![Connectivity Test Output - Vivo](./connectivity_test_output_vivo.png)
+![Connectivity Test Output - Vivo](./img/connectivity_test_output_vivo.png)
 
 ## ICMP
 
 ### IPv4
 
-![ICMP Test IPv4 - Output - Vivo - 1](./icmp_test_ipv4_output_vivo_1.png)
+![ICMP Test IPv4 - Output - Vivo - 1](./img/icmp_test_ipv4_output_vivo_1.png)
 
-![ICMP Test IPv4 - Output - Vivo - 2](./icmp_test_ipv4_output_vivo_2.png)
+![ICMP Test IPv4 - Output - Vivo - 2](./img/icmp_test_ipv4_output_vivo_2.png)
 
 ### IPv6
 
-![ICMP Test IPv6 - Output - Vivo - 1](./icmp_test_ipv6_output_vivo_1.png)
+![ICMP Test IPv6 - Output - Vivo - 1](./img/icmp_test_ipv6_output_vivo_1.png)
 
-![ICMP Test IPv6 - Output - Vivo - 2](./icmp_test_ipv6_output_vivo_2.png)
+![ICMP Test IPv6 - Output - Vivo - 2](./img/icmp_test_ipv6_output_vivo_2.png)
 
-## Path MTU Discovery
+## Ping
 
 ### IPv4
 
