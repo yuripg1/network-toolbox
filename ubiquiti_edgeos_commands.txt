@@ -5,22 +5,23 @@ delete system login user ubnt
 
 delete interfaces ethernet eth1 address
 delete interfaces switch switch0 mtu
-set interfaces ethernet eth0 description eth0-lan
-set interfaces ethernet eth0 mac D2:21:F9:DD:C8:50
+set interfaces ethernet eth0 description eth0-wan
+set interfaces ethernet eth0 mac D2:21:F9:48:20:D2
 set interfaces ethernet eth0 mtu 1500
-set interfaces ethernet eth1 disable
+set interfaces ethernet eth1 description eth1-lan
+set interfaces ethernet eth1 mac D2:21:F9:DD:C8:50
 set interfaces ethernet eth1 mtu 1500
 set interfaces ethernet eth2 disable
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth3 disable
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 description eth4-wan
-set interfaces ethernet eth4 mac D2:21:F9:48:20:D2
+set interfaces ethernet eth4 disable
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
+set interfaces ethernet eth1 address 10.182.186.1/24
+
 delete interfaces ethernet eth0 address
-set interfaces ethernet eth0 address 10.182.186.1/24
 
 set firewall name WAN_IN default-action drop
 set firewall name WAN_IN rule 3333 action accept
@@ -60,15 +61,15 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1480;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
 
-set interfaces ethernet eth4 vif 600 description eth4-wan-vif600
-set interfaces ethernet eth4 vif 600 pppoe 0 default-route force
-set interfaces ethernet eth4 vif 600 pppoe 0 description eth4-wan-vif600-pppoe0
-set interfaces ethernet eth4 vif 600 pppoe 0 firewall in name WAN_IN
-set interfaces ethernet eth4 vif 600 pppoe 0 firewall local name WAN_LOCAL
-set interfaces ethernet eth4 vif 600 pppoe 0 mtu 1480
-set interfaces ethernet eth4 vif 600 pppoe 0 name-server none
-set interfaces ethernet eth4 vif 600 pppoe 0 password cliente
-set interfaces ethernet eth4 vif 600 pppoe 0 user-id cliente@cliente
+set interfaces ethernet eth0 vif 600 description eth0-wan-vlan-600
+set interfaces ethernet eth0 vif 600 pppoe 0 default-route force
+set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vlan-600-pppoe
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1480
+set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
+set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
+set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 
 set service nat rule 6250 outbound-interface pppoe0
 set service nat rule 6250 outside-address port 49152-65535
@@ -82,7 +83,7 @@ set service nat rule 7500 type masquerade
 set firewall options mss-clamp interface-type pppoe
 set firewall options mss-clamp mss 1440
 
-set service dns forwarding listen-on eth0
+set service dns forwarding listen-on eth1
 set service dns forwarding name-server 8.8.4.4
 set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options bogus-priv
@@ -154,26 +155,26 @@ set firewall ipv6-name WANv6_LOCAL rule 9090 description "drop tcp syn packets"
 set firewall ipv6-name WANv6_LOCAL rule 9090 protocol tcp
 set firewall ipv6-name WANv6_LOCAL rule 9090 tcp flags SYN
 
-set interfaces ethernet eth0 ipv6 dup-addr-detect-transmits 1
-set interfaces ethernet eth0 ipv6 router-advert cur-hop-limit 64
-set interfaces ethernet eth0 ipv6 router-advert default-preference high
-set interfaces ethernet eth0 ipv6 router-advert link-mtu 1480
-set interfaces ethernet eth0 ipv6 router-advert managed-flag false
-set interfaces ethernet eth0 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
-set interfaces ethernet eth0 ipv6 router-advert other-config-flag false
-set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 autonomous-flag true
-set interfaces ethernet eth0 ipv6 router-advert prefix ::/64 on-link-flag true
-set interfaces ethernet eth0 ipv6 router-advert send-advert true
+set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
+set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
+set interfaces ethernet eth1 ipv6 router-advert default-preference high
+set interfaces ethernet eth1 ipv6 router-advert link-mtu 1480
+set interfaces ethernet eth1 ipv6 router-advert managed-flag false
+set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
+set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
+set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
+set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
+set interfaces ethernet eth1 ipv6 router-advert send-advert true
 
-set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth0 host-address ::1190:1cd9:750e:8422
-set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
-set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd prefix-only
-set interfaces ethernet eth4 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
-set interfaces ethernet eth4 vif 600 pppoe 0 firewall in ipv6-name WANv6_IN
-set interfaces ethernet eth4 vif 600 pppoe 0 firewall local ipv6-name WANv6_LOCAL
-set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
-set interfaces ethernet eth4 vif 600 pppoe 0 ipv6 enable
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth1 host-address ::1190:1cd9:750e:8422
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall in ipv6-name WANv6_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall local ipv6-name WANv6_LOCAL
+set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
+set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 
 set firewall options mss-clamp6 interface-type pppoe
 set firewall options mss-clamp6 mss 1420
@@ -200,11 +201,11 @@ set system conntrack timeout udp stream 180
 
 set system conntrack modules sip disable
 
-set firewall source-validation strict
+set firewall source-validation disable
 set firewall syn-cookies disable
 
-set interfaces ethernet eth4 address 192.168.15.2/24
-set service nat rule 8750 outbound-interface eth4
+set interfaces ethernet eth0 address 192.168.15.2/24
+set service nat rule 8750 outbound-interface eth0
 set service nat rule 8750 type masquerade
 
 set system static-host-mapping host-name router.lan inet 10.182.186.1

@@ -207,75 +207,26 @@ firewall {
     }
     receive-redirects disable
     send-redirects enable
-    source-validation strict
+    source-validation disable
     syn-cookies disable
 }
 interfaces {
     ethernet eth0 {
-        address 10.182.186.1/24
-        description eth0-lan
-        duplex auto
-        ipv6 {
-            dup-addr-detect-transmits 1
-            router-advert {
-                cur-hop-limit 64
-                default-preference high
-                link-mtu 1480
-                managed-flag false
-                max-interval 600
-                name-server fe80::d021:f9ff:fedd:c850
-                other-config-flag false
-                prefix ::/64 {
-                    autonomous-flag true
-                    on-link-flag true
-                    valid-lifetime 2592000
-                }
-                reachable-time 0
-                retrans-timer 0
-                send-advert true
-            }
-        }
-        mac D2:21:F9:DD:C8:50
-        mtu 1500
-        speed auto
-    }
-    ethernet eth1 {
-        disable
-        duplex auto
-        mtu 1500
-        speed auto
-    }
-    ethernet eth2 {
-        disable
-        duplex auto
-        mtu 1500
-        speed auto
-    }
-    ethernet eth3 {
-        disable
-        duplex auto
-        mtu 1500
-        speed auto
-    }
-    ethernet eth4 {
         address 192.168.15.2/24
-        description eth4-wan
+        description eth0-wan
         duplex auto
         mac D2:21:F9:48:20:D2
         mtu 1500
-        poe {
-            output off
-        }
         speed auto
         vif 600 {
-            description eth4-wan-vif600
+            description eth0-wan-vlan-600
             pppoe 0 {
                 default-route force
-                description eth4-wan-vif600-pppoe0
+                description eth0-wan-vlan-600-pppoe
                 dhcpv6-pd {
                     no-dns
                     pd 0 {
-                        interface eth0 {
+                        interface eth1 {
                             host-address ::1190:1cd9:750e:8422
                         }
                         prefix-length /64
@@ -304,6 +255,55 @@ interfaces {
                 user-id cliente@cliente
             }
         }
+    }
+    ethernet eth1 {
+        address 10.182.186.1/24
+        description eth1-lan
+        duplex auto
+        ipv6 {
+            dup-addr-detect-transmits 1
+            router-advert {
+                cur-hop-limit 64
+                default-preference high
+                link-mtu 1480
+                managed-flag false
+                max-interval 600
+                name-server fe80::d021:f9ff:fedd:c850
+                other-config-flag false
+                prefix ::/64 {
+                    autonomous-flag true
+                    on-link-flag true
+                    valid-lifetime 2592000
+                }
+                reachable-time 0
+                retrans-timer 0
+                send-advert true
+            }
+        }
+        mac D2:21:F9:DD:C8:50
+        mtu 1500
+        speed auto
+    }
+    ethernet eth2 {
+        disable
+        duplex auto
+        mtu 1500
+        speed auto
+    }
+    ethernet eth3 {
+        disable
+        duplex auto
+        mtu 1500
+        speed auto
+    }
+    ethernet eth4 {
+        disable
+        duplex auto
+        mtu 1500
+        poe {
+            output off
+        }
+        speed auto
     }
     loopback lo {
     }
@@ -334,7 +334,7 @@ service {
     dns {
         forwarding {
             cache-size 10000
-            listen-on eth0
+            listen-on eth1
             name-server 8.8.4.4
             name-server 8.8.8.8
             options bogus-priv
@@ -363,7 +363,7 @@ service {
             type masquerade
         }
         rule 8750 {
-            outbound-interface eth4
+            outbound-interface eth0
             type masquerade
         }
     }
