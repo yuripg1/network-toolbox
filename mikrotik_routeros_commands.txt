@@ -2,15 +2,15 @@
 
 /user remove admin
 
-/interface ethernet set [ find default-name=ether1 ] l2mtu=1504 mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
-/interface ethernet set [ find default-name=ether2 ] l2mtu=1504 mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
-/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 mtu=1500
-/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 mtu=1500
+/interface ethernet set [ find default-name=ether1 ] l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
+/interface ethernet set [ find default-name=ether2 ] l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
+/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
@@ -36,7 +36,7 @@
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
 /interface vlan add interface=ether1-wan mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
@@ -88,11 +88,11 @@
 /system ntp client servers add address=time3.google.com
 /system ntp client servers add address=time4.google.com
 
-/ip firewall connection tracking set enabled=auto generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
 /ip firewall service-port set sip disabled=yes
 
-/ip settings set allow-fast-path=yes arp-timeout=5m rp-filter=no tcp-syncookies=no
+/ip settings set allow-fast-path=no arp-timeout=5m rp-filter=no tcp-syncookies=no
 
 /ip address add address=192.168.15.2/24 interface=ether1-wan network=192.168.15.0
 /interface list member add interface=ether1-wan list=masquerade-interface-list
@@ -122,3 +122,5 @@
 /tool graphing resource add store-on-disk=no
 
 /system logging set 0 topics=info,!dhcp
+
+/interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
