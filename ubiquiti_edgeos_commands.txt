@@ -23,35 +23,35 @@ set interfaces ethernet eth1 address 10.182.186.1/24
 
 delete interfaces ethernet eth0 address
 
-set firewall name WAN_IN default-action drop
-set firewall name WAN_IN rule 3333 action accept
-set firewall name WAN_IN rule 3333 description "accept established,related packets"
-set firewall name WAN_IN rule 3333 state established enable
-set firewall name WAN_IN rule 3333 state related enable
-set firewall name WAN_IN rule 6666 action drop
-set firewall name WAN_IN rule 6666 description "drop invalid packets"
-set firewall name WAN_IN rule 6666 state invalid enable
-set firewall name WAN_LOCAL default-action drop
-set firewall name WAN_LOCAL rule 1666 action accept
-set firewall name WAN_LOCAL rule 1666 description "accept established,related packets"
-set firewall name WAN_LOCAL rule 1666 state established enable
-set firewall name WAN_LOCAL rule 1666 state related enable
-set firewall name WAN_LOCAL rule 3333 action drop
-set firewall name WAN_LOCAL rule 3333 description "drop invalid packets"
-set firewall name WAN_LOCAL rule 3333 state invalid enable
-set firewall name WAN_LOCAL rule 5000 action accept
-set firewall name WAN_LOCAL rule 5000 description "accept icmp echo request packets"
-set firewall name WAN_LOCAL rule 5000 icmp code 0
-set firewall name WAN_LOCAL rule 5000 icmp type 8
-set firewall name WAN_LOCAL rule 5000 protocol icmp
-set firewall name WAN_LOCAL rule 6666 action drop
-set firewall name WAN_LOCAL rule 6666 description "drop remaining icmp packets"
-set firewall name WAN_LOCAL rule 6666 log enable
-set firewall name WAN_LOCAL rule 6666 protocol icmp
-set firewall name WAN_LOCAL rule 8333 action drop
-set firewall name WAN_LOCAL rule 8333 description "drop tcp syn packets"
-set firewall name WAN_LOCAL rule 8333 protocol tcp
-set firewall name WAN_LOCAL rule 8333 tcp flags SYN
+set firewall name FORWARD_WAN_IN default-action drop
+set firewall name FORWARD_WAN_IN rule 3333 action accept
+set firewall name FORWARD_WAN_IN rule 3333 description "accept established,related packets"
+set firewall name FORWARD_WAN_IN rule 3333 state established enable
+set firewall name FORWARD_WAN_IN rule 3333 state related enable
+set firewall name FORWARD_WAN_IN rule 6666 action drop
+set firewall name FORWARD_WAN_IN rule 6666 description "drop invalid packets"
+set firewall name FORWARD_WAN_IN rule 6666 state invalid enable
+set firewall name INPUT_WAN_IN default-action drop
+set firewall name INPUT_WAN_IN rule 1666 action accept
+set firewall name INPUT_WAN_IN rule 1666 description "accept established,related packets"
+set firewall name INPUT_WAN_IN rule 1666 state established enable
+set firewall name INPUT_WAN_IN rule 1666 state related enable
+set firewall name INPUT_WAN_IN rule 3333 action drop
+set firewall name INPUT_WAN_IN rule 3333 description "drop invalid packets"
+set firewall name INPUT_WAN_IN rule 3333 state invalid enable
+set firewall name INPUT_WAN_IN rule 5000 action accept
+set firewall name INPUT_WAN_IN rule 5000 description "accept icmp echo request packets"
+set firewall name INPUT_WAN_IN rule 5000 icmp code 0
+set firewall name INPUT_WAN_IN rule 5000 icmp type 8
+set firewall name INPUT_WAN_IN rule 5000 protocol icmp
+set firewall name INPUT_WAN_IN rule 6666 action drop
+set firewall name INPUT_WAN_IN rule 6666 description "drop remaining icmp packets"
+set firewall name INPUT_WAN_IN rule 6666 log enable
+set firewall name INPUT_WAN_IN rule 6666 protocol icmp
+set firewall name INPUT_WAN_IN rule 8333 action drop
+set firewall name INPUT_WAN_IN rule 8333 description "drop tcp syn packets"
+set firewall name INPUT_WAN_IN rule 8333 protocol tcp
+set firewall name INPUT_WAN_IN rule 8333 tcp flags SYN
 
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
@@ -61,11 +61,11 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1480;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
 
-set interfaces ethernet eth0 vif 600 description eth0-wan-vlan-600
+set interfaces ethernet eth0 vif 600 description eth0-wan-vif-600
 set interfaces ethernet eth0 vif 600 pppoe 0 default-route force
-set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vlan-600-pppoe
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vif-600-pppoe
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name FORWARD_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name INPUT_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1480
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
@@ -80,80 +80,77 @@ set service nat rule 6250 type masquerade
 set service nat rule 7500 outbound-interface pppoe0
 set service nat rule 7500 type masquerade
 
-set firewall options mss-clamp interface-type pppoe
-set firewall options mss-clamp mss 1440
-
 set service dns forwarding listen-on eth1
 set service dns forwarding name-server 8.8.4.4
 set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
-set firewall ipv6-name WANv6_IN default-action drop
-set firewall ipv6-name WANv6_IN rule 1666 action accept
-set firewall ipv6-name WANv6_IN rule 1666 description "accept established,related packets"
-set firewall ipv6-name WANv6_IN rule 1666 state established enable
-set firewall ipv6-name WANv6_IN rule 1666 state related enable
-set firewall ipv6-name WANv6_IN rule 3333 action drop
-set firewall ipv6-name WANv6_IN rule 3333 description "drop invalid packets"
-set firewall ipv6-name WANv6_IN rule 3333 state invalid enable
-set firewall ipv6-name WANv6_IN rule 5000 action accept
-set firewall ipv6-name WANv6_IN rule 5000 description "accept icmpv6 echo request packets"
-set firewall ipv6-name WANv6_IN rule 5000 icmpv6 type 128/0
-set firewall ipv6-name WANv6_IN rule 5000 protocol icmpv6
-set firewall ipv6-name WANv6_IN rule 6666 action drop
-set firewall ipv6-name WANv6_IN rule 6666 description "drop remaining icmpv6 packets"
-set firewall ipv6-name WANv6_IN rule 6666 log enable
-set firewall ipv6-name WANv6_IN rule 6666 protocol icmpv6
-set firewall ipv6-name WANv6_IN rule 8333 action drop
-set firewall ipv6-name WANv6_IN rule 8333 description "drop tcp syn packets"
-set firewall ipv6-name WANv6_IN rule 8333 protocol tcp
-set firewall ipv6-name WANv6_IN rule 8333 tcp flags SYN
-set firewall ipv6-name WANv6_LOCAL default-action drop
-set firewall ipv6-name WANv6_LOCAL rule 909 action accept
-set firewall ipv6-name WANv6_LOCAL rule 909 description "accept established,related packets"
-set firewall ipv6-name WANv6_LOCAL rule 909 state established enable
-set firewall ipv6-name WANv6_LOCAL rule 909 state related enable
-set firewall ipv6-name WANv6_LOCAL rule 1818 action drop
-set firewall ipv6-name WANv6_LOCAL rule 1818 description "drop invalid packets"
-set firewall ipv6-name WANv6_LOCAL rule 1818 state invalid enable
-set firewall ipv6-name WANv6_LOCAL rule 2727 action accept
-set firewall ipv6-name WANv6_LOCAL rule 2727 description "accept icmpv6 echo request packets"
-set firewall ipv6-name WANv6_LOCAL rule 2727 icmpv6 type 128/0
-set firewall ipv6-name WANv6_LOCAL rule 2727 protocol icmpv6
-set firewall ipv6-name WANv6_LOCAL rule 3636 action accept
-set firewall ipv6-name WANv6_LOCAL rule 3636 description "accept link-local icmpv6 router solicitation packets"
-set firewall ipv6-name WANv6_LOCAL rule 3636 icmpv6 type 133/0
-set firewall ipv6-name WANv6_LOCAL rule 3636 protocol icmpv6
-set firewall ipv6-name WANv6_LOCAL rule 3636 source address fe80::/10
-set firewall ipv6-name WANv6_LOCAL rule 4545 action accept
-set firewall ipv6-name WANv6_LOCAL rule 4545 description "accept link-local icmpv6 router advertisement packets"
-set firewall ipv6-name WANv6_LOCAL rule 4545 icmpv6 type 134/0
-set firewall ipv6-name WANv6_LOCAL rule 4545 protocol icmpv6
-set firewall ipv6-name WANv6_LOCAL rule 4545 source address fe80::/10
-set firewall ipv6-name WANv6_LOCAL rule 5454 action accept
-set firewall ipv6-name WANv6_LOCAL rule 5454 description "accept link-local udp dhcpv6 packets"
-set firewall ipv6-name WANv6_LOCAL rule 5454 destination port 546
-set firewall ipv6-name WANv6_LOCAL rule 5454 protocol udp
-set firewall ipv6-name WANv6_LOCAL rule 5454 source address fe80::/10
-set firewall ipv6-name WANv6_LOCAL rule 5454 source port 547
-set firewall ipv6-name WANv6_LOCAL rule 6363 action drop
-set firewall ipv6-name WANv6_LOCAL rule 6363 description "drop remaining icmpv6 packets"
-set firewall ipv6-name WANv6_LOCAL rule 6363 log enable
-set firewall ipv6-name WANv6_LOCAL rule 6363 protocol icmpv6
-set firewall ipv6-name WANv6_LOCAL rule 7272 action drop
-set firewall ipv6-name WANv6_LOCAL rule 7272 description "drop remaining udp dhcpv6 packets"
-set firewall ipv6-name WANv6_LOCAL rule 7272 destination port 546
-set firewall ipv6-name WANv6_LOCAL rule 7272 log enable
-set firewall ipv6-name WANv6_LOCAL rule 7272 protocol udp
-set firewall ipv6-name WANv6_LOCAL rule 8181 action drop
-set firewall ipv6-name WANv6_LOCAL rule 8181 description "drop remaining link-local packets"
-set firewall ipv6-name WANv6_LOCAL rule 8181 log enable
-set firewall ipv6-name WANv6_LOCAL rule 8181 source address fe80::/10
-set firewall ipv6-name WANv6_LOCAL rule 9090 action drop
-set firewall ipv6-name WANv6_LOCAL rule 9090 description "drop tcp syn packets"
-set firewall ipv6-name WANv6_LOCAL rule 9090 protocol tcp
-set firewall ipv6-name WANv6_LOCAL rule 9090 tcp flags SYN
+set firewall ipv6-name IPV6_FORWARD_WAN_IN default-action drop
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 1666 action accept
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 1666 description "accept established,related packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 1666 state established enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 1666 state related enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 3333 action drop
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 3333 description "drop invalid packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 3333 state invalid enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 action accept
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 icmpv6 type 128/0
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 protocol icmpv6
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6666 action drop
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6666 description "drop remaining icmpv6 packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6666 log enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6666 protocol icmpv6
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8333 action drop
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8333 description "drop tcp syn packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8333 protocol tcp
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8333 tcp flags SYN
+set firewall ipv6-name IPV6_INPUT_WAN_IN default-action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 description "accept established,related packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 state established enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 state related enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 description "drop invalid packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 state invalid enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 icmpv6 type 128/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 description "accept link-local icmpv6 router solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 icmpv6 type 133/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 description "accept link-local icmpv6 router advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 icmpv6 type 134/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 description "accept link-local udp dhcpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 destination port 546
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 source port 547
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 description "drop remaining icmpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 log enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 description "drop remaining udp dhcpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 destination port 546
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 log enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 description "drop remaining link-local packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 log enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 description "drop tcp syn packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 protocol tcp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 tcp flags SYN
 
 set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
@@ -171,13 +168,10 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth1 host-
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall in ipv6-name WANv6_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall local ipv6-name WANv6_LOCAL
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall in ipv6-name IPV6_FORWARD_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall local ipv6-name IPV6_INPUT_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
-
-set firewall options mss-clamp6 interface-type pppoe
-set firewall options mss-clamp6 mss 1420
 
 delete system ntp server
 set system time-zone America/Sao_Paulo
@@ -227,8 +221,24 @@ set system offload ipsec disable
 
 set system traffic-analysis dpi disable
 
-$ scp ./ntp_fixer.sh user925232615@router.lan:/home/user925232615
+$ scp ./ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
+$ scp ./ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
+$ scp ./ipv4_mangle_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./ipv6_mangle_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
 
-$ sudo mv /home/user925232615/ntp_fixer.sh /etc/ppp/ipv6-up.d/ntp_fixer.sh
-$ sudo chown root:root /etc/ppp/ipv6-up.d/ntp_fixer.sh
-$ sudo chmod +x /etc/ppp/ipv6-up.d/ntp_fixer.sh
+$ sudo mv /home/user925232615/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv4_nat_lan.sh
+$ sudo mv /home/user925232615/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh
+$ sudo mv /home/user925232615/ipv4_mangle_wan.sh /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
+$ sudo mv /home/user925232615/ipv6_mangle_wan.sh /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
+$ sudo mv /home/user925232615/ipv6_nat_wan.sh /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
+$ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh
+$ sudo chown root:root /config/scripts/post-config.d/ipv6_nat_lan.sh
+$ sudo chown root:root /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
+$ sudo chown root:root /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
+$ sudo chown root:root /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
+$ sudo chmod +x /config/scripts/post-config.d/ipv4_nat_lan.sh
+$ sudo chmod +x /config/scripts/post-config.d/ipv6_nat_lan.sh
+$ sudo chmod +x /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
+$ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
+$ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh

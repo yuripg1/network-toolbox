@@ -15,17 +15,17 @@
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
 /interface list add name=wan-interface-list
-/ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan
-/ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan
-/ip firewall filter add action=accept chain=ip-forward-wan comment="accept established,related packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ip-forward-wan comment="drop invalid packets" connection-state=invalid
-/ip firewall filter add action=drop chain=ip-forward-wan comment="drop remaining packets"
-/ip firewall filter add action=accept chain=ip-input-wan comment="accept established,related packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ip-input-wan comment="drop invalid packets" connection-state=invalid
-/ip firewall filter add action=accept chain=ip-input-wan comment="accept icmp echo request packets" icmp-options=8:0 protocol=icmp
-/ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining icmp packets" log=yes protocol=icmp
-/ip firewall filter add action=drop chain=ip-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
-/ip firewall filter add action=drop chain=ip-input-wan comment="drop remaining packets"
+/ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
+/ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan-in
+/ip firewall filter add action=accept chain=ip-forward-wan-in comment="accept established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop remaining packets"
+/ip firewall filter add action=accept chain=ip-input-wan-in comment="accept established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=accept chain=ip-input-wan-in comment="accept icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining icmp packets" log=yes protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
@@ -44,30 +44,36 @@
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 
-/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
-/ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
+/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
+/ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
+
+/interface list add name=lan-interface-list
+/interface list member add interface=ether2-lan list=lan-interface-list
+/ip firewall address-list add address=10.175.202.1/32 list=ip-dns-server-address-list
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 
 /ip dns set allow-remote-requests=yes max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan
-/ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan
-/ipv6 firewall filter add action=accept chain=ipv6-forward-wan comment="accept established,related packets" connection-state=established,related
-/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-forward-wan comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
-/ipv6 firewall filter add action=drop chain=ipv6-forward-wan comment="drop remaining packets"
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept established,related packets" connection-state=established,related
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept link-local icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan comment="accept link-local udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining udp dhcpv6 packets" dst-port=546 log=yes protocol=udp
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining link-local packets" log=yes src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan comment="drop remaining packets"
+/ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan-in
+/ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan-in
+/ipv6 firewall filter add action=accept chain=ipv6-forward-wan-in comment="accept established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
+/ipv6 firewall filter add action=accept chain=ipv6-forward-wan-in comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept link-local icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept link-local udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining udp dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining link-local packets" log=yes src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
@@ -78,8 +84,12 @@
 
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 
-/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
-/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
+/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
+/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
+
+/ipv6 firewall address-list add address=fe80::48a9:8aff:fe40:5a95/128 list=ipv6-dns-server-address-list
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client set enabled=yes
@@ -107,8 +117,6 @@
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
 
-/interface list add name=lan-interface-list
-/interface list member add interface=ether2-lan list=lan-interface-list
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list
 /tool mac-server set allowed-interface-list=lan-interface-list
 /tool mac-server mac-winbox set allowed-interface-list=lan-interface-list

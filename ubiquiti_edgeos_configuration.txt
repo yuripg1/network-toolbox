@@ -1,7 +1,7 @@
 firewall {
     all-ping enable
     broadcast-ping disable
-    ipv6-name WANv6_IN {
+    ipv6-name IPV6_FORWARD_WAN_IN {
         default-action drop
         rule 1666 {
             action accept
@@ -41,7 +41,7 @@ firewall {
             }
         }
     }
-    ipv6-name WANv6_LOCAL {
+    ipv6-name IPV6_INPUT_WAN_IN {
         default-action drop
         rule 909 {
             action accept
@@ -136,7 +136,7 @@ firewall {
     ipv6-src-route disable
     ip-src-route disable
     log-martians enable
-    name WAN_IN {
+    name FORWARD_WAN_IN {
         default-action drop
         rule 3333 {
             action accept
@@ -154,7 +154,7 @@ firewall {
             }
         }
     }
-    name WAN_LOCAL {
+    name INPUT_WAN_IN {
         default-action drop
         rule 1666 {
             action accept
@@ -195,16 +195,6 @@ firewall {
             }
         }
     }
-    options {
-        mss-clamp {
-            interface-type pppoe
-            mss 1440
-        }
-        mss-clamp6 {
-            interface-type pppoe
-            mss 1420
-        }
-    }
     receive-redirects disable
     send-redirects enable
     source-validation disable
@@ -219,10 +209,10 @@ interfaces {
         mtu 1500
         speed auto
         vif 600 {
-            description eth0-wan-vlan-600
+            description eth0-wan-vif-600
             pppoe 0 {
                 default-route force
-                description eth0-wan-vlan-600-pppoe
+                description eth0-wan-vif-600-pppoe
                 dhcpv6-pd {
                     no-dns
                     pd 0 {
@@ -236,12 +226,12 @@ interfaces {
                 }
                 firewall {
                     in {
-                        ipv6-name WANv6_IN
-                        name WAN_IN
+                        ipv6-name IPV6_FORWARD_WAN_IN
+                        name FORWARD_WAN_IN
                     }
                     local {
-                        ipv6-name WANv6_LOCAL
-                        name WAN_LOCAL
+                        ipv6-name IPV6_INPUT_WAN_IN
+                        name INPUT_WAN_IN
                     }
                 }
                 ipv6 {
