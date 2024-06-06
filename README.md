@@ -13,7 +13,11 @@
 
 * [Commands](./ubiquiti_edgeos_commands.txt)
 * [Configuration](./ubiquiti_edgeos_configuration.txt)
-* [NTP fixer](./ntp_fixer.sh)
+* [IPv4 NAT rules (LAN)](./ipv4_nat_lan.sh)
+* [IPv6 NAT rules (LAN)](./ipv6_nat_lan.sh)
+* [IPv4 Mangle rules (WAN)](./ipv4_mangle_wan.sh)
+* [IPv6 Mangle rules (WAN)](./ipv6_mangle_wan.sh)
+* [IPv6 NAT rules (WAN)](./ipv6_nat_wan.sh)
 
 ## NTP test script
 
