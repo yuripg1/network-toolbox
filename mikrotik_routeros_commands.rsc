@@ -2,8 +2,8 @@
 
 /user remove admin
 
-/interface ethernet set [ find default-name=ether1 ] l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
-/interface ethernet set [ find default-name=ether2 ] l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
+/interface ethernet set [ find default-name=ether1 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
+/interface ethernet set [ find default-name=ether2 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
 /interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
@@ -15,6 +15,12 @@
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
 /interface list add name=wan-interface-list
+/interface list add include=wan-interface-list name=masquerade-interface-list
+/interface list add name=lan-interface-list
+/interface list member add interface=ether2-lan list=lan-interface-list
+
+/ip firewall address-list add address=10.175.202.1/32 list=ip-dns-server-address-list
+
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan-in
 /ip firewall filter add action=accept chain=ip-forward-wan-in comment="accept established,related packets" connection-state=established,related
@@ -39,23 +45,20 @@
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
-
-/interface list add include=wan-interface-list name=masquerade-interface-list
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
-
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
 
-/interface list add name=lan-interface-list
-/interface list member add interface=ether2-lan list=lan-interface-list
-/ip firewall address-list add address=10.175.202.1/32 list=ip-dns-server-address-list
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
+
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 
 /ip dns set allow-remote-requests=yes max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
+/ipv6 firewall address-list add address=fe80::48a9:8aff:fe40:5a95/128 list=ipv6-dns-server-address-list
+
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-forward-wan-in
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan-in
 /ipv6 firewall filter add action=accept chain=ipv6-forward-wan-in comment="accept established,related packets" connection-state=established,related
@@ -82,14 +85,13 @@
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool prefix-hint=::/64 pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
-/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
-
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
 
-/ipv6 firewall address-list add address=fe80::48a9:8aff:fe40:5a95/128 list=ipv6-dns-server-address-list
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
+
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client set enabled=yes
@@ -113,9 +115,14 @@
 
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set ssh disabled=yes
+/ip service set www disabled=no port=80
+/ip service set ssh disabled=no port=22
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
+/ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
+
+/ip ssh set strong-crypto=yes
 
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list
 /tool mac-server set allowed-interface-list=lan-interface-list

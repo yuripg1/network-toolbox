@@ -1,5 +1,5 @@
-/interface ethernet set [ find default-name=ether1 ] l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
-/interface ethernet set [ find default-name=ether2 ] l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
+/interface ethernet set [ find default-name=ether1 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
+/interface ethernet set [ find default-name=ether2 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
 /interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
@@ -22,8 +22,8 @@
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list
 /ip settings set allow-fast-path=no arp-timeout=5m rp-filter=no tcp-syncookies=no
-/interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 /interface list member add interface=ether2-lan list=lan-interface-list
+/interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 /interface list member add interface=ether1-wan list=masquerade-interface-list
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 /ip address add address=192.168.15.2/24 interface=ether1-wan network=192.168.15.0
@@ -44,16 +44,20 @@
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 /ip firewall service-port set sip disabled=yes
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set ssh disabled=yes
+/ip service set www disabled=no port=80
+/ip service set ssh disabled=no port=22
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
+/ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
+/ip ssh set strong-crypto=yes
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool prefix-hint=::/64 pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
@@ -78,9 +82,9 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
-/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
