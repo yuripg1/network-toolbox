@@ -2,15 +2,15 @@
 
 /user remove admin
 
-/interface ethernet set [ find default-name=ether1 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
-/interface ethernet set [ find default-name=ether2 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
-/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether1 ] arp-timeout=5m disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
+/interface ethernet set [ find default-name=ether2 ] arp-timeout=5m disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
+/interface ethernet set [ find default-name=ether3 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether4 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether5 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether6 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether7 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether8 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
@@ -41,7 +41,7 @@
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
-/interface vlan add interface=ether1-wan mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
+/interface vlan add arp-timeout=5m interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
