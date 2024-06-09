@@ -76,7 +76,6 @@ set service nat rule 6250 outside-address port 49152-65535
 set service nat rule 6250 protocol udp
 set service nat rule 6250 source port 123
 set service nat rule 6250 type masquerade
-
 set service nat rule 7500 outbound-interface pppoe0
 set service nat rule 7500 type masquerade
 
