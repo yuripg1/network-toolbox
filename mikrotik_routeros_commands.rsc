@@ -38,11 +38,11 @@
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool disabled=yes authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
-/ppp profile add change-tcp-mss=no name=ppp-profile use-ipv6=required
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=yes;" on-up=":local interfaceName [/interface get \$interface name]; /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=no;" use-ipv6=required
 /interface vlan add arp-timeout=5m interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=ppp-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1441-65535
@@ -83,7 +83,7 @@
 /ipv6 nd prefix default set autonomous=yes
 
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
-/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool prefix-hint=::/64 pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
+/ipv6 dhcp-client add add-default-route=yes disabled=yes default-route-distance=1 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool prefix-hint=::/64 pool-prefix-length=64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn,!rst tcp-mss=1421-65535
@@ -138,4 +138,5 @@
 
 /system logging set 0 topics=info,!dhcp
 
+/ip dhcp-server set ip-dhcp-server disabled=no
 /interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
