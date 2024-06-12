@@ -15,8 +15,8 @@
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
-/ip dhcp-server add address-pool=ip-dhcp-server-pool disabled=no authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
-/ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=yes;" on-up=":local interfaceName [/interface get \$interface name]; /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=no;" use-ipv6=required
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes disabled=no interface=ether2-lan lease-time=2d name=ip-dhcp-server
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": disconnected\"); :local dhcpv6ClientDisabled [/ipv6 dhcp-client get [find interface=\$interfaceName] disabled]; :if (\$dhcpv6ClientDisabled != true) do={ /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=yes; };" on-up=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": connected\"); :local dhcpv6ClientDisabled [/ipv6 dhcp-client get [find interface=\$interfaceName] disabled]; :if (\$dhcpv6ClientDisabled != false) do={ /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=no; };" use-ipv6=required
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /ip smb set enabled=no
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
@@ -90,7 +90,7 @@
 /ipv6 nd prefix default set autonomous=yes
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
-/system logging set 0 topics=info,!dhcp
+/system logging set 0 topics=info,!dhcp,!ppp,!pppoe
 /system note set show-at-login=no
 /system ntp client set enabled=yes
 /system ntp client servers add address=time1.google.com

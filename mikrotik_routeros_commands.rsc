@@ -38,9 +38,9 @@
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
-/ip dhcp-server add address-pool=ip-dhcp-server-pool disabled=yes authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes disabled=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
-/ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=yes;" on-up=":local interfaceName [/interface get \$interface name]; /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=no;" use-ipv6=required
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": disconnected\"); :local dhcpv6ClientDisabled [/ipv6 dhcp-client get [find interface=\$interfaceName] disabled]; :if (\$dhcpv6ClientDisabled != true) do={ /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=yes; };" on-up=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": connected\"); :local dhcpv6ClientDisabled [/ipv6 dhcp-client get [find interface=\$interfaceName] disabled]; :if (\$dhcpv6ClientDisabled != false) do={ /ipv6 dhcp-client set [find interface=\$interfaceName] disabled=no; };" use-ipv6=required
 /interface vlan add arp-timeout=5m interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
@@ -136,7 +136,7 @@
 /tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
 
-/system logging set 0 topics=info,!dhcp
+/system logging set 0 topics=info,!dhcp,!ppp,!pppoe
 
 /ip dhcp-server set ip-dhcp-server disabled=no
 /interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
