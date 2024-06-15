@@ -18,6 +18,15 @@
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes disabled=no interface=ether2-lan lease-time=2d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": disconnected\"); :foreach ipv6DhcpClient in=[/ipv6 dhcp-client find interface=\$interfaceName] do={ :local ipv6DhcpClientPoolName [/ipv6 dhcp-client get \$ipv6DhcpClient pool-name]; :foreach ipv6Address in=[/ipv6 address find from-pool=\$ipv6DhcpClientPoolName] do={ :local ipv6AddressDisabled [/ipv6 address get \$ipv6Address disabled]; :if (\$ipv6AddressDisabled != true) do={ /ipv6 address set \$ipv6Address disabled=yes; }; }; :local ipv6DhcpClientDisabled [/ipv6 dhcp-client get \$ipv6DhcpClient disabled]; :if (\$ipv6DhcpClientDisabled != true) do={ /ipv6 dhcp-client set \$ipv6DhcpClient disabled=yes; }; };" on-up=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": connected\"); :foreach ipv6DhcpClient in=[/ipv6 dhcp-client find interface=\$interfaceName] do={ :local ipv6DhcpClientDisabled [/ipv6 dhcp-client get \$ipv6DhcpClient disabled]; :if (\$ipv6DhcpClientDisabled != false) do={ /ipv6 dhcp-client set \$ipv6DhcpClient disabled=no; }; };" use-ipv6=required
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/queue interface set ether1-wan queue=ethernet-default
+/queue interface set ether2-lan queue=ethernet-default
+/queue interface set ether3 queue=ethernet-default
+/queue interface set ether4 queue=ethernet-default
+/queue interface set ether5 queue=ethernet-default
+/queue interface set ether6 queue=ethernet-default
+/queue interface set ether7 queue=ethernet-default
+/queue interface set ether8 queue=ethernet-default
+/queue interface set sfp-sfpplus1 queue=ethernet-default
 /ip smb set enabled=no
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list

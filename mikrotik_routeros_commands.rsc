@@ -11,6 +11,15 @@
 /interface ethernet set [ find default-name=ether7 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=ether8 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/queue interface set ether1-wan queue=ethernet-default
+/queue interface set ether2-lan queue=ethernet-default
+/queue interface set ether3 queue=ethernet-default
+/queue interface set ether4 queue=ethernet-default
+/queue interface set ether5 queue=ethernet-default
+/queue interface set ether6 queue=ethernet-default
+/queue interface set ether7 queue=ethernet-default
+/queue interface set ether8 queue=ethernet-default
+/queue interface set sfp-sfpplus1 queue=ethernet-default
 
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
