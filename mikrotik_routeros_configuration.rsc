@@ -38,7 +38,7 @@
 /ip address add address=192.168.15.2/24 interface=ether1-wan network=192.168.15.0
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
 /ip dns set allow-remote-requests=yes max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
-/ip dns static add address=10.175.202.1 name=router.lan ttl=5m
+/ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
 /ip firewall address-list add address=10.175.202.1/32 list=ip-dns-server-address-list
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan-in

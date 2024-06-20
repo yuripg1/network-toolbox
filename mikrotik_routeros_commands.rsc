@@ -88,7 +88,7 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes disabled=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes disabled=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
@@ -118,7 +118,7 @@
 /ip address add address=192.168.15.2/24 interface=ether1-wan network=192.168.15.0
 /interface list member add interface=ether1-wan list=masquerade-interface-list
 
-/ip dns static add address=10.175.202.1 name=router.lan ttl=5m
+/ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
 
 /system identity set name=Home-Router
 
@@ -131,13 +131,12 @@
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
 
+/ip smb set enabled=no
 /ip ssh set strong-crypto=yes
 
 /ip neighbor discovery-settings set discover-interface-list=lan-interface-list
 /tool mac-server set allowed-interface-list=lan-interface-list
 /tool mac-server mac-winbox set allowed-interface-list=lan-interface-list
-
-/ip smb set enabled=no
 
 /tool bandwidth-server set enabled=no
 
@@ -148,4 +147,5 @@
 /system logging set 0 topics=info,!dhcp,!ppp,!pppoe
 
 /ip dhcp-server set ip-dhcp-server disabled=no
+/ipv6 nd set [ find interface=ether2-lan ] disabled=no
 /interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
