@@ -72,42 +72,42 @@ $ deactivate
 
 ```
 $ ping -c 10 -D -M do -O -s 1452 -v -4 google.com
-PING  (172.217.162.206) 1452(1480) bytes of data.
-[1711214721.482567] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=1 ttl=55 (truncated)
-[1711214722.462736] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=2 ttl=55 (truncated)
-[1711214723.464793] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=3 ttl=55 (truncated)
-[1711214724.466755] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=4 ttl=55 (truncated)
-[1711214725.468685] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=5 ttl=55 (truncated)
-[1711214726.470564] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=6 ttl=55 (truncated)
-[1711214727.472524] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=7 ttl=55 (truncated)
-[1711214728.474476] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=8 ttl=55 (truncated)
-[1711214729.476343] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=9 ttl=55 (truncated)
-[1711214730.478245] 76 bytes from gru14s20-in-f14.1e100.net (172.217.162.206): icmp_seq=10 ttl=55 (truncated)
+PING  (172.217.28.14) 1452(1480) bytes of data.
+[1719075616.724296] 76 bytes from gru14s08-in-f14.1e100.net (172.217.28.14): icmp_seq=1 ttl=55 (truncated)
+[1719075617.704538] 76 bytes from gru14s08-in-f14.1e100.net (172.217.28.14): icmp_seq=2 ttl=55 (truncated)
+[1719075618.705755] 76 bytes from eze03s15-in-f14.1e100.net (172.217.28.14): icmp_seq=3 ttl=55 (truncated)
+[1719075619.708139] 76 bytes from eze03s15-in-f14.1e100.net (172.217.28.14): icmp_seq=4 ttl=55 (truncated)
+[1719075620.709549] 76 bytes from eze03s15-in-f14.1e100.net (172.217.28.14): icmp_seq=5 ttl=55 (truncated)
+[1719075621.710778] 76 bytes from gru14s08-in-f14.1e100.net (172.217.28.14): icmp_seq=6 ttl=55 (truncated)
+[1719075622.713019] 76 bytes from eze03s15-in-f14.1e100.net (172.217.28.14): icmp_seq=7 ttl=55 (truncated)
+[1719075623.714296] 76 bytes from eze03s15-in-f14.1e100.net (172.217.28.14): icmp_seq=8 ttl=55 (truncated)
+[1719075624.715639] 76 bytes from gru14s08-in-f14.1e100.net (172.217.28.14): icmp_seq=9 ttl=55 (truncated)
+[1719075625.717051] 76 bytes from eze03s15-in-f14.1e100.net (172.217.28.14): icmp_seq=10 ttl=55 (truncated)
 
 ---  ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 9017ms
-rtt min/avg/max/mdev = 23.357/23.472/23.594/0.069 ms
+10 packets transmitted, 10 received, 0% packet loss, time 9013ms
+rtt min/avg/max/mdev = 19.914/20.010/20.137/0.064 ms
 ```
 
 ### IPv6
 
 ```
 $ ping -c 10 -D -M do -O -s 1432 -v -6 google.com
-PING google.com(2800:3f0:4001:818::200e (2800:3f0:4001:818::200e)) 1432 data bytes
-[1711214752.254270] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=1 ttl=55 (truncated)
-[1711214753.256964] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=2 ttl=55 (truncated)
-[1711214754.260678] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=3 ttl=55 (truncated)
-[1711214755.259133] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=4 ttl=55 (truncated)
-[1711214756.261420] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=5 ttl=55 (truncated)
-[1711214757.264742] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=6 ttl=55 (truncated)
-[1711214758.267065] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=7 ttl=55 (truncated)
-[1711214759.270821] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=8 ttl=55 (truncated)
-[1711214760.272850] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=9 ttl=55 (truncated)
-[1711214761.268719] 76 bytes from 2800:3f0:4001:818::200e (2800:3f0:4001:818::200e): icmp_seq=10 ttl=55 (truncated)
+PING google.com(2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e)) 1432 data bytes
+[1719075637.151093] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=1 ttl=55 (truncated)
+[1719075638.152206] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=2 ttl=55 (truncated)
+[1719075639.152529] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=3 ttl=55 (truncated)
+[1719075640.156356] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=4 ttl=55 (truncated)
+[1719075641.157468] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=5 ttl=55 (truncated)
+[1719075642.159446] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=6 ttl=55 (truncated)
+[1719075643.161418] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=7 ttl=55 (truncated)
+[1719075644.163357] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=8 ttl=55 (truncated)
+[1719075645.165213] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=9 ttl=55 (truncated)
+[1719075646.166763] 76 bytes from 2800:3f0:4001:82f::200e (2800:3f0:4001:82f::200e): icmp_seq=10 ttl=55 (truncated)
 
 --- google.com ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 9015ms
-rtt min/avg/max/mdev = 27.971/28.719/33.157/1.499 ms
+10 packets transmitted, 10 received, 0% packet loss, time 9016ms
+rtt min/avg/max/mdev = 20.734/20.930/21.560/0.272 ms
 ```
 
 ## Traceroute
@@ -116,37 +116,39 @@ rtt min/avg/max/mdev = 27.971/28.719/33.157/1.499 ms
 
 ```
 $ mtr -4 --report-wide --report-cycles 100 --show-ips --aslookup google.com
-Start: 2024-03-23T14:26:28-0300
+Start: 2024-06-22T14:01:14-0300
 HOST: pc                                                           Loss%   Snt   Last   Avg  Best  Wrst StDev
-  1. AS???    _gateway (10.175.202.1)                               0.0%   100    0.6   0.5   0.3   0.7   0.1
-  2. AS18881  179.184.126.60                                        0.0%   100    2.4   2.4   2.0   3.0   0.1
-  3. AS18881  191.30.9.225.dynamic.adsl.gvt.net.br (191.30.9.225)   0.0%   100    2.6   2.7   2.3   3.2   0.2
+  1. AS???    router.lan (10.175.202.1)                             0.0%   100    0.6   0.6   0.5   0.7   0.0
+  2. AS18881  179.184.126.60                                        0.0%   100    2.4   2.5   2.2   3.7   0.3
+  3. AS18881  191.30.9.225.dynamic.adsl.gvt.net.br (191.30.9.225)   0.0%   100    2.5   2.8   2.4   3.4   0.2
   4. AS???    ???                                                  100.0   100    0.0   0.0   0.0   0.0   0.0
-  5. AS15169  72.14.194.130                                         0.0%   100   26.9  27.1  26.8  27.8   0.2
-  6. AS15169  172.253.50.119                                        0.0%   100   26.6  26.7  26.4  26.9   0.1
-  7. AS15169  66.249.94.31                                          0.0%   100   28.4  28.1  27.8  29.8   0.3
-  8. AS15169  gru14s20-in-f14.1e100.net (172.217.162.206)           0.0%   100   23.4  23.4  22.8  24.4   0.2
+  5. AS15169  72.14.194.130                                         0.0%   100   21.2  21.1  20.8  21.3   0.1
+  6. AS15169  172.253.50.119                                        1.0%   100   21.2  21.4  21.0  24.7   0.7
+  7. AS15169  216.239.48.123                                        0.0%   100   21.6  22.0  21.3  44.6   2.3
+  8. AS15169  eze03s15-in-f14.1e100.net (172.217.28.14)             0.0%   100   19.9  19.9  19.8  20.1   0.1
 ```
 
 ### IPv6
 
 ```
 $ mtr -6 --report-wide --report-cycles 100 --show-ips --aslookup google.com
-Start: 2024-03-23T14:28:28-0300
+Start: 2024-06-22T14:03:11-0300
 HOST: pc                                              Loss%   Snt   Last   Avg  Best  Wrst StDev
-  1. AS18881  2804:7f4:c180:c45d:72c7:90fa:ba4d:9e56   0.0%   100    0.5   0.5   0.3   0.8   0.1
-  2. AS18881  2804:7f4:2000:1::bf                      0.0%   100    3.2   3.3   2.9   4.1   0.2
-  3. AS18881  2804:7f4:2000:1000::8bd                 15.0%   100    3.6   3.5   3.2   4.3   0.2
-  4. AS???    2001:12e0:100:3024:a002:3024:a009:2      0.0%   100    3.4   3.3   2.9   5.1   0.2
-  5. AS???    2001:12e0:100:3004:a002:3024:a005:16     0.0%   100    3.1   3.4   3.1   3.9   0.1
-  6. AS???    2001:12e0:100:3019:a002:3004:a002:10     4.0%   100   21.7  21.7  21.5  22.1   0.1
-  7. AS???    2001:12e0:100:1016:a002:3019:a002:2     17.0%   100   26.8  26.7  26.4  27.1   0.1
-  8. AS???    2001:12e0:100:1017:a001:1016:a002:2a    81.0%   100   24.1  24.4  24.1  25.1   0.2
-  9. AS15169  2001:4860:1:1::d84                      20.0%   100   29.4  29.7  28.9  49.3   2.8
- 10. AS15169  2800:3f0:8071::1                         0.0%   100   24.2  24.4  24.2  24.8   0.1
- 11. AS15169  2001:4860:0:1::4682                     34.0%   100   25.3  25.2  24.9  25.9   0.2
- 12. AS15169  2001:4860:0:1::417d                     11.0%   100   25.5  25.6  25.1  31.8   0.8
- 13. AS15169  2800:3f0:4001:818::200e                  0.0%   100   27.7  27.8  26.9  28.2   0.1
+  1. AS18881  2804:7f4:c181:a8a7:72c7:90fa:ba4d:9e56   0.0%   100    0.6   0.7   0.6   1.8   0.1
+  2. AS18881  2804:7f4:2000:1::bf                      0.0%   100    3.3   3.4   3.1   4.7   0.2
+  3. AS18881  2804:7f4:2000:1000::8b9                 18.0%   100    3.9   3.7   3.4   4.2   0.2
+  4. AS???    2001:12e0:0:3024:a006::2                 0.0%   100    3.4   3.3   3.1   3.8   0.1
+  5. AS???    2001:12e0:100:3003:a002:3024:a006:0      0.0%   100    4.6  95.5   4.5 3763. 499.9
+  6. AS???    2001:12e0:100:3003:a002:3020:a002:9     34.0%   100   14.3  14.3  14.1  15.0   0.2
+  7. AS???    2001:12e0:100:1017:a002:3020:a002:10     2.0%   100   19.3  19.1  18.9  19.7   0.1
+  8. AS???    2001:12e0:100:1017:a001:1017:a002:24    75.0%   100   19.0  19.2  19.0  19.6   0.1
+  9. AS15169  2001:4860:1:1::d84                      45.0%   100   22.1  21.9  21.7  22.5   0.2
+ 10. AS15169  2800:3f0:8364:240::1                     0.0%   100   20.2  20.0  19.7  20.2   0.1
+ 11. AS15169  2001:4860:0:1::8762                      0.0%   100   21.2  21.4  20.9  25.0   0.7
+ 12. AS15169  2001:4860:0:1::7cc2                     11.0%   100   22.0  22.2  21.4  25.8   0.7
+ 13. AS15169  2001:4860:0:1::12e1                      0.0%   100   21.5  21.1  20.8  22.1   0.2
+ 14. AS15169  2001:4860:0:1::1329                      0.0%   100   20.1  20.0  19.9  20.8   0.1
+ 15. AS15169  2800:3f0:4001:823::200e                  0.0%   100   20.3  20.3  20.2  20.6   0.1
 ```
 
 ## Speedtest CLI
@@ -154,32 +156,32 @@ HOST: pc                                              Loss%   Snt   Last   Avg  
 https://www.speedtest.net/apps/cli
 
 ```
-$ ./speedtest --selection-details
+$ ./speedtest --progress=no --selection-details
 
    Speedtest by Ookla
 
 Selecting server:
-      48754:  24.90 ms; BianchiNet - Jundiaí
-      42154:  38.59 ms; Moovenet - Valinhos
-      36605:  41.45 ms; Localnet - Guaíba
-      30281:  18.67 ms; STEC-GUAIBA - Guaíba
-      61847:  40.83 ms; CHTECH - Guaíba
-      14143:  40.57 ms; Claro Net Vírtua - Porto Alegre
-      36132:   2.55 ms; RSSul Telecom - Porto Alegre
-      17678:   3.56 ms; RLNET - Porto Alegre
-      38008:  40.04 ms; EdgeUno - Porto Alegre
-      38068:  23.65 ms; LPInternet - Porto Alegre
-      39941:  38.30 ms; Onnexx - Porto Alegre
-      52447:  24.45 ms; GNS POA - Porto Alegre
+      48754:  23.39 ms; BianchiNet - Jundiaí
+      42154:  24.67 ms; Moovenet - Valinhos
+      36605:  19.16 ms; Localnet - Guaíba
+      30281:  18.72 ms; STEC-GUAIBA - Guaíba
+      61847:  19.35 ms; CHTECH - Guaíba
+      14143:  46.24 ms; Claro Net Vírtua - Porto Alegre
+      36132:   2.75 ms; RSSul Telecom - Porto Alegre
+      17678:   2.81 ms; RLNET - Porto Alegre
+      38008:  38.41 ms; EdgeUno - Porto Alegre
+      24878:   5.00 ms; RSnetPOA - Porto Alegre
+      38068:  31.48 ms; LPInternet - Porto Alegre
+      39941:  45.31 ms; Onnexx - Porto Alegre
       Server: RSSul Telecom - Porto Alegre (id: 36132)
          ISP: Vivo
-Idle Latency:     3.76 ms   (jitter: 0.10ms, low: 3.65ms, high: 3.88ms)
-    Download:   708.66 Mbps (data used: 586.5 MB)
-                  9.67 ms   (jitter: 0.62ms, low: 2.98ms, high: 11.64ms)
-      Upload:   356.37 Mbps (data used: 457.7 MB)
-                  3.09 ms   (jitter: 11.17ms, low: 2.32ms, high: 228.79ms)
+Idle Latency:     3.19 ms   (jitter: 0.14ms, low: 2.97ms, high: 3.22ms)
+    Download:   708.28 Mbps (data used: 542.1 MB)
+                  9.69 ms   (jitter: 0.53ms, low: 2.88ms, high: 10.85ms)
+      Upload:   356.34 Mbps (data used: 462.8 MB)
+                  2.42 ms   (jitter: 6.80ms, low: 1.52ms, high: 222.42ms)
  Packet Loss:     0.0%
-  Result URL: https://www.speedtest.net/result/c/eff1c292-bd15-48fd-8d6b-ed6e01fa77e5
+  Result URL: https://www.speedtest.net/result/c/dd996cb5-fde1-4e4a-b5c5-2675ddd01564
 ```
 
 ## Helpful online diagnostics

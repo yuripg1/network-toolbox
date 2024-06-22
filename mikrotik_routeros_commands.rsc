@@ -11,15 +11,6 @@
 /interface ethernet set [ find default-name=ether7 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=ether8 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/queue interface set ether1-wan queue=ethernet-default
-/queue interface set ether2-lan queue=ethernet-default
-/queue interface set ether3 queue=ethernet-default
-/queue interface set ether4 queue=ethernet-default
-/queue interface set ether5 queue=ethernet-default
-/queue interface set ether6 queue=ethernet-default
-/queue interface set ether7 queue=ethernet-default
-/queue interface set ether8 queue=ethernet-default
-/queue interface set sfp-sfpplus1 queue=ethernet-default
 
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
@@ -51,7 +42,7 @@
 
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
 /interface vlan add arp-timeout=5m interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
@@ -92,7 +83,7 @@
 /ipv6 nd prefix default set autonomous=yes
 
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
-/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-peer-dns=no
+/ipv6 dhcp-client add add-default-route=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
@@ -147,5 +138,12 @@
 
 /system logging action set [ find name=memory ] memory-lines=10000
 
-/interface pppoe-client set [ find name=ether1-wan-vlan-600-pppoe-client ] disabled=no
-/ipv6 dhcp-client set [ find interface=ether1-wan-vlan-600-pppoe-client ] disabled=no
+/queue interface set ether1-wan queue=ethernet-default
+/queue interface set ether2-lan queue=ethernet-default
+/queue interface set ether3 queue=ethernet-default
+/queue interface set ether4 queue=ethernet-default
+/queue interface set ether5 queue=ethernet-default
+/queue interface set ether6 queue=ethernet-default
+/queue interface set ether7 queue=ethernet-default
+/queue interface set ether8 queue=ethernet-default
+/queue interface set sfp-sfpplus1 queue=ethernet-default
