@@ -47,9 +47,9 @@
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes disabled=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
-/ppp profile add change-tcp-mss=no name=pppoe-client-profile on-down=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": disconnected\"); :foreach ipv6DhcpClient in=[/ipv6 dhcp-client find interface=\$interfaceName] do={ :local ipv6DhcpClientPoolName [/ipv6 dhcp-client get \$ipv6DhcpClient pool-name]; :foreach ipv6Address in=[/ipv6 address find from-pool=\$ipv6DhcpClientPoolName] do={ :local ipv6AddressDisabled [/ipv6 address get \$ipv6Address disabled]; :if (\$ipv6AddressDisabled != true) do={ /ipv6 address set \$ipv6Address disabled=yes; }; }; :local ipv6DhcpClientDisabled [/ipv6 dhcp-client get \$ipv6DhcpClient disabled]; :if (\$ipv6DhcpClientDisabled != true) do={ /ipv6 dhcp-client set \$ipv6DhcpClient disabled=yes; }; };" on-up=":local interfaceName [/interface get \$interface name]; :log info (\$interfaceName.\": connected\"); :foreach ipv6DhcpClient in=[/ipv6 dhcp-client find interface=\$interfaceName] do={ :local ipv6DhcpClientDisabled [/ipv6 dhcp-client get \$ipv6DhcpClient disabled]; :if (\$ipv6DhcpClientDisabled != false) do={ /ipv6 dhcp-client set \$ipv6DhcpClient disabled=no; }; };" use-ipv6=required
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
 /interface vlan add arp-timeout=5m interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
@@ -63,7 +63,7 @@
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 
-/ip dns set allow-remote-requests=yes max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
 /ipv6 firewall address-list add address=fe80::48a9:8aff:fe40:5a95/128 list=ipv6-dns-server-address-list
@@ -88,11 +88,11 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes disabled=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=high
 /ipv6 nd prefix default set autonomous=yes
 
-/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes disabled=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
-/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix script=":local pdValid \$\"pd-valid\"; :if (\$pdValid = 1) do={ :local pdPrefix \$\"pd-prefix\"; :foreach ipv6Pool in=[/ipv6 pool find prefix=\$pdPrefix] do={ :local ipv6PoolName [/ipv6 pool get \$ipv6Pool name]; :foreach ipv6Address in=[/ipv6 address find from-pool=\$ipv6PoolName] do={ :local ipv6AddressDisabled [/ipv6 address get \$ipv6Address disabled]; :if (\$ipv6AddressDisabled != false) do={ /ipv6 address set \$ipv6Address disabled=no; }; }; }; };" use-peer-dns=no
+/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
+/ipv6 dhcp-client add add-default-route=yes default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-peer-dns=no
 
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
@@ -115,7 +115,7 @@
 
 /ip settings set allow-fast-path=no arp-timeout=5m rp-filter=no tcp-syncookies=no
 
-/ip address add address=192.168.15.2/24 interface=ether1-wan network=192.168.15.0
+/ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
 /interface list member add interface=ether1-wan list=masquerade-interface-list
 
 /ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
@@ -131,6 +131,7 @@
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
 
+/ip cloud set update-time=no
 /ip smb set enabled=no
 /ip ssh set strong-crypto=yes
 
@@ -144,8 +145,7 @@
 /tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
 
-/system logging set 0 topics=info,!dhcp,!ppp,!pppoe
+/system logging action set [ find name=memory ] memory-lines=10000
 
-/ip dhcp-server set ip-dhcp-server disabled=no
-/ipv6 nd set [ find interface=ether2-lan ] disabled=no
-/interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
+/interface pppoe-client set [ find name=ether1-wan-vlan-600-pppoe-client ] disabled=no
+/ipv6 dhcp-client set [ find interface=ether1-wan-vlan-600-pppoe-client ] disabled=no
