@@ -6,25 +6,25 @@
 
 ### MikroTik RouterOS
 
-* [Commands](./mikrotik_routeros_commands.rsc)
-* [Configuration](./mikrotik_routeros_configuration.rsc)
+* [Commands](./mikrotik_routeros/commands.rsc)
+* [Configuration](./mikrotik_routeros/configuration.rsc)
 
 ### Ubiquiti EdgeOS
 
-* [Commands](./ubiquiti_edgeos_commands.txt)
-* [Configuration](./ubiquiti_edgeos_configuration.txt)
-* [IPv4 NAT rules (LAN)](./ipv4_nat_lan.sh)
-* [IPv6 NAT rules (LAN)](./ipv6_nat_lan.sh)
-* [IPv4 Mangle rules (WAN)](./ipv4_mangle_wan.sh)
-* [IPv6 Mangle rules (WAN)](./ipv6_mangle_wan.sh)
-* [IPv6 NAT rules (WAN)](./ipv6_nat_wan.sh)
+* [Commands](./ubiquiti_edgeos/commands.txt)
+* [Configuration](./ubiquiti_edgeos/configuration.txt)
+* [IPv4 NAT rules (LAN)](./ubiquiti_edgeos/scripts/ipv4_nat_lan.sh)
+* [IPv6 NAT rules (LAN)](./ubiquiti_edgeos/scripts/ipv6_nat_lan.sh)
+* [IPv4 Mangle rules (WAN)](./ubiquiti_edgeos/scripts/ipv4_mangle_wan.sh)
+* [IPv6 Mangle rules (WAN)](./ubiquiti_edgeos/scripts/ipv6_mangle_wan.sh)
+* [IPv6 NAT rules (WAN)](./ubiquiti_edgeos/scripts/ipv6_nat_wan.sh)
 
 ## NTP test script
 
 ### Resources
 
-* [Source code](./ntp_test.py)
-* [Vivo Telefônica Brasil (Brazilian ISP) output](./ntp_test_output_vivo.csv)
+* [Source code](./scripts/ntp_test.py)
+* [Vivo Telefônica Brasil (Brazilian ISP) output](./scripts/ntp_test_output_vivo.csv)
 
 ### Setup
 

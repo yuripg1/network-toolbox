@@ -79,6 +79,7 @@ set service nat rule 6250 type masquerade
 set service nat rule 7500 outbound-interface pppoe0
 set service nat rule 7500 type masquerade
 
+set service dns forwarding cache-size 10000
 set service dns forwarding listen-on eth1
 set service dns forwarding name-server 8.8.4.4
 set service dns forwarding name-server 8.8.8.8
@@ -194,10 +195,15 @@ set system conntrack timeout udp stream 180
 
 set system conntrack modules sip disable
 
+set firewall ip-src-route disable
+set firewall ipv6-receive-redirects disable
+set firewall ipv6-src-route disable
+set firewall receive-redirects disable
+set firewall send-redirects enable
 set firewall source-validation disable
 set firewall syn-cookies disable
 
-set interfaces ethernet eth0 address 192.168.15.2/24
+set interfaces ethernet eth0 address 10.123.203.2/24
 set service nat rule 8750 outbound-interface eth0
 set service nat rule 8750 type masquerade
 
@@ -220,11 +226,11 @@ set system offload ipsec disable
 
 set system traffic-analysis dpi disable
 
-$ scp ./ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
-$ scp ./ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
-$ scp ./ipv4_mangle_wan.sh user925232615@router.lan:/home/user925232615
-$ scp ./ipv6_mangle_wan.sh user925232615@router.lan:/home/user925232615
-$ scp ./ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv4_mangle_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv6_mangle_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
 
 $ sudo mv /home/user925232615/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv4_nat_lan.sh
 $ sudo mv /home/user925232615/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh

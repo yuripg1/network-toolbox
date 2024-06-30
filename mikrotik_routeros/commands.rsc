@@ -104,7 +104,8 @@
 
 /ip firewall service-port set sip disabled=yes
 
-/ip settings set allow-fast-path=no arp-timeout=5m rp-filter=no tcp-syncookies=no
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=no arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=no
+/ipv6 settings set accept-redirects=no accept-router-advertisements=no forward=yes
 
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
 /interface list member add interface=ether1-wan list=masquerade-interface-list

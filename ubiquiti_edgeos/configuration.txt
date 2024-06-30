@@ -202,7 +202,7 @@ firewall {
 }
 interfaces {
     ethernet eth0 {
-        address 192.168.15.2/24
+        address 10.123.203.2/24
         description eth0-wan
         duplex auto
         mac D2:21:F9:48:20:D2
