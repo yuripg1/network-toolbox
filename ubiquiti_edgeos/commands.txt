@@ -58,7 +58,7 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-r
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 172800
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1480;"
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
 
 set interfaces ethernet eth0 vif 600 description eth0-wan-vif-600
@@ -66,7 +66,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 default-route force
 set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vif-600-pppoe
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name FORWARD_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name INPUT_WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1480
+set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1492
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
 set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
@@ -81,8 +81,8 @@ set service nat rule 7500 type masquerade
 
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on eth1
-set service dns forwarding name-server 8.8.4.4
-set service dns forwarding name-server 8.8.8.8
+set service dns forwarding name-server 2001:4860:4860::8844
+set service dns forwarding name-server 2001:4860:4860::8888
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
@@ -155,7 +155,7 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 tcp flags SYN
 set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth1 ipv6 router-advert default-preference high
-set interfaces ethernet eth1 ipv6 router-advert link-mtu 1480
+set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
 set interfaces ethernet eth1 ipv6 router-advert managed-flag false
 set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
 set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
