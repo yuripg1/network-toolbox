@@ -3,7 +3,7 @@ firewall {
     broadcast-ping disable
     ipv6-name IPV6_FORWARD_WAN_IN {
         default-action drop
-        rule 1666 {
+        rule 2000 {
             action accept
             description "accept established,related packets"
             state {
@@ -11,14 +11,14 @@ firewall {
                 related enable
             }
         }
-        rule 3333 {
+        rule 4000 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 5000 {
+        rule 6000 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -26,24 +26,16 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 6666 {
+        rule 8000 {
             action drop
             description "drop remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
-        rule 8333 {
-            action drop
-            description "drop tcp syn packets"
-            protocol tcp
-            tcp {
-                flags SYN
-            }
-        }
     }
     ipv6-name IPV6_INPUT_WAN_IN {
         default-action drop
-        rule 909 {
+        rule 1111 {
             action accept
             description "accept established,related packets"
             state {
@@ -51,14 +43,14 @@ firewall {
                 related enable
             }
         }
-        rule 1818 {
+        rule 2222 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 2727 {
+        rule 3333 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -66,9 +58,9 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 3636 {
+        rule 4444 {
             action accept
-            description "accept link-local icmpv6 router solicitation packets"
+            description "accept icmpv6 router solicitation packets"
             icmpv6 {
                 type 133/0
             }
@@ -77,9 +69,9 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 4545 {
+        rule 5555 {
             action accept
-            description "accept link-local icmpv6 router advertisement packets"
+            description "accept icmpv6 router advertisement packets"
             icmpv6 {
                 type 134/0
             }
@@ -88,9 +80,9 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 5454 {
+        rule 6666 {
             action accept
-            description "accept link-local udp dhcpv6 packets"
+            description "accept dhcpv6 packets"
             destination {
                 port 546
             }
@@ -100,36 +92,20 @@ firewall {
                 port 547
             }
         }
-        rule 6363 {
+        rule 7777 {
             action drop
             description "drop remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
-        rule 7272 {
+        rule 8888 {
             action drop
-            description "drop remaining udp dhcpv6 packets"
+            description "drop remaining dhcpv6 packets"
             destination {
                 port 546
             }
             log enable
             protocol udp
-        }
-        rule 8181 {
-            action drop
-            description "drop remaining link-local packets"
-            log enable
-            source {
-                address fe80::/10
-            }
-        }
-        rule 9090 {
-            action drop
-            description "drop tcp syn packets"
-            protocol tcp
-            tcp {
-                flags SYN
-            }
         }
     }
     ipv6-receive-redirects disable
@@ -156,7 +132,7 @@ firewall {
     }
     name INPUT_WAN_IN {
         default-action drop
-        rule 1666 {
+        rule 2000 {
             action accept
             description "accept established,related packets"
             state {
@@ -164,14 +140,14 @@ firewall {
                 related enable
             }
         }
-        rule 3333 {
+        rule 4000 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 5000 {
+        rule 6000 {
             action accept
             description "accept icmp echo request packets"
             icmp {
@@ -180,25 +156,17 @@ firewall {
             }
             protocol icmp
         }
-        rule 6666 {
+        rule 8000 {
             action drop
             description "drop remaining icmp packets"
             log enable
             protocol icmp
         }
-        rule 8333 {
-            action drop
-            description "drop tcp syn packets"
-            protocol tcp
-            tcp {
-                flags SYN
-            }
-        }
     }
     receive-redirects disable
     send-redirects enable
     source-validation disable
-    syn-cookies disable
+    syn-cookies enable
 }
 interfaces {
     ethernet eth0 {
@@ -311,8 +279,8 @@ service {
                 default-router 10.182.186.1
                 dns-server 10.182.186.1
                 lease 172800
-                start 10.182.186.2 {
-                    stop 10.182.186.254
+                start 10.182.186.3 {
+                    stop 10.182.186.253
                 }
                 subnet-parameters "option interface-mtu 1492;"
                 subnet-parameters "option broadcast-address 10.182.186.255;"
@@ -375,11 +343,6 @@ system {
     conntrack {
         expect-table-size 2048
         hash-size 32768
-        modules {
-            sip {
-                disable
-            }
-        }
         table-size 262144
         timeout {
             icmp 30

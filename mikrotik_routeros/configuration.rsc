@@ -14,7 +14,7 @@
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
-/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.3-10.175.202.253
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
@@ -30,9 +30,9 @@
 /system logging action set [ find name=memory ] memory-lines=10000
 /ip smb set enabled=no
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
-/ip neighbor discovery-settings set discover-interface-list=lan-interface-list
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=no arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=no
-/ipv6 settings set accept-redirects=no accept-router-advertisements=no forward=yes
+/ip neighbor discovery-settings set discover-interface-list=none
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=no arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ipv6 settings set accept-redirects=no accept-router-advertisements=no disable-ipv6=no forward=yes
 /interface list member add interface=ether2-lan list=lan-interface-list
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 /interface list member add interface=ether1-wan list=masquerade-interface-list
@@ -52,7 +52,6 @@
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ip-input-wan-in comment="accept icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining icmp packets" log=yes protocol=icmp
-/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
@@ -60,7 +59,6 @@
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-server-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
-/ip firewall service-port set sip disabled=yes
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
 /ip service set www disabled=no port=80
@@ -80,17 +78,14 @@
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-forward-wan-in comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept link-local icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept link-local udp dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining udp dhcpv6 packets" dst-port=546 log=yes protocol=udp
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining link-local packets" log=yes src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop tcp syn packets" protocol=tcp tcp-flags=syn
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
@@ -102,14 +97,15 @@
 /ipv6 nd prefix default set autonomous=yes
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
-/system ntp client set enabled=yes
-/system ntp client servers add address=time1.google.com
-/system ntp client servers add address=time2.google.com
-/system ntp client servers add address=time3.google.com
-/system ntp client servers add address=time4.google.com
+/system ntp client set enabled=yes mode=unicast
+/system ntp client servers add address=time1.google.com iburst=yes
+/system ntp client servers add address=time2.google.com iburst=yes
+/system ntp client servers add address=time3.google.com iburst=yes
+/system ntp client servers add address=time4.google.com iburst=yes
 /tool bandwidth-server set enabled=no
 /tool graphing interface add interface=ether1-wan store-on-disk=no
 /tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
-/tool mac-server set allowed-interface-list=lan-interface-list
-/tool mac-server mac-winbox set allowed-interface-list=lan-interface-list
+/tool mac-server set allowed-interface-list=none
+/tool mac-server mac-winbox set allowed-interface-list=none
+/tool mac-server ping set enabled=no
