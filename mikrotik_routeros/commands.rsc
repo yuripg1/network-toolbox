@@ -98,7 +98,7 @@
 
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=no arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 /ipv6 settings set accept-redirects=no accept-router-advertisements=no disable-ipv6=no forward=yes
 
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
@@ -134,12 +134,12 @@
 
 /system logging action set [ find name=memory ] memory-lines=10000
 
-/queue interface set ether1-wan queue=ethernet-default
-/queue interface set ether2-lan queue=ethernet-default
-/queue interface set ether3 queue=ethernet-default
-/queue interface set ether4 queue=ethernet-default
-/queue interface set ether5 queue=ethernet-default
-/queue interface set ether6 queue=ethernet-default
-/queue interface set ether7 queue=ethernet-default
-/queue interface set ether8 queue=ethernet-default
-/queue interface set sfp-sfpplus1 queue=ethernet-default
+/queue interface set ether1-wan queue=only-hardware-queue
+/queue interface set ether2-lan queue=only-hardware-queue
+/queue interface set ether3 queue=only-hardware-queue
+/queue interface set ether4 queue=only-hardware-queue
+/queue interface set ether5 queue=only-hardware-queue
+/queue interface set ether6 queue=only-hardware-queue
+/queue interface set ether7 queue=only-hardware-queue
+/queue interface set ether8 queue=only-hardware-queue
+/queue interface set sfp-sfpplus1 queue=only-hardware-queue

@@ -18,20 +18,20 @@
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
 /interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
-/queue interface set ether1-wan queue=ethernet-default
-/queue interface set ether2-lan queue=ethernet-default
-/queue interface set ether3 queue=ethernet-default
-/queue interface set ether4 queue=ethernet-default
-/queue interface set ether5 queue=ethernet-default
-/queue interface set ether6 queue=ethernet-default
-/queue interface set ether7 queue=ethernet-default
-/queue interface set ether8 queue=ethernet-default
-/queue interface set sfp-sfpplus1 queue=ethernet-default
+/queue interface set ether1-wan queue=only-hardware-queue
+/queue interface set ether2-lan queue=only-hardware-queue
+/queue interface set ether3 queue=only-hardware-queue
+/queue interface set ether4 queue=only-hardware-queue
+/queue interface set ether5 queue=only-hardware-queue
+/queue interface set ether6 queue=only-hardware-queue
+/queue interface set ether7 queue=only-hardware-queue
+/queue interface set ether8 queue=only-hardware-queue
+/queue interface set sfp-sfpplus1 queue=only-hardware-queue
 /system logging action set [ find name=memory ] memory-lines=10000
 /ip smb set enabled=no
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=none
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=no arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 /ipv6 settings set accept-redirects=no accept-router-advertisements=no disable-ipv6=no forward=yes
 /interface list member add interface=ether2-lan list=lan-interface-list
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
