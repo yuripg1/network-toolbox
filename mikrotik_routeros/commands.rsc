@@ -2,15 +2,15 @@
 
 /user remove admin
 
-/interface ethernet set [ find default-name=ether1 ] arp-timeout=5m disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
-/interface ethernet set [ find default-name=ether2 ] arp-timeout=5m disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
-/interface ethernet set [ find default-name=ether3 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether4 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether5 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether6 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether7 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether8 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=sfp-sfpplus1 ] arp-timeout=5m disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether1 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
+/interface ethernet set [ find default-name=ether2 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
+/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 
@@ -36,12 +36,12 @@
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
-/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.3-10.175.202.253
+/ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.253
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
-/interface vlan add arp-timeout=5m interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
@@ -90,7 +90,7 @@
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
-/system ntp client set enabled=yes mode=unicast
+/system ntp client set enabled=no mode=unicast
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes
 /system ntp client servers add address=time3.google.com iburst=yes
@@ -98,7 +98,7 @@
 
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=5m ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 /ipv6 settings set accept-redirects=no accept-router-advertisements=no disable-ipv6=no forward=yes
 
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
@@ -110,9 +110,9 @@
 
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
+/ip service set www disabled=yes
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=yes
+/ip service set www-ssl disabled=no port=443
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
@@ -143,3 +143,18 @@
 /queue interface set ether7 queue=only-hardware-queue
 /queue interface set ether8 queue=only-hardware-queue
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
+
+/interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
+
+:delay 30s;
+
+/system ntp client set enabled=yes
+
+:delay 30s;
+
+/certificate add common-name=router.lan name=www-ssl-certificate
+/certificate sign www-ssl-certificate
+
+:delay 30s;
+
+/ip service set www-ssl certificate=www-ssl-certificate

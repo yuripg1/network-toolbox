@@ -279,7 +279,7 @@ service {
                 default-router 10.182.186.1
                 dns-server 10.182.186.1
                 lease 172800
-                start 10.182.186.3 {
+                start 10.182.186.2 {
                     stop 10.182.186.253
                 }
                 subnet-parameters "option interface-mtu 1492;"
