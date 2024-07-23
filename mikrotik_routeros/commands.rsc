@@ -41,7 +41,7 @@
 
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
 /interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=yes interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
@@ -90,7 +90,7 @@
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
-/system ntp client set enabled=no mode=unicast
+/system ntp client set enabled=yes mode=unicast
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes
 /system ntp client servers add address=time3.google.com iburst=yes
@@ -110,9 +110,9 @@
 
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=yes
+/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=no port=443
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
@@ -143,18 +143,3 @@
 /queue interface set ether7 queue=only-hardware-queue
 /queue interface set ether8 queue=only-hardware-queue
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
-
-/interface pppoe-client set ether1-wan-vlan-600-pppoe-client disabled=no
-
-:delay 30s;
-
-/system ntp client set enabled=yes
-
-:delay 30s;
-
-/certificate add common-name=router.lan name=www-ssl-certificate
-/certificate sign www-ssl-certificate
-
-:delay 30s;
-
-/ip service set www-ssl certificate=www-ssl-certificate

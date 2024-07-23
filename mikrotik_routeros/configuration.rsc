@@ -61,9 +61,9 @@
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=yes
+/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl certificate=www-ssl-certificate disabled=no port=443
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
