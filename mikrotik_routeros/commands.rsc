@@ -39,9 +39,9 @@
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.253
 /ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 
-/ppp profile add change-tcp-mss=no name=pppoe-client-profile use-ipv6=required
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
 /interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=pap,chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
