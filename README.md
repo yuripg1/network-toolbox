@@ -238,6 +238,11 @@ Idle Latency:     3.73 ms   (jitter: 0.04ms, low: 3.61ms, high: 3.75ms)
 
 ### Speed test
 
-* https://beta.simet.nic.br/
 * https://www.speedtest.net/
+* https://beta.simet.nic.br/
+* https://speed.cloudflare.com/
 * https://fast.com/
+
+### Packet loss
+
+* https://packetlosstest.com/

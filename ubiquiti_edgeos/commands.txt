@@ -147,6 +147,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall in ipv6-name IPV6_FORWARD_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall local ipv6-name IPV6_INPUT_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 address autoconf
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 

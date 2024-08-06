@@ -89,17 +89,18 @@
 
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 
+/ip cloud set update-time=no
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
-/system ntp client set enabled=yes mode=unicast
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes
 /system ntp client servers add address=time3.google.com iburst=yes
 /system ntp client servers add address=time4.google.com iburst=yes
+/system ntp client set enabled=yes mode=unicast
 
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
-/ipv6 settings set accept-redirects=no accept-router-advertisements=no disable-ipv6=no forward=yes
+/ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
 /interface list member add interface=ether1-wan list=masquerade-interface-list
@@ -117,7 +118,6 @@
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
 
-/ip cloud set update-time=no
 /ip smb set enabled=no
 /ip ssh set strong-crypto=yes
 

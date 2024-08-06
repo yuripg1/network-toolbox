@@ -32,7 +32,7 @@
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
-/ipv6 settings set accept-redirects=no accept-router-advertisements=no disable-ipv6=no forward=yes
+/ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 /interface list member add interface=ether2-lan list=lan-interface-list
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 /interface list member add interface=ether1-wan list=masquerade-interface-list

@@ -203,6 +203,9 @@ interfaces {
                     }
                 }
                 ipv6 {
+                    address {
+                        autoconf
+                    }
                     dup-addr-detect-transmits 1
                     enable {
                     }
