@@ -54,7 +54,7 @@
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 
-# IPv4 source NAT
+# IPv4 NAT
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list src-address-list=ip-lan-address-list
@@ -131,6 +131,9 @@
 # Host name configuration
 /system identity set name=Home-Router
 
+# Discovery configuration
+/ip neighbor discovery-settings set discover-interface-list=none
+
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
 /ip service set www disabled=no port=80
@@ -141,20 +144,8 @@
 /ip service set api-ssl disabled=yes
 
 /ip smb set enabled=no
+
 /ip ssh set strong-crypto=yes
-
-/ip neighbor discovery-settings set discover-interface-list=none
-/tool mac-server set allowed-interface-list=none
-/tool mac-server mac-winbox set allowed-interface-list=none
-/tool mac-server ping set enabled=no
-
-/tool bandwidth-server set enabled=no
-
-/tool graphing interface add interface=ether1-wan store-on-disk=no
-/tool graphing interface add interface=ether2-lan store-on-disk=no
-/tool graphing resource add store-on-disk=no
-
-/system logging action set [ find name=memory ] memory-lines=10000
 
 /queue interface set ether1-wan queue=only-hardware-queue
 /queue interface set ether2-lan queue=only-hardware-queue
@@ -165,3 +156,15 @@
 /queue interface set ether7 queue=only-hardware-queue
 /queue interface set ether8 queue=only-hardware-queue
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
+
+/system logging action set [ find name=memory ] memory-lines=10000
+
+/tool bandwidth-server set enabled=no
+
+/tool graphing interface add interface=ether1-wan store-on-disk=no
+/tool graphing interface add interface=ether2-lan store-on-disk=no
+/tool graphing resource add store-on-disk=no
+
+/tool mac-server set allowed-interface-list=none
+/tool mac-server mac-winbox set allowed-interface-list=none
+/tool mac-server ping set enabled=no
