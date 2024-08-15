@@ -1,52 +1,15 @@
+## Router commands & configurations
+
+* [MikroTik RouterOS](./mikrotik_routeros/)
+* [Ubiquiti EdgeOS](./ubiquiti_edgeos)
+
+## Scripts
+
+* [NTP test script](./scripts/ntp_test)
+
 ## Network diagram
 
 ![Network Diagram](./img/network_diagram.png)
-
-## Router commands & configurations
-
-### MikroTik RouterOS
-
-* [Commands](./mikrotik_routeros/commands.rsc)
-* [Configuration](./mikrotik_routeros/configuration.rsc)
-
-### Ubiquiti EdgeOS
-
-* [Commands](./ubiquiti_edgeos/commands.txt)
-* [Configuration](./ubiquiti_edgeos/configuration.txt)
-* [IPv4 NAT rules (LAN)](./ubiquiti_edgeos/scripts/ipv4_nat_lan.sh)
-* [IPv6 NAT rules (LAN)](./ubiquiti_edgeos/scripts/ipv6_nat_lan.sh)
-* [IPv4 Mangle rules (WAN)](./ubiquiti_edgeos/scripts/ipv4_mangle_wan.sh)
-* [IPv6 Mangle rules (WAN)](./ubiquiti_edgeos/scripts/ipv6_mangle_wan.sh)
-* [IPv6 NAT rules (WAN)](./ubiquiti_edgeos/scripts/ipv6_nat_wan.sh)
-
-## NTP test script
-
-### Resources
-
-* [Source code](./scripts/ntp_test.py)
-* [Vivo Telefônica Brasil (Brazilian ISP) output](./scripts/ntp_test_output_vivo.csv)
-
-### Setup
-
-```
-$ sudo apt update
-$ sudo apt -y install python3-pip python3-dev python3-venv
-$ python3 -m venv network-toolbox-venv
-$ source ./network-toolbox-venv/bin/activate
-$ pip3 install dnspython scapy
-```
-
-### Run
-
-```
-$ sudo ./network-toolbox-venv/bin/python3 ./ntp_test.py
-```
-
-### Teardown
-
-```
-$ deactivate
-```
 
 ## Connectivity
 
@@ -236,13 +199,14 @@ Idle Latency:     3.73 ms   (jitter: 0.04ms, low: 3.61ms, high: 3.75ms)
 * https://1.1.1.1/help
 * https://www.dnsleaktest.com/
 
+
+### Packet loss
+
+* https://packetlosstest.com/
+
 ### Speed test
 
 * https://www.speedtest.net/
 * https://beta.simet.nic.br/
 * https://speed.cloudflare.com/
 * https://fast.com/
-
-### Packet loss
-
-* https://packetlosstest.com/
