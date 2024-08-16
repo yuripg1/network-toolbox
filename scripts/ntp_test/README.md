@@ -24,5 +24,5 @@ $ deactivate
 
 ### Resources
 
-* [Source code](./ntp_test.py)
-* [Vivo (Brazilian ISP) output](./ntp_test_output_vivo.csv)
+* [ntp_test.py](./ntp_test.py)
+* [ntp_test_output_vivo.csv](./ntp_test_output_vivo.csv)

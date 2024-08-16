@@ -98,11 +98,11 @@ set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 
 ### IPv4 TCP MSS clamping
 
-* See **[ipv4_mangle_wan.sh](./scripts/ipv4_mangle_wan.sh)**
+See **[ipv4_mangle_wan.sh](./scripts/ipv4_mangle_wan.sh)**
 
 ### IPv4 DNS query redirection
 
-* See **[ipv4_nat_lan.sh](./scripts/ipv4_nat_lan.sh)**
+See **[ipv4_nat_lan.sh](./scripts/ipv4_nat_lan.sh)**
 
 ### IPv4 NAT
 
