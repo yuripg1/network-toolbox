@@ -796,6 +796,58 @@ system {
 }
 ```
 
+## End result
+
+### IPv4 addresses
+
+```
+$ sudo ip -brief -4 address
+lo               UNKNOWN        127.0.0.1/8
+eth0@itf0        UP             10.123.203.2/24
+eth1@itf0        UP             10.182.186.1/24
+pppoe0           UNKNOWN        189.114.100.193 peer 179.184.126.59/32
+```
+
+### IPv4 routes
+
+```
+$ sudo ip -4 route
+default dev pppoe0 scope link
+10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
+10.182.186.0/24 dev eth1 proto kernel scope link src 10.182.186.1
+179.184.126.59 dev pppoe0 proto kernel scope link src 189.114.100.193
+189.114.100.193 dev pppoe0 proto kernel scope link
+```
+
+### IPv6 addresses
+
+```
+$ sudo ip -brief -6 address
+lo               UNKNOWN        ::1/128
+itf0             UNKNOWN        fe80::d221:f9ff:fee1:353/64
+eth0@itf0        UP             fe80::d021:f9ff:fe48:20d2/64
+eth1@itf0        UP             2804:7f4:c2b4:caf9:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
+switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
+eth0.600@eth0    UP             fe80::d021:f9ff:fe48:20d2/64
+pppoe0           UNKNOWN        2804:7f4:c003:cea3:b09f:12c0:48e2:e995/64 fe80::b09f:12c0:48e2:e995/10
+```
+
+### IPv6 routes
+
+```
+$ sudo ip -6 route
+2804:7f4:c003:cea3::/64 dev pppoe0 proto kernel metric 256 expires 85920sec pref medium
+2804:7f4:c2b4:caf9::/64 dev eth1 proto kernel metric 256 pref medium
+fe80::/64 dev itf0 proto kernel metric 256 pref medium
+fe80::/64 dev switch0 proto kernel metric 256 pref medium
+fe80::/64 dev eth0 proto kernel metric 256 pref medium
+fe80::/64 dev eth1 proto kernel metric 256 pref medium
+fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
+fe80::/10 dev pppoe0 metric 1 pref medium
+fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
+default via fe80::e681:84ff:fe30:840f dev pppoe0 proto ra metric 1024 expires 4020sec hoplimit 64 pref medium
+```
+
 ## Resources
 
 * [commands.txt](./commands.txt)

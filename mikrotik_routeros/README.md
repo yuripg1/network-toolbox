@@ -127,7 +127,6 @@
 ### IPv6 WAN
 
 ```
-/ipv6 nd add interface=ether1-wan-vlan-600-pppoe-client
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
 ```
@@ -349,7 +348,6 @@
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
-/ipv6 nd add interface=ether1-wan-vlan-600-pppoe-client
 /ipv6 nd prefix default set autonomous=yes
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
@@ -365,6 +363,68 @@
 /tool mac-server set allowed-interface-list=none
 /tool mac-server mac-winbox set allowed-interface-list=none
 /tool mac-server ping set enabled=no
+```
+
+## End result
+
+### IPv4 addresses
+
+```
+> /ip address print
+Flags: D - DYNAMIC
+Columns: ADDRESS, NETWORK, INTERFACE
+#   ADDRESS            NETWORK         INTERFACE
+0   10.175.202.1/24    10.175.202.0    ether2-lan
+1   10.123.203.2/24    10.123.203.0    ether1-wan
+2 D 186.215.49.123/32  179.184.126.60  ether1-wan-vlan-600-pppoe-client
+```
+
+### IPv4 routes
+
+```
+> /ip route print
+Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, v - VPN
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+    DST-ADDRESS        GATEWAY                           DISTANCE
+DAv 0.0.0.0/0          ether1-wan-vlan-600-pppoe-client         1
+DAc 10.123.203.0/24    ether1-wan                               0
+DAc 10.175.202.0/24    ether2-lan                               0
+DAc 179.184.126.60/32  ether1-wan-vlan-600-pppoe-client         0
+```
+
+### IPv6 addresses
+
+```
+> /ipv6 address print
+Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
+Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
+#    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
+0  G 2804:7f4:c182:b507:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
+1 D  ::1/128                                                           lo                                no
+2 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
+3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
+4 DL fe80::48a9:8aff:fe40:5a95/64                                      ether2-lan                        no
+5 DL fe80::142a:3e58:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
+6 DG 2804:7f4:c00e:82d7:142a:3e58:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         23h56m29s
+```
+
+### IPv6 routes
+
+```
+> /ipv6 route print
+Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, d - DHCP, v - VPN
+Columns: DST-ADDRESS, GATEWAY, DISTANCE
+    DST-ADDRESS                                 GATEWAY                                                     DISTANCE
+D d ::/0                                        fe80::e681:84ff:fe57:f00f%ether1-wan-vlan-600-pppoe-client         2
+DAv ::/0                                        ether1-wan-vlan-600-pppoe-client                                   1
+DAc ::1/128                                     lo                                                                 0
+DAc 2804:7f4:c00e:82d7::/64                     ether1-wan-vlan-600-pppoe-client                                   0
+DAc 2804:7f4:c182:b507::/64                     ether2-lan                                                         0
+D d 2804:7f4:c182:b507::/64                                                                                        2
+DAc fe80::%ether1-wan/64                        ether1-wan                                                         0
+DAc fe80::%ether2-lan/64                        ether2-lan                                                         0
+DAc fe80::%ether1-wan-vlan-600/64               ether1-wan-vlan-600                                                0
+DAc fe80::%ether1-wan-vlan-600-pppoe-client/64  ether1-wan-vlan-600-pppoe-client                                   0
 ```
 
 ## Resources
