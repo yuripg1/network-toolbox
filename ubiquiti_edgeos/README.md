@@ -191,7 +191,7 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 ```
 set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
-set interfaces ethernet eth1 ipv6 router-advert default-preference high
+set interfaces ethernet eth1 ipv6 router-advert default-preference medium
 set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
 set interfaces ethernet eth1 ipv6 router-advert managed-flag false
 set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
@@ -587,7 +587,7 @@ interfaces {
             dup-addr-detect-transmits 1
             router-advert {
                 cur-hop-limit 64
-                default-preference high
+                default-preference medium
                 link-mtu 1492
                 managed-flag false
                 max-interval 600

@@ -83,7 +83,7 @@
 
 # IPv6 LAN
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
 /ipv6 nd prefix default set autonomous=yes
 
 # IPv6 WAN

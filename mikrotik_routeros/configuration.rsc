@@ -95,7 +95,7 @@
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=high
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
 /ipv6 nd prefix default set autonomous=yes
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router

@@ -29,7 +29,7 @@
 
 ![ICMP Test IPv6 - Output - Vivo - 2](./img/icmp_test_ipv6_output_vivo_2.png)
 
-## Ping
+## Ping & MTU
 
 ### IPv4
 

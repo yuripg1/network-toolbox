@@ -225,7 +225,7 @@ interfaces {
             dup-addr-detect-transmits 1
             router-advert {
                 cur-hop-limit 64
-                default-preference high
+                default-preference medium
                 link-mtu 1492
                 managed-flag false
                 max-interval 600
