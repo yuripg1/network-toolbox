@@ -176,7 +176,7 @@
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 ```
 
-### Miscellaneous configuration
+### Netfilter configuration
 
 ```
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
@@ -208,22 +208,35 @@
 /ip neighbor discovery-settings set discover-interface-list=none
 ```
 
-### Platform-specific configurations
+### Management hardening
+
+```
+/ip ssh set strong-crypto=yes
+```
+
+### Disabling of unused services
+
+```
+/ip smb set enabled=no
+/tool bandwidth-server set enabled=no
+```
+
+### Management channels configuration
 
 ```
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
+/ip service set www disabled=yes
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=yes
+/ip service set www-ssl disabled=no port=443
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
+```
 
-/ip smb set enabled=no
+### Physical interfaces queue configuration
 
-/ip ssh set strong-crypto=yes
-
+```
 /queue interface set ether1-wan queue=only-hardware-queue
 /queue interface set ether2-lan queue=only-hardware-queue
 /queue interface set ether3 queue=only-hardware-queue
@@ -233,18 +246,46 @@
 /queue interface set ether7 queue=only-hardware-queue
 /queue interface set ether8 queue=only-hardware-queue
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
+```
 
+### Log configuration
+
+```
 /system logging action set [ find name=memory ] memory-lines=10000
+```
 
-/tool bandwidth-server set enabled=no
+### Graphing of interfaces traffic and system resources
 
+```
 /tool graphing interface add interface=ether1-wan store-on-disk=no
 /tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
+```
 
+### Disabling of access and troubleshooting via MAC address
+
+```
 /tool mac-server set allowed-interface-list=none
 /tool mac-server mac-winbox set allowed-interface-list=none
 /tool mac-server ping set enabled=no
+```
+
+### Certificate configuration for management via HTTPS
+
+```
+/certificate add common-name=router.lan name=www-ssl-certificate trusted=yes
+/certificate sign www-ssl-certificate
+/ip service set www-ssl certificate=www-ssl-certificate
+```
+
+### DNS-over-HTTPS configuration
+
+```
+/tool fetch check-certificate=no mode=https url=https://i.pki.goog/r1.pem
+/tool fetch check-certificate=no mode=https url=https://i.pki.goog/wr2.pem
+/certificate import file-name=r1.pem trusted=yes
+/certificate import file-name=wr2.pem trusted=yes
+/ip dns set doh-max-concurrent-queries=500 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes
 ```
 
 ## Final configuration
@@ -292,7 +333,7 @@
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
 /ip cloud set ddns-enabled=no update-time=no
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB doh-max-concurrent-queries=500 max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes
 /ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
 /ip firewall address-list add address=10.175.202.1/32 list=ip-dns-address-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
@@ -315,9 +356,9 @@
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
+/ip service set www disabled=yes
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=yes
+/ip service set www-ssl certificate=www-ssl-certificate disabled=no port=443
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
@@ -373,10 +414,10 @@
 > /ip address print
 Flags: D - DYNAMIC
 Columns: ADDRESS, NETWORK, INTERFACE
-#   ADDRESS            NETWORK         INTERFACE
-0   10.175.202.1/24    10.175.202.0    ether2-lan
-1   10.123.203.2/24    10.123.203.0    ether1-wan
-2 D 186.215.49.123/32  179.184.126.60  ether1-wan-vlan-600-pppoe-client
+#   ADDRESS           NETWORK         INTERFACE
+0   10.175.202.1/24   10.175.202.0    ether2-lan
+1   10.123.203.2/24   10.123.203.0    ether1-wan
+2 D 201.47.220.72/32  179.184.126.60  ether1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -399,13 +440,13 @@ DAc 179.184.126.60/32  ether1-wan-vlan-600-pppoe-client         0
 Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
-0  G 2804:7f4:c182:b507:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
+0  G 2804:7f4:c182:a96d:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
 1 D  ::1/128                                                           lo                                no
-2 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
-3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
+2 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
+3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
 4 DL fe80::48a9:8aff:fe40:5a95/64                                      ether2-lan                        no
-5 DL fe80::142a:3e58:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
-6 DG 2804:7f4:c00e:82d7:142a:3e58:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         23h56m29s
+5 DL fe80::1fd0:1ede:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
+6 DG 2804:7f4:c00e:b07c:1fd0:1ede:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         23h18m31s
 ```
 
 ### IPv6 routes
@@ -418,9 +459,9 @@ Columns: DST-ADDRESS, GATEWAY, DISTANCE
 D d ::/0                                        fe80::e681:84ff:fe57:f00f%ether1-wan-vlan-600-pppoe-client         2
 DAv ::/0                                        ether1-wan-vlan-600-pppoe-client                                   1
 DAc ::1/128                                     lo                                                                 0
-DAc 2804:7f4:c00e:82d7::/64                     ether1-wan-vlan-600-pppoe-client                                   0
-DAc 2804:7f4:c182:b507::/64                     ether2-lan                                                         0
-D d 2804:7f4:c182:b507::/64                                                                                        2
+DAc 2804:7f4:c00e:b07c::/64                     ether1-wan-vlan-600-pppoe-client                                   0
+DAc 2804:7f4:c182:a96d::/64                     ether2-lan                                                         0
+D d 2804:7f4:c182:a96d::/64                                                                                        2
 DAc fe80::%ether1-wan/64                        ether1-wan                                                         0
 DAc fe80::%ether2-lan/64                        ether2-lan                                                         0
 DAc fe80::%ether1-wan-vlan-600/64               ether1-wan-vlan-600                                                0

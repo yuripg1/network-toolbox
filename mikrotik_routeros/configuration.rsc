@@ -40,7 +40,7 @@
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
 /ip cloud set ddns-enabled=no update-time=no
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB doh-max-concurrent-queries=500 max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes
 /ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
 /ip firewall address-list add address=10.175.202.1/32 list=ip-dns-address-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
@@ -63,9 +63,9 @@
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
+/ip service set www disabled=yes
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=yes
+/ip service set www-ssl certificate=www-ssl-certificate disabled=no port=443
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes

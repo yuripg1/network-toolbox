@@ -117,7 +117,7 @@
 # Connection tracking timeouts
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
-# Miscellaneous configuration
+# Netfilter configuration
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 
@@ -134,19 +134,24 @@
 # Discovery configuration
 /ip neighbor discovery-settings set discover-interface-list=none
 
+# Management hardening
+/ip ssh set strong-crypto=yes
+
+# Disabling of unused services
+/ip smb set enabled=no
+/tool bandwidth-server set enabled=no
+
+# Management channels configuration
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
+/ip service set www disabled=yes
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=yes
+/ip service set www-ssl disabled=no port=443
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
 
-/ip smb set enabled=no
-
-/ip ssh set strong-crypto=yes
-
+# Physical interfaces queue configuration
 /queue interface set ether1-wan queue=only-hardware-queue
 /queue interface set ether2-lan queue=only-hardware-queue
 /queue interface set ether3 queue=only-hardware-queue
@@ -157,14 +162,32 @@
 /queue interface set ether8 queue=only-hardware-queue
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
 
+# Log configuration
 /system logging action set [ find name=memory ] memory-lines=10000
 
-/tool bandwidth-server set enabled=no
-
+# Graphing of interfaces traffic and system resources
 /tool graphing interface add interface=ether1-wan store-on-disk=no
 /tool graphing interface add interface=ether2-lan store-on-disk=no
 /tool graphing resource add store-on-disk=no
 
+# Disabling of access and troubleshooting via MAC address
 /tool mac-server set allowed-interface-list=none
 /tool mac-server mac-winbox set allowed-interface-list=none
 /tool mac-server ping set enabled=no
+
+:delay 60s
+
+# Certificate configuration for management via HTTPS
+/certificate add common-name=router.lan name=www-ssl-certificate trusted=yes
+/certificate sign www-ssl-certificate
+:delay 15s;
+/ip service set www-ssl certificate=www-ssl-certificate
+
+# DNS-over-HTTPS configuration
+/tool fetch check-certificate=no mode=https url=https://i.pki.goog/r1.pem
+:delay 15s
+/tool fetch check-certificate=no mode=https url=https://i.pki.goog/wr2.pem
+:delay 15s
+/certificate import file-name=r1.pem trusted=yes
+/certificate import file-name=wr2.pem trusted=yes
+/ip dns set doh-max-concurrent-queries=500 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes

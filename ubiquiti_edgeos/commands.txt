@@ -215,7 +215,7 @@ set system conntrack timeout tcp time-wait 120
 set system conntrack timeout udp other 30
 set system conntrack timeout udp stream 180
 
-# Miscellaneous configuration
+# Netfilter configuration
 set firewall ip-src-route disable
 set firewall ipv6-receive-redirects disable
 set firewall ipv6-src-route disable
@@ -239,20 +239,25 @@ set system host-name Home-Router
 # Discovery configuration
 set service ubnt-discover disable
 
+# Management hardening
 set service gui older-ciphers disable
 
+# Disabling of unused services
 set service unms disable
 
+# Disabling of telemetry
 set system analytics-handler send-analytics-report false
-
 set system crash-handler send-crash-report false
 
-set system name-server 127.0.0.1
-
+# Disabling of hardware offloading
 set system offload hwnat disable
 set system offload ipsec disable
 
+# Disabling of traffic analysis
 set system traffic-analysis dpi disable
+
+# System DNS configuration
+set system name-server 127.0.0.1
 
 $ scp ./scripts/ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
 $ scp ./scripts/ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
