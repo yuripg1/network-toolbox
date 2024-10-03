@@ -144,9 +144,9 @@
 # Management channels configuration
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=yes
+/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=no port=443
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
@@ -174,20 +174,3 @@
 /tool mac-server set allowed-interface-list=none
 /tool mac-server mac-winbox set allowed-interface-list=none
 /tool mac-server ping set enabled=no
-
-:delay 60s
-
-# Certificate configuration for management via HTTPS
-/certificate add common-name=router.lan name=www-ssl-certificate trusted=yes
-/certificate sign www-ssl-certificate
-:delay 15s;
-/ip service set www-ssl certificate=www-ssl-certificate
-
-# DNS-over-HTTPS configuration
-/tool fetch check-certificate=no mode=https url=https://i.pki.goog/r1.pem
-:delay 15s
-/tool fetch check-certificate=no mode=https url=https://i.pki.goog/wr2.pem
-:delay 15s
-/certificate import file-name=r1.pem trusted=yes
-/certificate import file-name=wr2.pem trusted=yes
-/ip dns set doh-max-concurrent-queries=500 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes

@@ -226,9 +226,9 @@
 ```
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=yes
+/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl disabled=no port=443
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
@@ -268,24 +268,6 @@
 /tool mac-server set allowed-interface-list=none
 /tool mac-server mac-winbox set allowed-interface-list=none
 /tool mac-server ping set enabled=no
-```
-
-### Certificate configuration for management via HTTPS
-
-```
-/certificate add common-name=router.lan name=www-ssl-certificate trusted=yes
-/certificate sign www-ssl-certificate
-/ip service set www-ssl certificate=www-ssl-certificate
-```
-
-### DNS-over-HTTPS configuration
-
-```
-/tool fetch check-certificate=no mode=https url=https://i.pki.goog/r1.pem
-/tool fetch check-certificate=no mode=https url=https://i.pki.goog/wr2.pem
-/certificate import file-name=r1.pem trusted=yes
-/certificate import file-name=wr2.pem trusted=yes
-/ip dns set doh-max-concurrent-queries=500 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes
 ```
 
 ## Final configuration
@@ -333,7 +315,7 @@
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
 /ip cloud set ddns-enabled=no update-time=no
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
-/ip dns set allow-remote-requests=yes cache-size=20480KiB doh-max-concurrent-queries=500 max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844 use-doh-server=https://dns.google/dns-query verify-doh-cert=yes
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 /ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
 /ip firewall address-list add address=10.175.202.1/32 list=ip-dns-address-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
@@ -356,9 +338,9 @@
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=yes
+/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
-/ip service set www-ssl certificate=www-ssl-certificate disabled=no port=443
+/ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
@@ -417,7 +399,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 #   ADDRESS           NETWORK         INTERFACE
 0   10.175.202.1/24   10.175.202.0    ether2-lan
 1   10.123.203.2/24   10.123.203.0    ether1-wan
-2 D 201.47.220.72/32  179.184.126.60  ether1-wan-vlan-600-pppoe-client
+2 D 187.112.51.41/32  179.184.126.59  ether1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -430,7 +412,7 @@ Columns: DST-ADDRESS, GATEWAY, DISTANCE
 DAv 0.0.0.0/0          ether1-wan-vlan-600-pppoe-client         1
 DAc 10.123.203.0/24    ether1-wan                               0
 DAc 10.175.202.0/24    ether2-lan                               0
-DAc 179.184.126.60/32  ether1-wan-vlan-600-pppoe-client         0
+DAc 179.184.126.59/32  ether1-wan-vlan-600-pppoe-client         0
 ```
 
 ### IPv6 addresses
@@ -440,13 +422,13 @@ DAc 179.184.126.60/32  ether1-wan-vlan-600-pppoe-client         0
 Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
-0  G 2804:7f4:c182:a96d:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
+0  G 2804:7f4:c2b5:e851:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
 1 D  ::1/128                                                           lo                                no
 2 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
 3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
 4 DL fe80::48a9:8aff:fe40:5a95/64                                      ether2-lan                        no
-5 DL fe80::1fd0:1ede:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
-6 DG 2804:7f4:c00e:b07c:1fd0:1ede:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         23h18m31s
+5 DL fe80::7917:7c34:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
+6 DG 2804:7f4:c003:5801:7917:7c34:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         23h57m36s
 ```
 
 ### IPv6 routes
@@ -456,12 +438,12 @@ Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, d - DHCP, v - VPN
 Columns: DST-ADDRESS, GATEWAY, DISTANCE
     DST-ADDRESS                                 GATEWAY                                                     DISTANCE
-D d ::/0                                        fe80::e681:84ff:fe57:f00f%ether1-wan-vlan-600-pppoe-client         2
+D d ::/0                                        fe80::e681:84ff:fe30:840f%ether1-wan-vlan-600-pppoe-client         2
 DAv ::/0                                        ether1-wan-vlan-600-pppoe-client                                   1
 DAc ::1/128                                     lo                                                                 0
-DAc 2804:7f4:c00e:b07c::/64                     ether1-wan-vlan-600-pppoe-client                                   0
-DAc 2804:7f4:c182:a96d::/64                     ether2-lan                                                         0
-D d 2804:7f4:c182:a96d::/64                                                                                        2
+DAc 2804:7f4:c003:5801::/64                     ether1-wan-vlan-600-pppoe-client                                   0
+DAc 2804:7f4:c2b5:e851::/64                     ether2-lan                                                         0
+D d 2804:7f4:c2b5:e851::/64                                                                                        2
 DAc fe80::%ether1-wan/64                        ether1-wan                                                         0
 DAc fe80::%ether2-lan/64                        ether2-lan                                                         0
 DAc fe80::%ether1-wan-vlan-600/64               ether1-wan-vlan-600                                                0
