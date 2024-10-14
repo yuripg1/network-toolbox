@@ -25,14 +25,14 @@
 /ip firewall filter add action=accept chain=ip-input-wan-in comment="accept established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ip-input-wan-in comment="accept icmp echo request packets" icmp-options=8:0 protocol=icmp
-/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining icmp packets" log=yes protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log remaining icmp packets" log=yes protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 
 # IPv4 LAN
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 /interface list add name=lan-interface-list
 /interface list member add interface=ether2-lan list=lan-interface-list
-/ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
+/ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-option-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
@@ -42,12 +42,12 @@
 # IPv4 WAN
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
 /interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
 
 # IPv4 TCP MSS clamping
-/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
-/ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
+/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
+/ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
 
 # IPv4 DNS query redirection
 /ip firewall address-list add address=10.175.202.1/32 list=ip-dns-address-list
@@ -70,20 +70,20 @@
 /ipv6 firewall filter add action=accept chain=ipv6-forward-wan-in comment="accept established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-forward-wan-in comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=accept chain=ipv6-input-wan-in comment="accept dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining icmpv6 packets" log=yes protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
 # IPv6 LAN
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=medium
 /ipv6 nd prefix default set autonomous=yes
 
 # IPv6 WAN
@@ -91,8 +91,8 @@
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
 
 # IPv6 TCP MSS clamping
-/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
-/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
+/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
+/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
 
 # IPv6 DNS query redirection
 /ipv6 firewall address-list add address=fe80::48a9:8aff:fe40:5a95/128 list=ipv6-dns-address-list
@@ -117,7 +117,7 @@
 # Connection tracking timeouts
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
-# Netfilter configuration
+# Kernel configuration
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 

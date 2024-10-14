@@ -58,7 +58,7 @@ set firewall name INPUT_WAN_IN rule 6000 icmp code 0
 set firewall name INPUT_WAN_IN rule 6000 icmp type 8
 set firewall name INPUT_WAN_IN rule 6000 protocol icmp
 set firewall name INPUT_WAN_IN rule 8000 action drop
-set firewall name INPUT_WAN_IN rule 8000 description "drop remaining icmp packets"
+set firewall name INPUT_WAN_IN rule 8000 description "drop and log remaining icmp packets"
 set firewall name INPUT_WAN_IN rule 8000 log enable
 set firewall name INPUT_WAN_IN rule 8000 protocol icmp
 ```
@@ -72,7 +72,7 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-r
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 172800
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1480;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
 ```
 
@@ -90,7 +90,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 default-route force
 set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vif-600-pppoe
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name FORWARD_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name INPUT_WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1492
+set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1480
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
 set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
@@ -144,7 +144,7 @@ set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 description "accept icmpv6 
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 icmpv6 type 128/0
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 protocol icmpv6
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 action drop
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 description "drop remaining icmpv6 packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 description "drop and log remaining icmpv6 packets"
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 log enable
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN default-action drop
@@ -176,11 +176,11 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 protocol udp
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source address fe80::/10
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source port 547
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description "drop remaining icmpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description "drop and log remaining icmpv6 packets"
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 log enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description "drop remaining dhcpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description "drop and log remaining dhcpv6 packets"
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination port 546
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 log enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
@@ -192,7 +192,7 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth1 ipv6 router-advert default-preference medium
-set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
+set interfaces ethernet eth1 ipv6 router-advert link-mtu 1480
 set interfaces ethernet eth1 ipv6 router-advert managed-flag false
 set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
 set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
@@ -267,7 +267,7 @@ set system conntrack timeout udp other 30
 set system conntrack timeout udp stream 180
 ```
 
-### Netfilter configuration
+### Kernel configuration
 
 ```
 set firewall ip-src-route disable
@@ -409,7 +409,7 @@ firewall {
         }
         rule 8000 {
             action drop
-            description "drop remaining icmpv6 packets"
+            description "drop and log remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
@@ -475,13 +475,13 @@ firewall {
         }
         rule 7777 {
             action drop
-            description "drop remaining icmpv6 packets"
+            description "drop and log remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
         rule 8888 {
             action drop
-            description "drop remaining dhcpv6 packets"
+            description "drop and log remaining dhcpv6 packets"
             destination {
                 port 546
             }
@@ -539,7 +539,7 @@ firewall {
         }
         rule 8000 {
             action drop
-            description "drop remaining icmp packets"
+            description "drop and log remaining icmp packets"
             log enable
             protocol icmp
         }
@@ -591,7 +591,7 @@ interfaces {
                     enable {
                     }
                 }
-                mtu 1492
+                mtu 1480
                 name-server none
                 password ****************
                 user-id cliente@cliente
@@ -607,7 +607,7 @@ interfaces {
             router-advert {
                 cur-hop-limit 64
                 default-preference medium
-                link-mtu 1492
+                link-mtu 1480
                 managed-flag false
                 max-interval 600
                 name-server fe80::d021:f9ff:fedd:c850
@@ -666,7 +666,7 @@ service {
                 start 10.182.186.2 {
                     stop 10.182.186.253
                 }
-                subnet-parameters "option interface-mtu 1492;"
+                subnet-parameters "option interface-mtu 1480;"
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }
@@ -824,7 +824,7 @@ $ sudo ip -brief -4 address
 lo               UNKNOWN        127.0.0.1/8
 eth0@itf0        UP             10.123.203.2/24
 eth1@itf0        UP             10.182.186.1/24
-pppoe0           UNKNOWN        191.32.43.75 peer 179.184.126.60/32
+pppoe0           UNKNOWN        191.32.33.7 peer 179.184.126.60/32
 ```
 
 ### IPv4 routes
@@ -834,8 +834,8 @@ $ sudo ip -4 route
 default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev eth1 proto kernel scope link src 10.182.186.1
-179.184.126.60 dev pppoe0 proto kernel scope link src 191.32.43.75
-191.32.43.75 dev pppoe0 proto kernel scope link
+179.184.126.60 dev pppoe0 proto kernel scope link src 191.32.33.7
+191.32.33.7 dev pppoe0 proto kernel scope link
 ```
 
 ### IPv6 addresses
@@ -845,18 +845,18 @@ $ sudo ip -brief -6 address
 lo               UNKNOWN        ::1/128
 itf0             UNKNOWN        fe80::d221:f9ff:fee1:353/64
 eth0@itf0        UP             fe80::d021:f9ff:fe48:20d2/64
-eth1@itf0        UP             2804:7f4:c182:f3ee:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
+eth1@itf0        UP             2804:7f4:c183:342f:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d021:f9ff:fe48:20d2/64
-pppoe0           UNKNOWN        2804:7f4:c00e:f30e:6c14:c61b:2e4b:5d3f/64 fe80::6c14:c61b:2e4b:5d3f/10
+pppoe0           UNKNOWN        2804:7f4:c00f:e8e:2003:4065:f8d8:d37c/64 fe80::2003:4065:f8d8:d37c/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c00e:f30e::/64 dev pppoe0 proto kernel metric 256 expires 86187sec pref medium
-2804:7f4:c182:f3ee::/64 dev eth1 proto kernel metric 256 pref medium
+2804:7f4:c00f:e8e::/64 dev pppoe0 proto kernel metric 256 expires 86249sec pref medium
+2804:7f4:c183:342f::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
 fe80::/64 dev eth0 proto kernel metric 256 pref medium
@@ -864,7 +864,7 @@ fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::e681:84ff:fe57:f00f dev pppoe0 proto ra metric 1024 expires 4287sec hoplimit 64 pref medium
+default via fe80::e681:84ff:fe57:f00f dev pppoe0 proto ra metric 1024 expires 4349sec hoplimit 64 pref medium
 ```
 
 ## Resources
