@@ -179,7 +179,7 @@ interfaces {
         vif 600 {
             description eth0-wan-vif-600
             pppoe 0 {
-                default-route force
+                default-route auto
                 description eth0-wan-vif-600-pppoe
                 dhcpv6-pd {
                     no-dns
@@ -210,7 +210,7 @@ interfaces {
                     enable {
                     }
                 }
-                mtu 1480
+                mtu 1492
                 name-server none
                 password ****************
                 user-id cliente@cliente
@@ -226,7 +226,7 @@ interfaces {
             router-advert {
                 cur-hop-limit 64
                 default-preference medium
-                link-mtu 1480
+                link-mtu 1492
                 managed-flag false
                 max-interval 600
                 name-server fe80::d021:f9ff:fedd:c850
@@ -285,7 +285,7 @@ service {
                 start 10.182.186.2 {
                     stop 10.182.186.253
                 }
-                subnet-parameters "option interface-mtu 1480;"
+                subnet-parameters "option interface-mtu 1492;"
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }

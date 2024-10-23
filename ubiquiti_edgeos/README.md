@@ -72,7 +72,7 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-r
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 172800
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1480;"
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
 ```
 
@@ -86,11 +86,11 @@ delete interfaces ethernet eth0 address
 
 ```
 set interfaces ethernet eth0 vif 600 description eth0-wan-vif-600
-set interfaces ethernet eth0 vif 600 pppoe 0 default-route force
+set interfaces ethernet eth0 vif 600 pppoe 0 default-route auto
 set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vif-600-pppoe
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name FORWARD_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name INPUT_WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1480
+set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1492
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
 set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
@@ -192,7 +192,7 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth1 ipv6 router-advert default-preference medium
-set interfaces ethernet eth1 ipv6 router-advert link-mtu 1480
+set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
 set interfaces ethernet eth1 ipv6 router-advert managed-flag false
 set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
 set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
@@ -306,16 +306,22 @@ set system host-name Home-Router
 set service ubnt-discover disable
 ```
 
-### Management hardening
-
-```
-set service gui older-ciphers disable
-```
-
 ### Disabling of unused services
 
 ```
 set service unms disable
+```
+
+### Management channels configuration
+
+```
+delete service gui
+delete service ssh
+set service gui http-port 80
+set service gui https-port 443
+set service gui older-ciphers disable
+set service ssh port 22
+set service ssh protocol-version v2
 ```
 
 ### Disabling of telemetry
@@ -560,7 +566,7 @@ interfaces {
         vif 600 {
             description eth0-wan-vif-600
             pppoe 0 {
-                default-route force
+                default-route auto
                 description eth0-wan-vif-600-pppoe
                 dhcpv6-pd {
                     no-dns
@@ -591,7 +597,7 @@ interfaces {
                     enable {
                     }
                 }
-                mtu 1480
+                mtu 1492
                 name-server none
                 password ****************
                 user-id cliente@cliente
@@ -607,7 +613,7 @@ interfaces {
             router-advert {
                 cur-hop-limit 64
                 default-preference medium
-                link-mtu 1480
+                link-mtu 1492
                 managed-flag false
                 max-interval 600
                 name-server fe80::d021:f9ff:fedd:c850
@@ -666,7 +672,7 @@ service {
                 start 10.182.186.2 {
                     stop 10.182.186.253
                 }
-                subnet-parameters "option interface-mtu 1480;"
+                subnet-parameters "option interface-mtu 1492;"
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }

@@ -11,13 +11,13 @@
 /interface list add name=wan-interface-list
 /interface list add name=lan-interface-list
 /interface list add include=wan-interface-list name=masquerade-interface-list
-/ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1480'"
+/ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-option-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.253
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes bootp-support=none conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
-/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1480 max-mtu=1480 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /queue interface set ether1-wan queue=only-hardware-queue
 /queue interface set ether2-lan queue=only-hardware-queue
 /queue interface set ether3 queue=only-hardware-queue
@@ -54,8 +54,8 @@
 /ip firewall filter add action=accept chain=ip-input-wan-in comment="accept icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log remaining icmp packets" log=yes protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
-/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1440 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
-/ip firewall mangle add action=change-mss chain=postrouting new-mss=1440 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1441-65535
+/ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
+/ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-address-list=ip-lan-address-list src-port=123 to-ports=49152-65535
@@ -89,13 +89,13 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
-/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1420 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
-/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1420 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1421-65535
+/ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
+/ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1480 other-configuration=no ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
 /ipv6 nd prefix default set autonomous=yes
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
