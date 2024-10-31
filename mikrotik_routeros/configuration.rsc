@@ -15,7 +15,7 @@
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-option-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.253
-/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes bootp-support=none conflict-detection=yes interface=ether2-lan lease-time=2d name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes bootp-support=none conflict-detection=yes interface=ether2-lan lease-time=12h name=ip-dhcp-server
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
 /interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /queue interface set ether1-wan queue=only-hardware-queue
