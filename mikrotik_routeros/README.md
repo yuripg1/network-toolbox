@@ -26,6 +26,13 @@
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 ```
 
+### Kernel configuration
+
+```
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
+```
+
 ### IPv4 firewall rules
 
 ```
@@ -158,6 +165,12 @@
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 ```
 
+### Connection tracking timeouts
+
+```
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+```
+
 ### Clock configuration
 
 ```
@@ -168,19 +181,6 @@
 /system ntp client servers add address=time3.google.com iburst=yes
 /system ntp client servers add address=time4.google.com iburst=yes
 /system ntp client set enabled=yes mode=unicast
-```
-
-### Connection tracking timeouts
-
-```
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
-```
-
-### Kernel configuration
-
-```
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
-/ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 ```
 
 ### Static DNS configuration

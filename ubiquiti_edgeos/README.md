@@ -33,6 +33,18 @@ set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 ```
 
+### Kernel configuration
+
+```
+set firewall ip-src-route disable
+set firewall ipv6-receive-redirects disable
+set firewall ipv6-src-route disable
+set firewall receive-redirects disable
+set firewall send-redirects enable
+set firewall source-validation disable
+set firewall syn-cookies enable
+```
+
 ### IPv4 firewall rules
 
 ```
@@ -239,17 +251,6 @@ set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 ```
 
-### Clock configuration
-
-```
-delete system ntp server
-set system time-zone America/Sao_Paulo
-set system ntp server time1.google.com
-set system ntp server time2.google.com
-set system ntp server time3.google.com
-set system ntp server time4.google.com
-```
-
 ### Connection tracking timeouts
 
 ```
@@ -267,16 +268,15 @@ set system conntrack timeout udp other 30
 set system conntrack timeout udp stream 180
 ```
 
-### Kernel configuration
+### Clock configuration
 
 ```
-set firewall ip-src-route disable
-set firewall ipv6-receive-redirects disable
-set firewall ipv6-src-route disable
-set firewall receive-redirects disable
-set firewall send-redirects enable
-set firewall source-validation disable
-set firewall syn-cookies enable
+delete system ntp server
+set system time-zone America/Sao_Paulo
+set system ntp server time1.google.com
+set system ntp server time2.google.com
+set system ntp server time3.google.com
+set system ntp server time4.google.com
 ```
 
 ### Static DNS configuration
