@@ -86,6 +86,7 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 432
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
+set service dhcp-server static-arp enable
 ```
 
 ### Default address removal
@@ -210,6 +211,8 @@ set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd
 set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
+set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
+set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 86400
 set interfaces ethernet eth1 ipv6 router-advert send-advert true
 ```
 
@@ -621,7 +624,8 @@ interfaces {
                 prefix ::/64 {
                     autonomous-flag true
                     on-link-flag true
-                    valid-lifetime 2592000
+                    preferred-lifetime 43200
+                    valid-lifetime 86400
                 }
                 reachable-time 0
                 retrans-timer 0
@@ -676,7 +680,7 @@ service {
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }
-        static-arp disable
+        static-arp enable
         use-dnsmasq disable
     }
     dns {

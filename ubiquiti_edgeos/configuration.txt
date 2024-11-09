@@ -234,7 +234,8 @@ interfaces {
                 prefix ::/64 {
                     autonomous-flag true
                     on-link-flag true
-                    valid-lifetime 2592000
+                    preferred-lifetime 43200
+                    valid-lifetime 86400
                 }
                 reachable-time 0
                 retrans-timer 0
@@ -289,7 +290,7 @@ service {
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }
-        static-arp disable
+        static-arp enable
         use-dnsmasq disable
     }
     dns {
