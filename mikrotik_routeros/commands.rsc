@@ -15,9 +15,8 @@
 /interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 
-# Kernel configuration
+# IPv4 kernel configuration
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
-/ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 
 # IPv4 firewall rules
 /interface list add name=wan-interface-list
@@ -32,6 +31,9 @@
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log remaining icmp packets" log=yes protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 
+# IPv4 loopback configuration
+/ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
+
 # IPv4 LAN
 /ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 /interface list add name=lan-interface-list
@@ -39,9 +41,9 @@
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-option-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.175.202.1 gateway=10.175.202.1 netmask=24
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.195.123.1 gateway=10.175.202.1 netmask=24
 /ip pool add name=ip-dhcp-server-pool ranges=10.175.202.2-10.175.202.253
-/ip dhcp-server add add-arp=yes address-pool=ip-dhcp-server-pool authoritative=yes bootp-support=none conflict-detection=yes interface=ether2-lan lease-time=12h name=ip-dhcp-server
+/ip dhcp-server add address-pool=ip-dhcp-server-pool authoritative=yes bootp-support=none conflict-detection=yes interface=ether2-lan lease-time=12h name=ip-dhcp-server
 
 # IPv4 WAN
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
@@ -54,7 +56,7 @@
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 
 # IPv4 DNS query redirection
-/ip firewall address-list add address=10.175.202.1/32 list=ip-dns-address-list
+/ip firewall address-list add address=10.195.123.1/32 list=ip-dns-address-list
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 
@@ -66,6 +68,9 @@
 # IPv4 workaround for ISP blocking of inbound UDP packets on port 123
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-address-list=ip-lan-address-list src-port=123 to-ports=49152-65535 place-before=2
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
+
+# IPv6 kernel configuration
+/ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 
 # IPv6 firewall rules
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
@@ -85,9 +90,12 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
+# IPv6 loopback configuration
+/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo
+
 # IPv6 LAN
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fe80::48a9:8aff:fe40:5a95 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=1d
 
 # IPv6 WAN
@@ -99,7 +107,7 @@
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 
 # IPv6 DNS query redirection
-/ipv6 firewall address-list add address=fe80::48a9:8aff:fe40:5a95/128 list=ipv6-dns-address-list
+/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address-list
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interface-list protocol=tcp
 
@@ -122,7 +130,7 @@
 /system ntp client set enabled=yes mode=unicast
 
 # Static DNS configuration
-/ip dns static add address=10.175.202.1 name=router.lan ttl=5m type=A
+/ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
 
 # Modem access configuration
 /ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0

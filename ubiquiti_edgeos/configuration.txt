@@ -229,7 +229,7 @@ interfaces {
                 link-mtu 1492
                 managed-flag false
                 max-interval 600
-                name-server fe80::d021:f9ff:fedd:c850
+                name-server fd1a:ac95:26c8:c75f::1
                 other-config-flag false
                 prefix ::/64 {
                     autonomous-flag true
@@ -268,6 +268,8 @@ interfaces {
         speed auto
     }
     loopback lo {
+        address 10.189.117.1/32
+        address fd1a:ac95:26c8:c75f::1/128
     }
     switch switch0 {
         mtu 1500
@@ -281,7 +283,7 @@ service {
             authoritative enable
             subnet 10.182.186.0/24 {
                 default-router 10.182.186.1
-                dns-server 10.182.186.1
+                dns-server 10.189.117.1
                 lease 43200
                 start 10.182.186.2 {
                     stop 10.182.186.253
@@ -290,7 +292,7 @@ service {
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }
-        static-arp enable
+        static-arp disable
         use-dnsmasq disable
     }
     dns {
@@ -398,7 +400,6 @@ system {
             level admin
         }
     }
-    name-server 127.0.0.1
     ntp {
         server time1.google.com {
         }
@@ -415,7 +416,7 @@ system {
     }
     static-host-mapping {
         host-name router.lan {
-            inet 10.182.186.1
+            inet 10.189.117.1
         }
     }
     syslog {

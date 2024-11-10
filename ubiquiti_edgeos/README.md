@@ -33,12 +33,10 @@ set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 ```
 
-### Kernel configuration
+### IPv4 kernel configuration
 
 ```
 set firewall ip-src-route disable
-set firewall ipv6-receive-redirects disable
-set firewall ipv6-src-route disable
 set firewall receive-redirects disable
 set firewall send-redirects enable
 set firewall source-validation disable
@@ -75,18 +73,23 @@ set firewall name INPUT_WAN_IN rule 8000 log enable
 set firewall name INPUT_WAN_IN rule 8000 protocol icmp
 ```
 
+### IPv4 loopback configuration
+
+```
+set interfaces loopback lo address 10.189.117.1/32
+```
+
 ### IPv4 LAN
 
 ```
 set interfaces ethernet eth1 address 10.182.186.1/24
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.182.186.1
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 43200
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
-set service dhcp-server static-arp enable
 ```
 
 ### Default address removal
@@ -139,6 +142,13 @@ set service nat rule 8000 outside-address port 49152-65535
 set service nat rule 8000 protocol udp
 set service nat rule 8000 source port 123
 set service nat rule 8000 type source
+```
+
+### IPv6 kernel configuration
+
+```
+set firewall ipv6-receive-redirects disable
+set firewall ipv6-src-route disable
 ```
 
 ### IPv6 firewall rules
@@ -199,6 +209,12 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 log enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 ```
 
+### IPv6 loopback configuration
+
+```
+set interfaces loopback lo address fd1a:ac95:26c8:c75f::1/128
+```
+
 ### IPv6 LAN
 
 ```
@@ -207,7 +223,7 @@ set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth1 ipv6 router-advert default-preference medium
 set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
 set interfaces ethernet eth1 ipv6 router-advert managed-flag false
-set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
+set interfaces ethernet eth1 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
 set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
@@ -285,7 +301,7 @@ set system ntp server time4.google.com
 ### Static DNS configuration
 
 ```
-set system static-host-mapping host-name router.lan inet 10.182.186.1
+set system static-host-mapping host-name router.lan inet 10.189.117.1
 ```
 
 ### Modem access configuration
@@ -345,12 +361,6 @@ set system offload ipsec disable
 
 ```
 set system traffic-analysis dpi disable
-```
-
-### System DNS configuration
-
-```
-set system name-server 127.0.0.1
 ```
 
 ## Configuration scripts
@@ -619,7 +629,7 @@ interfaces {
                 link-mtu 1492
                 managed-flag false
                 max-interval 600
-                name-server fe80::d021:f9ff:fedd:c850
+                name-server fd1a:ac95:26c8:c75f::1
                 other-config-flag false
                 prefix ::/64 {
                     autonomous-flag true
@@ -658,6 +668,8 @@ interfaces {
         speed auto
     }
     loopback lo {
+        address 10.189.117.1/32
+        address fd1a:ac95:26c8:c75f::1/128
     }
     switch switch0 {
         mtu 1500
@@ -671,7 +683,7 @@ service {
             authoritative enable
             subnet 10.182.186.0/24 {
                 default-router 10.182.186.1
-                dns-server 10.182.186.1
+                dns-server 10.189.117.1
                 lease 43200
                 start 10.182.186.2 {
                     stop 10.182.186.253
@@ -680,7 +692,7 @@ service {
                 subnet-parameters "option broadcast-address 10.182.186.255;"
             }
         }
-        static-arp enable
+        static-arp disable
         use-dnsmasq disable
     }
     dns {
@@ -788,7 +800,6 @@ system {
             level admin
         }
     }
-    name-server 127.0.0.1
     ntp {
         server time1.google.com {
         }
@@ -805,7 +816,7 @@ system {
     }
     static-host-mapping {
         host-name router.lan {
-            inet 10.182.186.1
+            inet 10.189.117.1
         }
     }
     syslog {
@@ -831,10 +842,10 @@ system {
 
 ```
 $ sudo ip -brief -4 address
-lo               UNKNOWN        127.0.0.1/8
+lo               UNKNOWN        127.0.0.1/8 10.189.117.1/32
 eth0@itf0        UP             10.123.203.2/24
 eth1@itf0        UP             10.182.186.1/24
-pppoe0           UNKNOWN        191.32.33.7 peer 179.184.126.60/32
+pppoe0           UNKNOWN        201.1.26.169 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
@@ -844,29 +855,31 @@ $ sudo ip -4 route
 default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev eth1 proto kernel scope link src 10.182.186.1
-179.184.126.60 dev pppoe0 proto kernel scope link src 191.32.33.7
-191.32.33.7 dev pppoe0 proto kernel scope link
+10.189.117.1 dev lo proto kernel scope link
+189.97.102.55 dev pppoe0 proto kernel scope link src 201.1.26.169
+201.1.26.169 dev pppoe0 proto kernel scope link
 ```
 
 ### IPv6 addresses
 
 ```
 $ sudo ip -brief -6 address
-lo               UNKNOWN        ::1/128
+lo               UNKNOWN        fd1a:ac95:26c8:c75f::1/128 ::1/128
 itf0             UNKNOWN        fe80::d221:f9ff:fee1:353/64
 eth0@itf0        UP             fe80::d021:f9ff:fe48:20d2/64
-eth1@itf0        UP             2804:7f4:c183:342f:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
+eth1@itf0        UP             2804:7f4:ca00:71fd:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d021:f9ff:fe48:20d2/64
-pppoe0           UNKNOWN        2804:7f4:c00f:e8e:2003:4065:f8d8:d37c/64 fe80::2003:4065:f8d8:d37c/10
+pppoe0           UNKNOWN        2804:7f4:c02f:97c2:810a:3c61:4523:3021/64 fe80::810a:3c61:4523:3021/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c00f:e8e::/64 dev pppoe0 proto kernel metric 256 expires 86249sec pref medium
-2804:7f4:c183:342f::/64 dev eth1 proto kernel metric 256 pref medium
+2804:7f4:c02f:97c2::/64 dev pppoe0 proto kernel metric 256 expires 258934sec pref medium
+2804:7f4:ca00:71fd::/64 dev eth1 proto kernel metric 256 pref medium
+unreachable fd1a:ac95:26c8:c75f::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
 fe80::/64 dev eth0 proto kernel metric 256 pref medium
@@ -874,7 +887,7 @@ fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::e681:84ff:fe57:f00f dev pppoe0 proto ra metric 1024 expires 4349sec hoplimit 64 pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1534sec pref medium
 ```
 
 ## Resources

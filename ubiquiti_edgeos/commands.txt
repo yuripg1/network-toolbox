@@ -22,10 +22,8 @@ set interfaces ethernet eth4 disable
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
-# Kernel configuration
+# IPv4 kernel configuration
 set firewall ip-src-route disable
-set firewall ipv6-receive-redirects disable
-set firewall ipv6-src-route disable
 set firewall receive-redirects disable
 set firewall send-redirects enable
 set firewall source-validation disable
@@ -58,16 +56,18 @@ set firewall name INPUT_WAN_IN rule 8000 description "drop and log remaining icm
 set firewall name INPUT_WAN_IN rule 8000 log enable
 set firewall name INPUT_WAN_IN rule 8000 protocol icmp
 
+# IPv4 loopback configuration
+set interfaces loopback lo address 10.189.117.1/32
+
 # IPv4 LAN
 set interfaces ethernet eth1 address 10.182.186.1/24
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.182.186.1
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 43200
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
-set service dhcp-server static-arp enable
 
 # Default address removal
 delete interfaces ethernet eth0 address
@@ -106,6 +106,10 @@ set service nat rule 8000 outside-address port 49152-65535
 set service nat rule 8000 protocol udp
 set service nat rule 8000 source port 123
 set service nat rule 8000 type source
+
+# IPv6 kernel configuration
+set firewall ipv6-receive-redirects disable
+set firewall ipv6-src-route disable
 
 # IPv6 firewall rules
 set firewall ipv6-name IPV6_FORWARD_WAN_IN default-action drop
@@ -162,13 +166,16 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination port 546
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 log enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 
+# IPv6 loopback configuration
+set interfaces loopback lo address fd1a:ac95:26c8:c75f::1/128
+
 # IPv6 LAN
 set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
 set interfaces ethernet eth1 ipv6 router-advert default-preference medium
 set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
 set interfaces ethernet eth1 ipv6 router-advert managed-flag false
-set interfaces ethernet eth1 ipv6 router-advert name-server fe80::d021:f9ff:fedd:c850
+set interfaces ethernet eth1 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
 set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
@@ -228,7 +235,7 @@ set system ntp server time3.google.com
 set system ntp server time4.google.com
 
 # Static DNS configuration
-set system static-host-mapping host-name router.lan inet 10.182.186.1
+set system static-host-mapping host-name router.lan inet 10.189.117.1
 
 # Modem access configuration
 set interfaces ethernet eth0 address 10.123.203.2/24
@@ -264,9 +271,6 @@ set system offload ipsec disable
 
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
-
-# System DNS configuration
-set system name-server 127.0.0.1
 
 $ scp ./scripts/ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
 $ scp ./scripts/ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
