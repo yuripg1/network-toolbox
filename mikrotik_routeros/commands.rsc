@@ -91,7 +91,7 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
 # IPv6 loopback configuration
-/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo
+/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo no-dad=no
 
 # IPv6 LAN
 /ipv6 nd set [ find default=yes ] disabled=yes

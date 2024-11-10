@@ -71,7 +71,7 @@
 /ip service set winbox disabled=yes
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
-/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo
+/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo no-dad=no
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=ether2-lan no-dad=no
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
