@@ -26,6 +26,20 @@
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 ```
 
+### Initial configuration of interface lists
+
+```
+/interface list add name=lan-interface-list
+/interface list add name=wan-interface-list
+/interface list add include=wan-interface-list name=masquerade-interface-list
+```
+
+### Connection tracking timeouts
+
+```
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+```
+
 ### IPv4 kernel configuration
 
 ```
@@ -35,7 +49,6 @@
 ### IPv4 firewall rules
 
 ```
-/interface list add name=wan-interface-list
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan-in
 /ip firewall filter add action=accept chain=ip-forward-wan-in comment="accept established,related packets" connection-state=established,related
@@ -57,9 +70,8 @@
 ### IPv4 LAN
 
 ```
-/ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
-/interface list add name=lan-interface-list
 /interface list member add interface=ether2-lan list=lan-interface-list
+/ip address add address=10.175.202.1/24 interface=ether2-lan network=10.175.202.0
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
 /ip dhcp-server option sets add name=ip-dhcp-server-option-set options=ip-dhcp-server-option-26,ip-dhcp-server-option-28
@@ -95,7 +107,6 @@
 ### IPv4 NAT
 
 ```
-/interface list add include=wan-interface-list name=masquerade-interface-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interface-list src-address-list=ip-lan-address-list
 ```
@@ -105,6 +116,19 @@
 ```
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface-list protocol=udp src-address-list=ip-lan-address-list src-port=123 to-ports=49152-65535 place-before=2
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
+```
+
+### IPv4 modem access configuration
+
+```
+/interface list member add interface=ether1-wan list=masquerade-interface-list
+/ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
+```
+
+### IPv4 static DNS configuration
+
+```
+/ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
 ```
 
 ### IPv6 kernel configuration
@@ -143,9 +167,9 @@
 ### IPv6 LAN
 
 ```
+/ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=18h
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
-/ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=1d
 ```
 
 ### IPv6 WAN
@@ -176,16 +200,16 @@
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 ```
 
+### IPv6 static DNS configuration
+
+```
+/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=router.lan ttl=5m type=AAAA
+```
+
 ### DNS configuration
 
 ```
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
-```
-
-### Connection tracking timeouts
-
-```
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 ```
 
 ### Clock configuration
@@ -198,19 +222,6 @@
 /system ntp client servers add address=time3.google.com iburst=yes
 /system ntp client servers add address=time4.google.com iburst=yes
 /system ntp client set enabled=yes mode=unicast
-```
-
-### Static DNS configuration
-
-```
-/ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
-```
-
-### Modem access configuration
-
-```
-/ip address add address=10.123.203.2/24 interface=ether1-wan network=10.123.203.0
-/interface list member add interface=ether1-wan list=masquerade-interface-list
 ```
 
 ### Host name configuration
@@ -246,20 +257,6 @@
 /ip ssh set strong-crypto=yes
 ```
 
-### Physical interfaces queue configuration
-
-```
-/queue interface set ether1-wan queue=only-hardware-queue
-/queue interface set ether2-lan queue=only-hardware-queue
-/queue interface set ether3 queue=only-hardware-queue
-/queue interface set ether4 queue=only-hardware-queue
-/queue interface set ether5 queue=only-hardware-queue
-/queue interface set ether6 queue=only-hardware-queue
-/queue interface set ether7 queue=only-hardware-queue
-/queue interface set ether8 queue=only-hardware-queue
-/queue interface set sfp-sfpplus1 queue=only-hardware-queue
-```
-
 ### Log configuration
 
 ```
@@ -282,6 +279,20 @@
 /tool mac-server ping set enabled=no
 ```
 
+### Physical interfaces queue configuration
+
+```
+/queue interface set ether1-wan queue=only-hardware-queue
+/queue interface set ether2-lan queue=only-hardware-queue
+/queue interface set ether3 queue=only-hardware-queue
+/queue interface set ether4 queue=only-hardware-queue
+/queue interface set ether5 queue=only-hardware-queue
+/queue interface set ether6 queue=only-hardware-queue
+/queue interface set ether7 queue=only-hardware-queue
+/queue interface set ether8 queue=only-hardware-queue
+/queue interface set sfp-sfpplus1 queue=only-hardware-queue
+```
+
 ## Final configuration
 
 ```
@@ -295,8 +306,8 @@
 /interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface list add name=wan-interface-list
 /interface list add name=lan-interface-list
+/interface list add name=wan-interface-list
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
@@ -330,6 +341,7 @@
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.195.123.1 gateway=10.175.202.1 netmask=24
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 /ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
+/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=router.lan ttl=5m type=AAAA
 /ip firewall address-list add address=10.195.123.1/32 list=ip-dns-address-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
@@ -385,7 +397,7 @@
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
-/ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=1d
+/ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=18h
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
 /system ntp client set enabled=yes mode=unicast
@@ -410,11 +422,11 @@
 > /ip address print
 Flags: D - DYNAMIC
 Columns: ADDRESS, NETWORK, INTERFACE
-#   ADDRESS           NETWORK        INTERFACE
-0   10.195.123.1/32   10.195.123.1   lo
-1   10.175.202.1/24   10.175.202.0   ether2-lan
-2   10.123.203.2/24   10.123.203.0   ether1-wan
-3 D 179.99.32.167/32  189.97.102.55  ether1-wan-vlan-600-pppoe-client
+#   ADDRESS          NETWORK        INTERFACE
+0   10.195.123.1/32  10.195.123.1   lo
+1   10.175.202.1/24  10.175.202.0   ether2-lan
+2   10.123.203.2/24  10.123.203.0   ether1-wan
+3 D 187.10.3.85/32   189.97.102.55  ether1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -439,13 +451,13 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
 0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                                no
-1  G 2804:7f4:ca00:722f:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
+1  G 2804:7f4:ca00:8a39:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
 2 D  ::1/128                                                           lo                                no
 3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
 4 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
-5 DL fe80::48a9:8aff:fe40:5a95/64                                      ether2-lan                        no
-6 DL fe80::a346:e7a3:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
-7 DG 2804:7f4:c02f:97fa:a346:e7a3:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         2d23h55m8s
+5 DL fe80::1aa4:a418:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
+6 DG 2804:7f4:c02f:b688:1aa4:a418:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         2d23h56m13s
+7 DL fe80::48a9:8aff:fe40:5a95/64                                      ether2-lan                        no
 ```
 
 ### IPv6 routes
@@ -458,9 +470,9 @@ Columns: DST-ADDRESS, GATEWAY, DISTANCE
 D d ::/0                                        fe80::a21c:8dff:fef1:1934%ether1-wan-vlan-600-pppoe-client         2
 DAv ::/0                                        ether1-wan-vlan-600-pppoe-client                                   1
 DAc ::1/128                                     lo                                                                 0
-DAc 2804:7f4:c02f:97fa::/64                     ether1-wan-vlan-600-pppoe-client                                   0
-DAc 2804:7f4:ca00:722f::/64                     ether2-lan                                                         0
-D d 2804:7f4:ca00:722f::/64                                                                                        2
+DAc 2804:7f4:c02f:b688::/64                     ether1-wan-vlan-600-pppoe-client                                   0
+DAc 2804:7f4:ca00:8a39::/64                     ether2-lan                                                         0
+D d 2804:7f4:ca00:8a39::/64                                                                                        2
 DAc fd9b:69ab:e45c:4aa6::1/128                  lo                                                                 0
 DAc fe80::%ether1-wan/64                        ether1-wan                                                         0
 DAc fe80::%ether2-lan/64                        ether2-lan                                                         0

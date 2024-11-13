@@ -235,7 +235,7 @@ interfaces {
                     autonomous-flag true
                     on-link-flag true
                     preferred-lifetime 43200
-                    valid-lifetime 86400
+                    valid-lifetime 64800
                 }
                 reachable-time 0
                 retrans-timer 0
@@ -417,6 +417,7 @@ system {
     static-host-mapping {
         host-name router.lan {
             inet 10.189.117.1
+            inet fd1a:ac95:26c8:c75f::1
         }
     }
     syslog {

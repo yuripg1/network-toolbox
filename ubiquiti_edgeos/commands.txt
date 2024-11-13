@@ -22,6 +22,20 @@ set interfaces ethernet eth4 disable
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 
+# Connection tracking timeouts
+set system conntrack timeout icmp 30
+set system conntrack timeout other 600
+set system conntrack timeout tcp close 10
+set system conntrack timeout tcp close-wait 60
+set system conntrack timeout tcp established 432000
+set system conntrack timeout tcp fin-wait 120
+set system conntrack timeout tcp last-ack 30
+set system conntrack timeout tcp syn-recv 60
+set system conntrack timeout tcp syn-sent 120
+set system conntrack timeout tcp time-wait 120
+set system conntrack timeout udp other 30
+set system conntrack timeout udp stream 180
+
 # IPv4 kernel configuration
 set firewall ip-src-route disable
 set firewall receive-redirects disable
@@ -107,6 +121,15 @@ set service nat rule 8000 protocol udp
 set service nat rule 8000 source port 123
 set service nat rule 8000 type source
 
+# IPv4 modem access configuration
+set interfaces ethernet eth0 address 10.123.203.2/24
+set service nat rule 9000 outbound-interface eth0
+set service nat rule 9000 source address 10.182.186.0/24
+set service nat rule 9000 type masquerade
+
+# IPv4 static DNS configuration
+set system static-host-mapping host-name router.lan inet 10.189.117.1
+
 # IPv6 kernel configuration
 set firewall ipv6-receive-redirects disable
 set firewall ipv6-src-route disable
@@ -180,7 +203,7 @@ set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 86400
+set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 64800
 set interfaces ethernet eth1 ipv6 router-advert send-advert true
 
 # IPv6 WAN
@@ -204,6 +227,9 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 # IPv6 workaround for ISP blocking of inbound UDP packets on port 123
 # See scripts/ipv6_nat_wan.sh
 
+# IPv6 static DNS configuration
+set system static-host-mapping host-name router.lan inet fd1a:ac95:26c8:c75f::1
+
 # DNS configuration
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on eth1
@@ -212,20 +238,6 @@ set service dns forwarding name-server 2001:4860:4860::8888
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
-# Connection tracking timeouts
-set system conntrack timeout icmp 30
-set system conntrack timeout other 600
-set system conntrack timeout tcp close 10
-set system conntrack timeout tcp close-wait 60
-set system conntrack timeout tcp established 432000
-set system conntrack timeout tcp fin-wait 120
-set system conntrack timeout tcp last-ack 30
-set system conntrack timeout tcp syn-recv 60
-set system conntrack timeout tcp syn-sent 120
-set system conntrack timeout tcp time-wait 120
-set system conntrack timeout udp other 30
-set system conntrack timeout udp stream 180
-
 # Clock configuration
 delete system ntp server
 set system time-zone America/Sao_Paulo
@@ -233,15 +245,6 @@ set system ntp server time1.google.com
 set system ntp server time2.google.com
 set system ntp server time3.google.com
 set system ntp server time4.google.com
-
-# Static DNS configuration
-set system static-host-mapping host-name router.lan inet 10.189.117.1
-
-# Modem access configuration
-set interfaces ethernet eth0 address 10.123.203.2/24
-set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source address 10.182.186.0/24
-set service nat rule 9000 type masquerade
 
 # Host name configuration
 set system host-name Home-Router

@@ -8,8 +8,8 @@
 /interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
 /interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface list add name=wan-interface-list
 /interface list add name=lan-interface-list
+/interface list add name=wan-interface-list
 /interface list add include=wan-interface-list name=masquerade-interface-list
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ip-dhcp-server-option-28 value="'10.175.202.255'"
@@ -43,6 +43,7 @@
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option-set=ip-dhcp-server-option-set dns-server=10.195.123.1 gateway=10.175.202.1 netmask=24
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
 /ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
+/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=router.lan ttl=5m type=AAAA
 /ip firewall address-list add address=10.195.123.1/32 list=ip-dns-address-list
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
@@ -98,7 +99,7 @@
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface-list protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=ether2-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
-/ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=1d
+/ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=18h
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
 /system ntp client set enabled=yes mode=unicast

@@ -33,6 +33,23 @@ set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 ```
 
+### Connection tracking timeouts
+
+```
+set system conntrack timeout icmp 30
+set system conntrack timeout other 600
+set system conntrack timeout tcp close 10
+set system conntrack timeout tcp close-wait 60
+set system conntrack timeout tcp established 432000
+set system conntrack timeout tcp fin-wait 120
+set system conntrack timeout tcp last-ack 30
+set system conntrack timeout tcp syn-recv 60
+set system conntrack timeout tcp syn-sent 120
+set system conntrack timeout tcp time-wait 120
+set system conntrack timeout udp other 30
+set system conntrack timeout udp stream 180
+```
+
 ### IPv4 kernel configuration
 
 ```
@@ -144,6 +161,21 @@ set service nat rule 8000 source port 123
 set service nat rule 8000 type source
 ```
 
+### IPv4 modem access configuration
+
+```
+set interfaces ethernet eth0 address 10.123.203.2/24
+set service nat rule 9000 outbound-interface eth0
+set service nat rule 9000 source address 10.182.186.0/24
+set service nat rule 9000 type masquerade
+```
+
+### IPv4 static DNS configuration
+
+```
+set system static-host-mapping host-name router.lan inet 10.189.117.1
+```
+
 ### IPv6 kernel configuration
 
 ```
@@ -228,7 +260,7 @@ set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
 set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 86400
+set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 64800
 set interfaces ethernet eth1 ipv6 router-advert send-advert true
 ```
 
@@ -259,6 +291,12 @@ See **[ipv6_nat_lan.sh](./scripts/ipv6_nat_lan.sh)**
 
 See **[ipv6_nat_wan.sh](./scripts/ipv6_nat_wan.sh)**
 
+### IPv6 static DNS configuration
+
+```
+set system static-host-mapping host-name router.lan inet fd1a:ac95:26c8:c75f::1
+```
+
 ### DNS configuration
 
 ```
@@ -270,23 +308,6 @@ set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 ```
 
-### Connection tracking timeouts
-
-```
-set system conntrack timeout icmp 30
-set system conntrack timeout other 600
-set system conntrack timeout tcp close 10
-set system conntrack timeout tcp close-wait 60
-set system conntrack timeout tcp established 432000
-set system conntrack timeout tcp fin-wait 120
-set system conntrack timeout tcp last-ack 30
-set system conntrack timeout tcp syn-recv 60
-set system conntrack timeout tcp syn-sent 120
-set system conntrack timeout tcp time-wait 120
-set system conntrack timeout udp other 30
-set system conntrack timeout udp stream 180
-```
-
 ### Clock configuration
 
 ```
@@ -296,21 +317,6 @@ set system ntp server time1.google.com
 set system ntp server time2.google.com
 set system ntp server time3.google.com
 set system ntp server time4.google.com
-```
-
-### Static DNS configuration
-
-```
-set system static-host-mapping host-name router.lan inet 10.189.117.1
-```
-
-### Modem access configuration
-
-```
-set interfaces ethernet eth0 address 10.123.203.2/24
-set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source address 10.182.186.0/24
-set service nat rule 9000 type masquerade
 ```
 
 ### Host name configuration
@@ -635,7 +641,7 @@ interfaces {
                     autonomous-flag true
                     on-link-flag true
                     preferred-lifetime 43200
-                    valid-lifetime 86400
+                    valid-lifetime 64800
                 }
                 reachable-time 0
                 retrans-timer 0
@@ -817,6 +823,7 @@ system {
     static-host-mapping {
         host-name router.lan {
             inet 10.189.117.1
+            inet fd1a:ac95:26c8:c75f::1
         }
     }
     syslog {
@@ -845,7 +852,7 @@ $ sudo ip -brief -4 address
 lo               UNKNOWN        127.0.0.1/8 10.189.117.1/32
 eth0@itf0        UP             10.123.203.2/24
 eth1@itf0        UP             10.182.186.1/24
-pppoe0           UNKNOWN        201.1.26.169 peer 189.97.102.55/32
+pppoe0           UNKNOWN        152.254.252.160 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
@@ -856,8 +863,8 @@ default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev eth1 proto kernel scope link src 10.182.186.1
 10.189.117.1 dev lo proto kernel scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 201.1.26.169
-201.1.26.169 dev pppoe0 proto kernel scope link
+152.254.252.160 dev pppoe0 proto kernel scope link
+189.97.102.55 dev pppoe0 proto kernel scope link src 152.254.252.160
 ```
 
 ### IPv6 addresses
@@ -867,18 +874,18 @@ $ sudo ip -brief -6 address
 lo               UNKNOWN        fd1a:ac95:26c8:c75f::1/128 ::1/128
 itf0             UNKNOWN        fe80::d221:f9ff:fee1:353/64
 eth0@itf0        UP             fe80::d021:f9ff:fe48:20d2/64
-eth1@itf0        UP             2804:7f4:ca00:71fd:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
+eth1@itf0        UP             2804:7f4:ca00:8a1d:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d021:f9ff:fe48:20d2/64
-pppoe0           UNKNOWN        2804:7f4:c02f:97c2:810a:3c61:4523:3021/64 fe80::810a:3c61:4523:3021/10
+pppoe0           UNKNOWN        2804:7f4:c02f:b65f:adb8:60ce:1d4:d946/64 fe80::adb8:60ce:1d4:d946/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c02f:97c2::/64 dev pppoe0 proto kernel metric 256 expires 258934sec pref medium
-2804:7f4:ca00:71fd::/64 dev eth1 proto kernel metric 256 pref medium
+2804:7f4:c02f:b65f::/64 dev pppoe0 proto kernel metric 256 expires 258775sec pref medium
+2804:7f4:ca00:8a1d::/64 dev eth1 proto kernel metric 256 pref medium
 unreachable fd1a:ac95:26c8:c75f::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
@@ -887,7 +894,7 @@ fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1534sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1375sec pref medium
 ```
 
 ## Resources
