@@ -162,8 +162,9 @@
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 
-# Log configuration
+# Logging configuration
 /system logging action set [ find name=memory ] memory-lines=10000
+/system logging set [ find topics="info" ] topics=info,!dhcp
 
 # Graphing of interfaces traffic and system resources
 /tool graphing interface add interface=ether1-wan store-on-disk=no

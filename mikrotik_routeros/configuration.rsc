@@ -102,6 +102,7 @@
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=18h
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
+/system logging set [ find topics="info" ] topics=info,!dhcp
 /system ntp client set enabled=yes mode=unicast
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes
