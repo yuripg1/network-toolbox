@@ -25,10 +25,13 @@ set interfaces ethernet eth1 description eth1-lan
 set interfaces ethernet eth1 mac D2:21:F9:DD:C8:50
 set interfaces ethernet eth1 mtu 1500
 set interfaces ethernet eth2 disable
+set interfaces ethernet eth2 mac D2:21:F9:0E:FB:47
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth3 disable
+set interfaces ethernet eth3 mac D2:21:F9:5E:0D:50
 set interfaces ethernet eth3 mtu 1500
 set interfaces ethernet eth4 disable
+set interfaces ethernet eth4 mac D2:21:F9:A6:A5:35
 set interfaces ethernet eth4 mtu 1500
 set interfaces switch switch0 mtu 1500
 ```
@@ -203,42 +206,52 @@ set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 description "drop and log r
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 log enable
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN default-action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 description "accept established,related packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state established enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state related enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 description "drop invalid packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 state invalid enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 description "accept icmpv6 echo request packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 icmpv6 type 128/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 description "accept icmpv6 router solicitation packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 icmpv6 type 133/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 description "accept icmpv6 router advertisement packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 icmpv6 type 134/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 description "accept dhcpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 destination port 546
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 protocol udp
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source port 547
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description "drop and log remaining icmpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 log enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description "drop and log remaining dhcpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination port 546
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 log enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 description "accept established,related packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 state established enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 state related enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 description "drop invalid packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 state invalid enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 icmpv6 type 128/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 description "accept icmpv6 router solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 icmpv6 type 133/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 description "accept icmpv6 router advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 icmpv6 type 134/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 description "accept icmpv6 neighbor solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 icmpv6 type 135/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 description "accept icmpv6 neighbor advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 icmpv6 type 136/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 description "accept dhcpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 destination port 546
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 source port 547
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 description "drop and log remaining icmpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 log enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 description "drop and log remaining dhcpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 destination port 546
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 log enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 protocol udp
 ```
 
 ### IPv6 loopback configuration
@@ -441,7 +454,7 @@ firewall {
     }
     ipv6-name IPV6_INPUT_WAN_IN {
         default-action drop
-        rule 1111 {
+        rule 909 {
             action accept
             description "accept established,related packets"
             state {
@@ -449,14 +462,14 @@ firewall {
                 related enable
             }
         }
-        rule 2222 {
+        rule 1818 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 3333 {
+        rule 2727 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -464,7 +477,7 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 4444 {
+        rule 3636 {
             action accept
             description "accept icmpv6 router solicitation packets"
             icmpv6 {
@@ -475,7 +488,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 5555 {
+        rule 4545 {
             action accept
             description "accept icmpv6 router advertisement packets"
             icmpv6 {
@@ -486,7 +499,29 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 6666 {
+        rule 5454 {
+            action accept
+            description "accept icmpv6 neighbor solicitation packets"
+            icmpv6 {
+                type 135/0
+            }
+            protocol icmpv6
+            source {
+                address fe80::/10
+            }
+        }
+        rule 6363 {
+            action accept
+            description "accept icmpv6 neighbor advertisement packets"
+            icmpv6 {
+                type 136/0
+            }
+            protocol icmpv6
+            source {
+                address fe80::/10
+            }
+        }
+        rule 7272 {
             action accept
             description "accept dhcpv6 packets"
             destination {
@@ -498,13 +533,13 @@ firewall {
                 port 547
             }
         }
-        rule 7777 {
+        rule 8181 {
             action drop
             description "drop and log remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
-        rule 8888 {
+        rule 9090 {
             action drop
             description "drop and log remaining dhcpv6 packets"
             destination {
@@ -655,18 +690,21 @@ interfaces {
     ethernet eth2 {
         disable
         duplex auto
+        mac D2:21:F9:0E:FB:47
         mtu 1500
         speed auto
     }
     ethernet eth3 {
         disable
         duplex auto
+        mac D2:21:F9:5E:0D:50
         mtu 1500
         speed auto
     }
     ethernet eth4 {
         disable
         duplex auto
+        mac D2:21:F9:A6:A5:35
         mtu 1500
         poe {
             output off
@@ -852,7 +890,7 @@ $ sudo ip -brief -4 address
 lo               UNKNOWN        127.0.0.1/8 10.189.117.1/32
 eth0@itf0        UP             10.123.203.2/24
 eth1@itf0        UP             10.182.186.1/24
-pppoe0           UNKNOWN        152.254.252.160 peer 189.97.102.55/32
+pppoe0           UNKNOWN        152.254.252.92 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
@@ -863,8 +901,8 @@ default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev eth1 proto kernel scope link src 10.182.186.1
 10.189.117.1 dev lo proto kernel scope link
-152.254.252.160 dev pppoe0 proto kernel scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 152.254.252.160
+152.254.252.92 dev pppoe0 proto kernel scope link
+189.97.102.55 dev pppoe0 proto kernel scope link src 152.254.252.92
 ```
 
 ### IPv6 addresses
@@ -874,18 +912,18 @@ $ sudo ip -brief -6 address
 lo               UNKNOWN        fd1a:ac95:26c8:c75f::1/128 ::1/128
 itf0             UNKNOWN        fe80::d221:f9ff:fee1:353/64
 eth0@itf0        UP             fe80::d021:f9ff:fe48:20d2/64
-eth1@itf0        UP             2804:7f4:ca00:8a1d:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
+eth1@itf0        UP             2804:7f4:ca01:a329:1190:1cd9:750e:8422/64 fe80::d021:f9ff:fedd:c850/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d021:f9ff:fe48:20d2/64
-pppoe0           UNKNOWN        2804:7f4:c02f:b65f:adb8:60ce:1d4:d946/64 fe80::adb8:60ce:1d4:d946/10
+pppoe0           UNKNOWN        2804:7f4:c02f:5ed2:6066:8bf3:389b:18cd/64 fe80::6066:8bf3:389b:18cd/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c02f:b65f::/64 dev pppoe0 proto kernel metric 256 expires 258775sec pref medium
-2804:7f4:ca00:8a1d::/64 dev eth1 proto kernel metric 256 pref medium
+2804:7f4:c02f:5ed2::/64 dev pppoe0 proto kernel metric 256 expires 258999sec pref medium
+2804:7f4:ca01:a329::/64 dev eth1 proto kernel metric 256 pref medium
 unreachable fd1a:ac95:26c8:c75f::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
@@ -894,7 +932,7 @@ fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1375sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1599sec pref medium
 ```
 
 ## Resources

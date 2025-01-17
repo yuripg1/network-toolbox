@@ -17,13 +17,13 @@
 ```
 /interface ethernet set [ find default-name=ether1 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
 /interface ethernet set [ find default-name=ether2 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
-/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:EA:89:1C mtu=1500
+/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:4B:19:C4 mtu=1500
+/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:42:4C:35 mtu=1500
+/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:69:E6:5A mtu=1500
+/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:D9:61:91 mtu=1500
+/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:71:A9:B1 mtu=1500
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:B3:C6:4C mtu=1500
 ```
 
 ### Initial configuration of interface lists
@@ -43,7 +43,7 @@
 ### IPv4 kernel configuration
 
 ```
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=8h ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 ```
 
 ### IPv4 firewall rules
@@ -52,12 +52,14 @@
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
 /ip firewall filter add action=return chain=ip-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop remaining packets"
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan-in
 /ip firewall filter add action=return chain=ip-input-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ip firewall filter add action=return chain=ip-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log remaining icmp packets" log=yes protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 ```
 
@@ -146,15 +148,20 @@
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan-in
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 ```
 
@@ -261,7 +268,6 @@
 
 ```
 /system logging action set [ find name=memory ] memory-lines=10000
-/system logging set [ find topics="info" ] topics=info,!dhcp
 ```
 
 ### Graphing of interfaces traffic and system resources
@@ -299,13 +305,13 @@
 ```
 /interface ethernet set [ find default-name=ether1 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:5E:73:3D mtu=1500 name=ether1-wan
 /interface ethernet set [ find default-name=ether2 ] disabled=no l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:40:5A:95 mtu=1500 name=ether2-lan
-/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
-/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mtu=1500
+/interface ethernet set [ find default-name=ether3 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:EA:89:1C mtu=1500
+/interface ethernet set [ find default-name=ether4 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:4B:19:C4 mtu=1500
+/interface ethernet set [ find default-name=ether5 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:42:4C:35 mtu=1500
+/interface ethernet set [ find default-name=ether6 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:69:E6:5A mtu=1500
+/interface ethernet set [ find default-name=ether7 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:D9:61:91 mtu=1500
+/interface ethernet set [ find default-name=ether8 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:71:A9:B1 mtu=1500
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] disabled=yes l2mtu=1504 loop-protect=off mac-address=4A:A9:8A:B3:C6:4C mtu=1500
 /interface vlan add interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
 /interface list add name=lan-interface-list
 /interface list add name=wan-interface-list
@@ -330,7 +336,7 @@
 /ip smb set enabled=no
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=none
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=8h ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 /interface list member add interface=ether2-lan list=lan-interface-list
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interface-list
@@ -348,12 +354,14 @@
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-forward-wan-in
 /ip firewall filter add action=return chain=ip-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop remaining packets"
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ip-input-wan-in
 /ip firewall filter add action=return chain=ip-input-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ip firewall filter add action=return chain=ip-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log remaining icmp packets" log=yes protocol=icmp
+/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
@@ -381,15 +389,20 @@
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interface-list jump-target=ipv6-input-wan-in
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining icmpv6 packets" log=yes protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log remaining dhcpv6 packets" dst-port=546 log=yes protocol=udp
+/ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop and log untracked packets" connection-state=untracked log=yes
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface-list new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface-list passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
@@ -401,7 +414,6 @@
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=12h valid-lifetime=18h
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
-/system logging set [ find topics="info" ] topics=info,!dhcp
 /system ntp client set enabled=yes mode=unicast
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes
@@ -424,11 +436,11 @@
 > /ip address print
 Flags: D - DYNAMIC
 Columns: ADDRESS, NETWORK, INTERFACE
-#   ADDRESS          NETWORK        INTERFACE
-0   10.195.123.1/32  10.195.123.1   lo
-1   10.175.202.1/24  10.175.202.0   ether2-lan
-2   10.123.203.2/24  10.123.203.0   ether1-wan
-3 D 187.10.3.85/32   189.97.102.55  ether1-wan-vlan-600-pppoe-client
+#   ADDRESS           NETWORK        INTERFACE
+0   10.195.123.1/32   10.195.123.1   lo
+1   10.175.202.1/24   10.175.202.0   ether2-lan
+2   10.123.203.2/24   10.123.203.0   ether1-wan
+3 D 179.174.45.29/32  189.97.102.55  ether1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -453,12 +465,12 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
 0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                                no
-1  G 2804:7f4:ca00:8a39:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
+1  G 2804:7f4:ca01:a161:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  ether2-lan                        yes
 2 D  ::1/128                                                           lo                                no
-3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
-4 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
-5 DL fe80::1aa4:a418:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
-6 DG 2804:7f4:c02f:b688:1aa4:a418:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         2d23h56m13s
+3 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan                        no
+4 DL fe80::48a9:8aff:fe5e:733d/64                                      ether1-wan-vlan-600               no
+5 DL fe80::d0cd:1036:0:c/64                                            ether1-wan-vlan-600-pppoe-client  no
+6 DG 2804:7f4:c02f:5c49:d0cd:1036:0:c/64                               ether1-wan-vlan-600-pppoe-client  no         2d18h40m49s
 7 DL fe80::48a9:8aff:fe40:5a95/64                                      ether2-lan                        no
 ```
 
@@ -472,9 +484,9 @@ Columns: DST-ADDRESS, GATEWAY, DISTANCE
 D d ::/0                                        fe80::a21c:8dff:fef1:1934%ether1-wan-vlan-600-pppoe-client         2
 DAv ::/0                                        ether1-wan-vlan-600-pppoe-client                                   1
 DAc ::1/128                                     lo                                                                 0
-DAc 2804:7f4:c02f:b688::/64                     ether1-wan-vlan-600-pppoe-client                                   0
-DAc 2804:7f4:ca00:8a39::/64                     ether2-lan                                                         0
-D d 2804:7f4:ca00:8a39::/64                                                                                        2
+DAc 2804:7f4:c02f:5c49::/64                     ether1-wan-vlan-600-pppoe-client                                   0
+DAc 2804:7f4:ca01:a161::/64                     ether2-lan                                                         0
+D d 2804:7f4:ca01:a161::/64                                                                                        2
 DAc fd9b:69ab:e45c:4aa6::1/128                  lo                                                                 0
 DAc fe80::%ether1-wan/64                        ether1-wan                                                         0
 DAc fe80::%ether2-lan/64                        ether2-lan                                                         0

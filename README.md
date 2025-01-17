@@ -34,43 +34,43 @@
 ### IPv4
 
 ```
-$ ping -c 10 -D -O -4 google.com
-PING  (172.217.29.142) 56(84) bytes of data.
-[1728872138.804518] 64 bytes from gru10s01-in-f142.1e100.net (172.217.29.142): icmp_seq=1 ttl=55 time=25.8 ms
-[1728872139.780823] 64 bytes from gru10s01-in-f14.1e100.net (172.217.29.142): icmp_seq=2 ttl=55 time=27.6 ms
-[1728872140.781853] 64 bytes from gru10s01-in-f14.1e100.net (172.217.29.142): icmp_seq=3 ttl=55 time=27.8 ms
-[1728872141.783531] 64 bytes from gru10s01-in-f142.1e100.net (172.217.29.142): icmp_seq=4 ttl=55 time=28.0 ms
-[1728872142.785336] 64 bytes from pngrua-ad-in-f14.1e100.net (172.217.29.142): icmp_seq=5 ttl=55 time=28.1 ms
-[1728872143.787132] 64 bytes from pngrua-ad-in-f14.1e100.net (172.217.29.142): icmp_seq=6 ttl=55 time=28.1 ms
-[1728872144.789145] 64 bytes from gru10s01-in-f14.1e100.net (172.217.29.142): icmp_seq=7 ttl=55 time=28.2 ms
-[1728872145.791079] 64 bytes from pngrua-ad-in-f14.1e100.net (172.217.29.142): icmp_seq=8 ttl=55 time=28.2 ms
-[1728872146.792983] 64 bytes from pngrua-ad-in-f14.1e100.net (172.217.29.142): icmp_seq=9 ttl=55 time=28.1 ms
-[1728872147.794986] 64 bytes from gru06s47-in-f14.1e100.net (172.217.29.142): icmp_seq=10 ttl=55 time=28.3 ms
+$ ping -c 10 -D -O -4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+[1737057077.615929] 64 bytes from 8.8.8.8: icmp_seq=1 ttl=60 time=29.6 ms
+[1737057078.615305] 64 bytes from 8.8.8.8: icmp_seq=2 ttl=60 time=27.1 ms
+[1737057079.616824] 64 bytes from 8.8.8.8: icmp_seq=3 ttl=60 time=27.3 ms
+[1737057080.618507] 64 bytes from 8.8.8.8: icmp_seq=4 ttl=60 time=27.3 ms
+[1737057081.623021] 64 bytes from 8.8.8.8: icmp_seq=5 ttl=60 time=30.0 ms
+[1737057082.626270] 64 bytes from 8.8.8.8: icmp_seq=6 ttl=60 time=32.7 ms
+[1737057083.621346] 64 bytes from 8.8.8.8: icmp_seq=7 ttl=60 time=27.0 ms
+[1737057084.627029] 64 bytes from 8.8.8.8: icmp_seq=8 ttl=60 time=31.1 ms
+[1737057085.625369] 64 bytes from 8.8.8.8: icmp_seq=9 ttl=60 time=27.8 ms
+[1737057086.627038] 64 bytes from 8.8.8.8: icmp_seq=10 ttl=60 time=28.1 ms
 
----  ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 9035ms
-rtt min/avg/max/mdev = 25.777/27.802/28.255/0.702 ms
+--- 8.8.8.8 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9013ms
+rtt min/avg/max/mdev = 26.987/28.801/32.722/1.871 ms
 ```
 
 ### IPv6
 
 ```
-$ ping -c 10 -D -O -6 google.com
-PING google.com(2800:3f0:4001:836::200e (2800:3f0:4001:836::200e)) 56 data bytes
-[1728872149.608134] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=1 ttl=55 time=21.1 ms
-[1728872150.607878] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=2 ttl=55 time=19.8 ms
-[1728872151.608738] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=3 ttl=55 time=19.7 ms
-[1728872152.611641] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=4 ttl=55 time=20.4 ms
-[1728872153.613118] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=5 ttl=55 time=20.0 ms
-[1728872154.614615] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=6 ttl=55 time=20.0 ms
-[1728872155.616080] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=7 ttl=55 time=20.0 ms
-[1728872156.617248] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=8 ttl=55 time=19.8 ms
-[1728872157.619845] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=9 ttl=55 time=20.0 ms
-[1728872158.621401] 64 bytes from 2800:3f0:4001:836::200e (2800:3f0:4001:836::200e): icmp_seq=10 ttl=55 time=20.0 ms
+$ ping -c 10 -D -O -6 2001:4860:4860::8888
+PING 2001:4860:4860::8888 (2001:4860:4860::8888) 56 data bytes
+[1737057087.901519] 64 bytes from 2001:4860:4860::8888: icmp_seq=1 ttl=115 time=18.7 ms
+[1737057088.902059] 64 bytes from 2001:4860:4860::8888: icmp_seq=2 ttl=115 time=18.6 ms
+[1737057089.902988] 64 bytes from 2001:4860:4860::8888: icmp_seq=3 ttl=115 time=18.5 ms
+[1737057090.904174] 64 bytes from 2001:4860:4860::8888: icmp_seq=4 ttl=115 time=18.7 ms
+[1737057091.905922] 64 bytes from 2001:4860:4860::8888: icmp_seq=5 ttl=115 time=18.4 ms
+[1737057092.911393] 64 bytes from 2001:4860:4860::8888: icmp_seq=6 ttl=115 time=22.0 ms
+[1737057093.913938] 64 bytes from 2001:4860:4860::8888: icmp_seq=7 ttl=115 time=23.0 ms
+[1737057094.913894] 64 bytes from 2001:4860:4860::8888: icmp_seq=8 ttl=115 time=21.5 ms
+[1737057095.913917] 64 bytes from 2001:4860:4860::8888: icmp_seq=9 ttl=115 time=19.5 ms
+[1737057096.914268] 64 bytes from 2001:4860:4860::8888: icmp_seq=10 ttl=115 time=18.6 ms
 
---- google.com ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 9014ms
-rtt min/avg/max/mdev = 19.669/20.075/21.050/0.373 ms
+--- 2001:4860:4860::8888 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9013ms
+rtt min/avg/max/mdev = 18.428/19.757/23.036/1.637 ms
 ```
 
 ## Traceroute
@@ -78,42 +78,39 @@ rtt min/avg/max/mdev = 19.669/20.075/21.050/0.373 ms
 ### IPv4
 
 ```
-$ mtr -4 --report-wide --report-cycles 250 --show-ips --aslookup google.com
-Start: 2024-10-13T23:16:00-0300
-HOST: pc                                                             Loss%   Snt   Last   Avg  Best  Wrst StDev
-  1. AS???    router.lan (10.175.202.1)                               0.0%   250    0.7   0.7   0.4   0.9   0.1
-  2. AS18881  179.184.126.60                                          0.0%   250    2.6   2.4   2.1   3.7   0.2
-  3. AS18881  191.30.9.229.dynamic.adsl.gvt.net.br (191.30.9.229)     0.0%   250    2.6   2.6   2.4   3.1   0.1
-  4. AS???    152-255-179-142.user.vivozap.com.br (152.255.179.142)   0.0%   250    2.7   2.5   2.1   3.1   0.1
-  5. AS???    152-255-183-71.user.vivozap.com.br (152.255.183.71)     0.4%   250    2.7   2.6   2.3   3.2   0.1
-  6. AS???    187-100-57-205.dsl.telesp.net.br (187.100.57.205)      83.6%   250   21.4  21.5  21.4  22.1   0.1
-  7. AS???    187-100-60-223.dsl.telesp.net.br (187.100.60.223)      94.4%   250   23.6  23.7  23.4  24.1   0.2
-  8. AS???    187-100-57-106.dsl.telesp.net.br (187.100.57.106)      99.6%   250   28.3  28.3  28.3  28.3   0.0
-  9. AS15169  74.125.52.64                                            0.0%   250   24.9  24.9  24.4  25.5   0.2
- 10. AS15169  142.250.236.167                                         0.0%   250   24.8  24.6  24.4  25.3   0.1
- 11. AS15169  192.178.110.169                                         0.0%   250   24.8  24.7  24.5  25.0   0.1
- 12. AS15169  pngrua-ad-in-f14.1e100.net (172.217.29.142)             0.0%   250   28.0  28.1  27.8  28.5   0.1
+$ mtr -4 --report-wide --report-cycles 250 --show-ips --aslookup 8.8.8.8
+Start: 2025-01-16T16:51:38-0300
+HOST: laptop                                                         Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1. AS???    _gateway (10.175.202.1)                                 0.0%   250    0.7   0.5   0.3   0.8   0.1
+  2. AS???    ???                                                    100.0   250    0.0   0.0   0.0   0.0   0.0
+  3. AS27699  201-1-227-250.dsl.telesp.net.br (201.1.227.250)         0.0%   250    2.8   2.9   2.2  11.4   1.2
+  4. AS???    152-255-156-210.user.vivozap.com.br (152.255.156.210)  72.8%   250    3.1   2.8   2.1  11.3   1.1
+  5. AS???    152-255-193-158.user.vivozap.com.br (152.255.193.158)  72.4%   250   23.5  21.6  20.9  25.7   0.8
+  6. AS???    152-255-203-134.user.vivozap.com.br (152.255.203.134)  84.4%   250  520.4 121.7  22.4 1540. 318.1
+  7. AS???    ???                                                    100.0   250    0.0   0.0   0.0   0.0   0.0
+  8. AS12956  84.16.7.106                                             0.0%   250   27.6  28.0  27.1  52.5   1.9
+  9. AS12956  94.142.103.197                                          0.0%   250   27.7  27.9  27.3  32.0   0.8
+ 10. AS15169  142.251.69.135                                          0.0%   250   24.0  23.0  22.1  28.3   0.9
+ 11. AS15169  108.170.248.213                                         0.0%   250   23.6  23.9  23.2  31.8   0.8
+ 12. AS15169  dns.google (8.8.8.8)                                    0.0%   250   27.6  27.6  27.1  34.3   0.8
 ```
 
 ### IPv6
 
 ```
-$ mtr -6 --report-wide --report-cycles 250 --show-ips --aslookup google.com
-Start: 2024-10-13T23:20:20-0300
-HOST: pc                                              Loss%   Snt   Last   Avg  Best  Wrst StDev
-  1. AS18881  2804:7f4:c183:357f:72c7:90fa:ba4d:9e56   0.0%   250    0.8   0.7   0.4   1.5   0.1
-  2. AS18881  2804:7f4:2000:1::bf                      0.0%   250    3.2   3.4   2.9   4.5   0.2
-  3. AS18881  2804:7f4:2000:1000::8bd                 12.4%   250    3.5   3.5   3.2   4.5   0.2
-  4. AS???    2001:12e0:100:3024:a006:3024:a009:12     0.0%   250    3.4   3.3   3.0   4.2   0.2
-  5. AS???    2001:12e0:100:3003:a002:3024:a006:0      0.0%   250    4.9   4.7   4.4   5.4   0.2
-  6. AS???    2001:12e0:100:3003:a002:3020:a002:b      0.0%   250   14.1  14.2  13.8  15.0   0.1
-  7. AS???    2001:12e0:100:1017:a002:3020:a002:2     18.0%   250   23.5  23.4  23.0  24.0   0.2
-  8. AS???    2001:12e0:100:1025:a001:1017:a002:2c    76.4%   250   19.2  19.3  18.9  21.0   0.3
-  9. AS15169  2001:4860:1:1::c4a                      43.2%   250   24.7  24.7  24.3  31.3   0.6
- 10. AS15169  2800:3f0:8364:40::1                      0.0%   250   19.9  19.7  19.3  24.7   0.3
- 11. AS15169  2001:4860:0:1::9006                     12.4%   250   25.1  25.5  24.4  61.2   2.9
- 12. AS15169  2001:4860:0:1::874b                      0.0%   250   24.5  24.1  23.6  24.6   0.1
- 13. AS15169  2800:3f0:4001:836::200e                  0.0%   250   19.7  19.8  19.3  20.1   0.1
+$ mtr -6 --report-wide --report-cycles 250 --show-ips --aslookup 2001:4860:4860::8888
+Start: 2025-01-16T16:56:03-0300
+HOST: laptop                                          Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1. AS18881  2804:7f4:ca01:a161:72c7:90fa:ba4d:9e56   0.0%   250    0.5   0.6   0.4   0.9   0.1
+  2. AS???    ???                                     100.0   250    0.0   0.0   0.0   0.0   0.0
+  3. AS???    2001:12e0:500:0:1:0:40:6ba               0.0%   250    8.0   4.6   2.2  11.6   2.8
+  4. AS???    2001:12e0:100:3003:a002:3004:a005:0      0.0%   250    7.7   4.5   2.3  11.6   2.7
+  5. AS???    2001:12e0:100:3003:a002:3020:a002:d      0.0%   250   12.1  14.3  11.7  25.0   3.3
+  6. AS???    2001:12e0:100:1017:a002:3020:a002:6     12.0%   250   21.8  23.7  21.5  34.7   2.7
+  7. AS???    2001:12e0:100:1025:a001:1017:a002:30    90.0%   250   23.6  24.2  21.7  33.5   3.1
+  8. AS15169  2001:4860:1:1::c4a                      15.6%   250   23.2  26.0  22.8  42.8   3.7
+  9. AS15169  2800:3f0:8362:100::1                     0.0%   250   23.0  25.0  22.5  35.7   2.8
+ 10. AS15169  dns.google (2001:4860:4860::8888)        0.0%   250   22.4  20.9  18.5  31.9   3.1
 ```
 
 ## Speedtest CLI
@@ -126,27 +123,27 @@ $ ./speedtest --progress=no --selection-details
    Speedtest by Ookla
 
 Selecting server:
-      65079:  27.64 ms; SenGi Internet - São Vicente
-      48754:  27.46 ms; BianchiNet - Jundiaí
-      36605:   4.58 ms; Localnet - Guaíba
-      30281:  35.49 ms; STEC-GUAIBA - Guaíba
-      61847:  30.75 ms; CHTECH - Guaíba
-      14143:  44.68 ms; Claro Net Vírtua - Porto Alegre
-      36132:   3.91 ms; RSSul Telecom - Porto Alegre
-      17678:   3.42 ms; RLNET - Porto Alegre
-      38008:  41.20 ms; EdgeUno - Porto Alegre
-      24878:   5.07 ms; RSnetPOA - Porto Alegre
-      38068:  25.24 ms; LPInternet - Porto Alegre
-      39941:  42.29 ms; Onnexx - Porto Alegre
-      Server: RLNET - Porto Alegre (id: 17678)
+      65079:  28.93 ms; SenGi Internet - São Vicente
+      40803:  33.04 ms; Seguro Net - Campinas
+      14143:  23.06 ms; Claro Net Vírtua - Porto Alegre
+      36132:   2.36 ms; RSSul Telecom - Porto Alegre
+      17678:   2.52 ms; RLNET - Porto Alegre
+      38008:  12.01 ms; EdgeUno - Porto Alegre
+      38210:  18.03 ms; i9NET - Porto Alegre
+      38068:  24.09 ms; LPInternet - Porto Alegre
+      39941:  21.56 ms; Onnexx - Porto Alegre
+      52447:   2.47 ms; GNS POA - Porto Alegre
+      33982:  20.59 ms; CLICNET - Porto Alegre
+      27206:   3.09 ms; RJ CONNECT - Porto Alegre
+      Server: RSSul Telecom - Porto Alegre (id: 36132)
          ISP: Vivo
-Idle Latency:     3.73 ms   (jitter: 0.04ms, low: 3.61ms, high: 3.75ms)
-    Download:   710.16 Mbps (data used: 348.3 MB)
-                 11.19 ms   (jitter: 0.53ms, low: 4.08ms, high: 12.40ms)
-      Upload:   356.09 Mbps (data used: 462.0 MB)
-                  3.33 ms   (jitter: 19.29ms, low: 1.91ms, high: 417.98ms)
+Idle Latency:     2.55 ms   (jitter: 0.08ms, low: 2.46ms, high: 2.60ms)
+    Download:   800.46 Mbps (data used: 1.2 GB)
+                  4.52 ms   (jitter: 2.64ms, low: 1.58ms, high: 208.02ms)
+      Upload:   511.44 Mbps (data used: 230.2 MB)
+                 13.87 ms   (jitter: 0.77ms, low: 2.61ms, high: 15.73ms)
  Packet Loss:     0.0%
-  Result URL: https://www.speedtest.net/result/c/c91ca7c4-03f1-48e0-8b34-86f6c0f30f95
+  Result URL: https://www.speedtest.net/result/c/2f11b3da-63a3-44ee-a2f7-e962707ecec8
 ```
 
 ## Helpful online diagnostics

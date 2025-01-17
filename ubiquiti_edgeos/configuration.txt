@@ -35,7 +35,7 @@ firewall {
     }
     ipv6-name IPV6_INPUT_WAN_IN {
         default-action drop
-        rule 1111 {
+        rule 909 {
             action accept
             description "accept established,related packets"
             state {
@@ -43,14 +43,14 @@ firewall {
                 related enable
             }
         }
-        rule 2222 {
+        rule 1818 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 3333 {
+        rule 2727 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -58,7 +58,7 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 4444 {
+        rule 3636 {
             action accept
             description "accept icmpv6 router solicitation packets"
             icmpv6 {
@@ -69,7 +69,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 5555 {
+        rule 4545 {
             action accept
             description "accept icmpv6 router advertisement packets"
             icmpv6 {
@@ -80,7 +80,29 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 6666 {
+        rule 5454 {
+            action accept
+            description "accept icmpv6 neighbor solicitation packets"
+            icmpv6 {
+                type 135/0
+            }
+            protocol icmpv6
+            source {
+                address fe80::/10
+            }
+        }
+        rule 6363 {
+            action accept
+            description "accept icmpv6 neighbor advertisement packets"
+            icmpv6 {
+                type 136/0
+            }
+            protocol icmpv6
+            source {
+                address fe80::/10
+            }
+        }
+        rule 7272 {
             action accept
             description "accept dhcpv6 packets"
             destination {
@@ -92,13 +114,13 @@ firewall {
                 port 547
             }
         }
-        rule 7777 {
+        rule 8181 {
             action drop
             description "drop and log remaining icmpv6 packets"
             log enable
             protocol icmpv6
         }
-        rule 8888 {
+        rule 9090 {
             action drop
             description "drop and log remaining dhcpv6 packets"
             destination {
@@ -249,18 +271,21 @@ interfaces {
     ethernet eth2 {
         disable
         duplex auto
+        mac D2:21:F9:0E:FB:47
         mtu 1500
         speed auto
     }
     ethernet eth3 {
         disable
         duplex auto
+        mac D2:21:F9:5E:0D:50
         mtu 1500
         speed auto
     }
     ethernet eth4 {
         disable
         duplex auto
+        mac D2:21:F9:A6:A5:35
         mtu 1500
         poe {
             output off
