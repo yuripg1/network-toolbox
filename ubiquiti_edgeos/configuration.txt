@@ -3,7 +3,7 @@ firewall {
     broadcast-ping disable
     ipv6-name IPV6_FORWARD_WAN_IN {
         default-action drop
-        rule 2000 {
+        rule 2500 {
             action accept
             description "accept established,related packets"
             state {
@@ -11,31 +11,25 @@ firewall {
                 related enable
             }
         }
-        rule 4000 {
+        rule 5000 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 6000 {
+        rule 7500 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
                 type 128/0
             }
-            protocol icmpv6
-        }
-        rule 8000 {
-            action drop
-            description "drop and log remaining icmpv6 packets"
-            log enable
             protocol icmpv6
         }
     }
     ipv6-name IPV6_INPUT_WAN_IN {
         default-action drop
-        rule 909 {
+        rule 1111 {
             action accept
             description "accept established,related packets"
             state {
@@ -43,14 +37,14 @@ firewall {
                 related enable
             }
         }
-        rule 1818 {
+        rule 2222 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 2727 {
+        rule 3333 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -58,7 +52,7 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 3636 {
+        rule 4444 {
             action accept
             description "accept icmpv6 router solicitation packets"
             icmpv6 {
@@ -69,7 +63,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 4545 {
+        rule 5555 {
             action accept
             description "accept icmpv6 router advertisement packets"
             icmpv6 {
@@ -80,7 +74,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 5454 {
+        rule 6666 {
             action accept
             description "accept icmpv6 neighbor solicitation packets"
             icmpv6 {
@@ -91,7 +85,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 6363 {
+        rule 7777 {
             action accept
             description "accept icmpv6 neighbor advertisement packets"
             icmpv6 {
@@ -102,7 +96,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 7272 {
+        rule 8888 {
             action accept
             description "accept dhcpv6 packets"
             destination {
@@ -113,21 +107,6 @@ firewall {
                 address fe80::/10
                 port 547
             }
-        }
-        rule 8181 {
-            action drop
-            description "drop and log remaining icmpv6 packets"
-            log enable
-            protocol icmpv6
-        }
-        rule 9090 {
-            action drop
-            description "drop and log remaining dhcpv6 packets"
-            destination {
-                port 546
-            }
-            log enable
-            protocol udp
         }
     }
     ipv6-receive-redirects disable
@@ -154,7 +133,7 @@ firewall {
     }
     name INPUT_WAN_IN {
         default-action drop
-        rule 2000 {
+        rule 2500 {
             action accept
             description "accept established,related packets"
             state {
@@ -162,26 +141,20 @@ firewall {
                 related enable
             }
         }
-        rule 4000 {
+        rule 5000 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 6000 {
+        rule 7500 {
             action accept
             description "accept icmp echo request packets"
             icmp {
                 code 0
                 type 8
             }
-            protocol icmp
-        }
-        rule 8000 {
-            action drop
-            description "drop and log remaining icmp packets"
-            log enable
             protocol icmp
         }
     }
