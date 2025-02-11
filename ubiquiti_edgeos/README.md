@@ -17,40 +17,30 @@ delete system login user ubnt
 
 ```
 delete interfaces ethernet eth1 address
-delete interfaces switch switch0 mtu
 set interfaces ethernet eth0 description eth0-wan
-set interfaces ethernet eth0 mac D2:21:F9:48:20:D2
+set interfaces ethernet eth0 mac D0:21:F9:90:67:BD
 set interfaces ethernet eth0 mtu 1500
-set interfaces ethernet eth1 description eth1-lan
-set interfaces ethernet eth1 mac D2:21:F9:DD:C8:50
+set interfaces ethernet eth1 mac D0:21:F9:82:0D:94
 set interfaces ethernet eth1 mtu 1500
-set interfaces ethernet eth2 disable
-set interfaces ethernet eth2 mac D2:21:F9:0E:FB:47
+set interfaces ethernet eth2 mac D0:21:F9:D5:0A:39
 set interfaces ethernet eth2 mtu 1500
-set interfaces ethernet eth3 disable
-set interfaces ethernet eth3 mac D2:21:F9:5E:0D:50
+set interfaces ethernet eth3 mac D0:21:F9:0E:6E:DA
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 disable
-set interfaces ethernet eth4 mac D2:21:F9:A6:A5:35
+set interfaces ethernet eth4 mac D0:21:F9:76:B7:33
 set interfaces ethernet eth4 mtu 1500
+```
+
+### Switch configuration
+
+```
+delete interfaces switch switch0 mtu
+set interfaces switch switch0 description switch0-lan
 set interfaces switch switch0 mtu 1500
-```
-
-### Connection tracking timeouts
-
-```
-set system conntrack timeout icmp 30
-set system conntrack timeout other 600
-set system conntrack timeout tcp close 10
-set system conntrack timeout tcp close-wait 60
-set system conntrack timeout tcp established 432000
-set system conntrack timeout tcp fin-wait 120
-set system conntrack timeout tcp last-ack 30
-set system conntrack timeout tcp syn-recv 60
-set system conntrack timeout tcp syn-sent 120
-set system conntrack timeout tcp time-wait 120
-set system conntrack timeout udp other 30
-set system conntrack timeout udp stream 180
+set interfaces switch switch0 switch-port interface eth1 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth2 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth3 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
+set interfaces switch switch0 switch-port vlan-aware enable
 ```
 
 ### IPv4 kernel configuration
@@ -75,22 +65,18 @@ set firewall name FORWARD_WAN_IN rule 6666 action drop
 set firewall name FORWARD_WAN_IN rule 6666 description "drop invalid packets"
 set firewall name FORWARD_WAN_IN rule 6666 state invalid enable
 set firewall name INPUT_WAN_IN default-action drop
-set firewall name INPUT_WAN_IN rule 2000 action accept
-set firewall name INPUT_WAN_IN rule 2000 description "accept established,related packets"
-set firewall name INPUT_WAN_IN rule 2000 state established enable
-set firewall name INPUT_WAN_IN rule 2000 state related enable
-set firewall name INPUT_WAN_IN rule 4000 action drop
-set firewall name INPUT_WAN_IN rule 4000 description "drop invalid packets"
-set firewall name INPUT_WAN_IN rule 4000 state invalid enable
-set firewall name INPUT_WAN_IN rule 6000 action accept
-set firewall name INPUT_WAN_IN rule 6000 description "accept icmp echo request packets"
-set firewall name INPUT_WAN_IN rule 6000 icmp code 0
-set firewall name INPUT_WAN_IN rule 6000 icmp type 8
-set firewall name INPUT_WAN_IN rule 6000 protocol icmp
-set firewall name INPUT_WAN_IN rule 8000 action drop
-set firewall name INPUT_WAN_IN rule 8000 description "drop and log remaining icmp packets"
-set firewall name INPUT_WAN_IN rule 8000 log enable
-set firewall name INPUT_WAN_IN rule 8000 protocol icmp
+set firewall name INPUT_WAN_IN rule 2500 action accept
+set firewall name INPUT_WAN_IN rule 2500 description "accept established,related packets"
+set firewall name INPUT_WAN_IN rule 2500 state established enable
+set firewall name INPUT_WAN_IN rule 2500 state related enable
+set firewall name INPUT_WAN_IN rule 5000 action drop
+set firewall name INPUT_WAN_IN rule 5000 description "drop invalid packets"
+set firewall name INPUT_WAN_IN rule 5000 state invalid enable
+set firewall name INPUT_WAN_IN rule 7500 action accept
+set firewall name INPUT_WAN_IN rule 7500 description "accept icmp echo request packets"
+set firewall name INPUT_WAN_IN rule 7500 icmp code 0
+set firewall name INPUT_WAN_IN rule 7500 icmp type 8
+set firewall name INPUT_WAN_IN rule 7500 protocol icmp
 ```
 
 ### IPv4 loopback configuration
@@ -102,7 +88,8 @@ set interfaces loopback lo address 10.189.117.1/32
 ### IPv4 LAN
 
 ```
-set interfaces ethernet eth1 address 10.182.186.1/24
+set interfaces switch switch0 vif 10 address 10.182.186.1/24
+set interfaces switch switch0 vif 10 description switch0-lan-vif-10
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
@@ -190,68 +177,55 @@ set firewall ipv6-src-route disable
 
 ```
 set firewall ipv6-name IPV6_FORWARD_WAN_IN default-action drop
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2000 action accept
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2000 description "accept established,related packets"
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2000 state established enable
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2000 state related enable
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 4000 action drop
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 4000 description "drop invalid packets"
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 4000 state invalid enable
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 action accept
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 description "accept icmpv6 echo request packets"
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 icmpv6 type 128/0
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 6000 protocol icmpv6
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 action drop
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 description "drop and log remaining icmpv6 packets"
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 log enable
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 8000 protocol icmpv6
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 action accept
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 description "accept established,related packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 state established enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 state related enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 action drop
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 description "drop invalid packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 state invalid enable
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 action accept
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 icmpv6 type 128/0
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN default-action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 description "accept established,related packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 state established enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 909 state related enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 description "drop invalid packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1818 state invalid enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 description "accept icmpv6 echo request packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 icmpv6 type 128/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2727 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 description "accept icmpv6 router solicitation packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 icmpv6 type 133/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3636 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 description "accept icmpv6 router advertisement packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 icmpv6 type 134/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4545 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 description "accept icmpv6 neighbor solicitation packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 icmpv6 type 135/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5454 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 description "accept icmpv6 neighbor advertisement packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 icmpv6 type 136/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6363 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 description "accept dhcpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 destination port 546
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 protocol udp
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7272 source port 547
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 description "drop and log remaining icmpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 log enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8181 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 description "drop and log remaining dhcpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 destination port 546
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 log enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 9090 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 description "accept established,related packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state established enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state related enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 description "drop invalid packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 state invalid enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 icmpv6 type 128/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 description "accept icmpv6 router solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 icmpv6 type 133/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 description "accept icmpv6 router advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 icmpv6 type 134/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 description "accept icmpv6 neighbor solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 icmpv6 type 135/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description "accept icmpv6 neighbor advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 icmpv6 type 136/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description "accept dhcpv6 packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination port 546
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source port 547
 ```
 
 ### IPv6 loopback configuration
@@ -263,25 +237,25 @@ set interfaces loopback lo address fd1a:ac95:26c8:c75f::1/128
 ### IPv6 LAN
 
 ```
-set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
-set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
-set interfaces ethernet eth1 ipv6 router-advert default-preference medium
-set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
-set interfaces ethernet eth1 ipv6 router-advert managed-flag false
-set interfaces ethernet eth1 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
-set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 64800
-set interfaces ethernet eth1 ipv6 router-advert send-advert true
+set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
+set interfaces switch switch0 vif 10 ipv6 router-advert cur-hop-limit 64
+set interfaces switch switch0 vif 10 ipv6 router-advert default-preference medium
+set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
+set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
+set interfaces switch switch0 vif 10 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
+set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 autonomous-flag true
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 on-link-flag true
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 valid-lifetime 64800
+set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 ```
 
 ### IPv6 WAN
 
 ```
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth1 host-address ::1190:1cd9:750e:8422
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address ::1190:1cd9:750e:8422
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
@@ -314,11 +288,28 @@ set system static-host-mapping host-name router.lan inet fd1a:ac95:26c8:c75f::1
 
 ```
 set service dns forwarding cache-size 10000
-set service dns forwarding listen-on eth1
-set service dns forwarding name-server 2001:4860:4860::8844
-set service dns forwarding name-server 2001:4860:4860::8888
+set service dns forwarding listen-on switch0.10
+set service dns forwarding name-server 8.8.4.4
+set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
+```
+
+### Connection tracking timeouts
+
+```
+set system conntrack timeout icmp 30
+set system conntrack timeout other 600
+set system conntrack timeout tcp close 10
+set system conntrack timeout tcp close-wait 60
+set system conntrack timeout tcp established 432000
+set system conntrack timeout tcp fin-wait 120
+set system conntrack timeout tcp last-ack 30
+set system conntrack timeout tcp syn-recv 60
+set system conntrack timeout tcp syn-sent 120
+set system conntrack timeout tcp time-wait 120
+set system conntrack timeout udp other 30
+set system conntrack timeout udp stream 180
 ```
 
 ### Clock configuration
@@ -414,6 +405,12 @@ $ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
 $ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
 ```
 
+## Cleanup
+
+```
+$ sudo rm -rf /home/ubnt
+```
+
 ## Final configuration
 
 ```
@@ -422,7 +419,7 @@ firewall {
     broadcast-ping disable
     ipv6-name IPV6_FORWARD_WAN_IN {
         default-action drop
-        rule 2000 {
+        rule 2500 {
             action accept
             description "accept established,related packets"
             state {
@@ -430,31 +427,25 @@ firewall {
                 related enable
             }
         }
-        rule 4000 {
+        rule 5000 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 6000 {
+        rule 7500 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
                 type 128/0
             }
-            protocol icmpv6
-        }
-        rule 8000 {
-            action drop
-            description "drop and log remaining icmpv6 packets"
-            log enable
             protocol icmpv6
         }
     }
     ipv6-name IPV6_INPUT_WAN_IN {
         default-action drop
-        rule 909 {
+        rule 1111 {
             action accept
             description "accept established,related packets"
             state {
@@ -462,14 +453,14 @@ firewall {
                 related enable
             }
         }
-        rule 1818 {
+        rule 2222 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 2727 {
+        rule 3333 {
             action accept
             description "accept icmpv6 echo request packets"
             icmpv6 {
@@ -477,7 +468,7 @@ firewall {
             }
             protocol icmpv6
         }
-        rule 3636 {
+        rule 4444 {
             action accept
             description "accept icmpv6 router solicitation packets"
             icmpv6 {
@@ -488,7 +479,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 4545 {
+        rule 5555 {
             action accept
             description "accept icmpv6 router advertisement packets"
             icmpv6 {
@@ -499,7 +490,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 5454 {
+        rule 6666 {
             action accept
             description "accept icmpv6 neighbor solicitation packets"
             icmpv6 {
@@ -510,7 +501,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 6363 {
+        rule 7777 {
             action accept
             description "accept icmpv6 neighbor advertisement packets"
             icmpv6 {
@@ -521,7 +512,7 @@ firewall {
                 address fe80::/10
             }
         }
-        rule 7272 {
+        rule 8888 {
             action accept
             description "accept dhcpv6 packets"
             destination {
@@ -532,21 +523,6 @@ firewall {
                 address fe80::/10
                 port 547
             }
-        }
-        rule 8181 {
-            action drop
-            description "drop and log remaining icmpv6 packets"
-            log enable
-            protocol icmpv6
-        }
-        rule 9090 {
-            action drop
-            description "drop and log remaining dhcpv6 packets"
-            destination {
-                port 546
-            }
-            log enable
-            protocol udp
         }
     }
     ipv6-receive-redirects disable
@@ -573,7 +549,7 @@ firewall {
     }
     name INPUT_WAN_IN {
         default-action drop
-        rule 2000 {
+        rule 2500 {
             action accept
             description "accept established,related packets"
             state {
@@ -581,26 +557,20 @@ firewall {
                 related enable
             }
         }
-        rule 4000 {
+        rule 5000 {
             action drop
             description "drop invalid packets"
             state {
                 invalid enable
             }
         }
-        rule 6000 {
+        rule 7500 {
             action accept
             description "accept icmp echo request packets"
             icmp {
                 code 0
                 type 8
             }
-            protocol icmp
-        }
-        rule 8000 {
-            action drop
-            description "drop and log remaining icmp packets"
-            log enable
             protocol icmp
         }
     }
@@ -614,7 +584,7 @@ interfaces {
         address 10.123.203.2/24
         description eth0-wan
         duplex auto
-        mac D2:21:F9:48:20:D2
+        mac D0:21:F9:90:67:BD
         mtu 1500
         speed auto
         vif 600 {
@@ -625,7 +595,7 @@ interfaces {
                 dhcpv6-pd {
                     no-dns
                     pd 0 {
-                        interface eth1 {
+                        interface switch0.10 {
                             host-address ::1190:1cd9:750e:8422
                         }
                         prefix-length /64
@@ -659,52 +629,26 @@ interfaces {
         }
     }
     ethernet eth1 {
-        address 10.182.186.1/24
-        description eth1-lan
         duplex auto
-        ipv6 {
-            dup-addr-detect-transmits 1
-            router-advert {
-                cur-hop-limit 64
-                default-preference medium
-                link-mtu 1492
-                managed-flag false
-                max-interval 600
-                name-server fd1a:ac95:26c8:c75f::1
-                other-config-flag false
-                prefix ::/64 {
-                    autonomous-flag true
-                    on-link-flag true
-                    preferred-lifetime 43200
-                    valid-lifetime 64800
-                }
-                reachable-time 0
-                retrans-timer 0
-                send-advert true
-            }
-        }
-        mac D2:21:F9:DD:C8:50
+        mac D0:21:F9:82:0D:94
         mtu 1500
         speed auto
     }
     ethernet eth2 {
-        disable
         duplex auto
-        mac D2:21:F9:0E:FB:47
+        mac D0:21:F9:D5:0A:39
         mtu 1500
         speed auto
     }
     ethernet eth3 {
-        disable
         duplex auto
-        mac D2:21:F9:5E:0D:50
+        mac D0:21:F9:0E:6E:DA
         mtu 1500
         speed auto
     }
     ethernet eth4 {
-        disable
         duplex auto
-        mac D2:21:F9:A6:A5:35
+        mac D0:21:F9:76:B7:33
         mtu 1500
         poe {
             output off
@@ -716,7 +660,56 @@ interfaces {
         address fd1a:ac95:26c8:c75f::1/128
     }
     switch switch0 {
+        description switch0-lan
         mtu 1500
+        switch-port {
+            interface eth1 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth2 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth3 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth4 {
+                vlan {
+                    pvid 10
+                }
+            }
+            vlan-aware enable
+        }
+        vif 10 {
+            address 10.182.186.1/24
+            description switch0-lan-vif-10
+            ipv6 {
+                dup-addr-detect-transmits 1
+                router-advert {
+                    cur-hop-limit 64
+                    default-preference medium
+                    link-mtu 1492
+                    managed-flag false
+                    max-interval 600
+                    name-server fd1a:ac95:26c8:c75f::1
+                    other-config-flag false
+                    prefix ::/64 {
+                        autonomous-flag true
+                        on-link-flag true
+                        preferred-lifetime 43200
+                        valid-lifetime 64800
+                    }
+                    reachable-time 0
+                    retrans-timer 0
+                    send-advert true
+                }
+            }
+        }
     }
 }
 service {
@@ -742,9 +735,9 @@ service {
     dns {
         forwarding {
             cache-size 10000
-            listen-on eth1
-            name-server 2001:4860:4860::8844
-            name-server 2001:4860:4860::8888
+            listen-on switch0.10
+            name-server 8.8.4.4
+            name-server 8.8.8.8
             options bogus-priv
             options domain-needed
         }
