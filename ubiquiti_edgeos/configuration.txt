@@ -168,7 +168,7 @@ interfaces {
         address 10.123.203.2/24
         description eth0-wan
         duplex auto
-        mac D2:21:F9:48:20:D2
+        mac D0:21:F9:90:67:BD
         mtu 1500
         speed auto
         vif 600 {
@@ -179,7 +179,7 @@ interfaces {
                 dhcpv6-pd {
                     no-dns
                     pd 0 {
-                        interface eth1 {
+                        interface switch0.10 {
                             host-address ::1190:1cd9:750e:8422
                         }
                         prefix-length /64
@@ -213,52 +213,26 @@ interfaces {
         }
     }
     ethernet eth1 {
-        address 10.182.186.1/24
-        description eth1-lan
         duplex auto
-        ipv6 {
-            dup-addr-detect-transmits 1
-            router-advert {
-                cur-hop-limit 64
-                default-preference medium
-                link-mtu 1492
-                managed-flag false
-                max-interval 600
-                name-server fd1a:ac95:26c8:c75f::1
-                other-config-flag false
-                prefix ::/64 {
-                    autonomous-flag true
-                    on-link-flag true
-                    preferred-lifetime 43200
-                    valid-lifetime 64800
-                }
-                reachable-time 0
-                retrans-timer 0
-                send-advert true
-            }
-        }
-        mac D2:21:F9:DD:C8:50
+        mac D0:21:F9:82:0D:94
         mtu 1500
         speed auto
     }
     ethernet eth2 {
-        disable
         duplex auto
-        mac D2:21:F9:0E:FB:47
+        mac D0:21:F9:D5:0A:39
         mtu 1500
         speed auto
     }
     ethernet eth3 {
-        disable
         duplex auto
-        mac D2:21:F9:5E:0D:50
+        mac D0:21:F9:0E:6E:DA
         mtu 1500
         speed auto
     }
     ethernet eth4 {
-        disable
         duplex auto
-        mac D2:21:F9:A6:A5:35
+        mac D0:21:F9:76:B7:33
         mtu 1500
         poe {
             output off
@@ -270,7 +244,56 @@ interfaces {
         address fd1a:ac95:26c8:c75f::1/128
     }
     switch switch0 {
+        description switch0-lan
         mtu 1500
+        switch-port {
+            interface eth1 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth2 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth3 {
+                vlan {
+                    pvid 10
+                }
+            }
+            interface eth4 {
+                vlan {
+                    pvid 10
+                }
+            }
+            vlan-aware enable
+        }
+        vif 10 {
+            address 10.182.186.1/24
+            description switch0-lan-vif-10
+            ipv6 {
+                dup-addr-detect-transmits 1
+                router-advert {
+                    cur-hop-limit 64
+                    default-preference medium
+                    link-mtu 1492
+                    managed-flag false
+                    max-interval 600
+                    name-server fd1a:ac95:26c8:c75f::1
+                    other-config-flag false
+                    prefix ::/64 {
+                        autonomous-flag true
+                        on-link-flag true
+                        preferred-lifetime 43200
+                        valid-lifetime 64800
+                    }
+                    reachable-time 0
+                    retrans-timer 0
+                    send-advert true
+                }
+            }
+        }
     }
 }
 service {
@@ -296,9 +319,9 @@ service {
     dns {
         forwarding {
             cache-size 10000
-            listen-on eth1
-            name-server 2001:4860:4860::8844
-            name-server 2001:4860:4860::8888
+            listen-on switch0.10
+            name-server 8.8.4.4
+            name-server 8.8.8.8
             options bogus-priv
             options domain-needed
         }

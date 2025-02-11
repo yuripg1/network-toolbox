@@ -1,5 +1,5 @@
 #!/bin/sh
-LAN_INTERFACE="eth1"
+LAN_INTERFACE="switch0.10"
 DNS_SERVER_IP_ADDRESS="10.189.117.1"
 logger "Checking IPv4 NAT rules on LAN interface $LAN_INTERFACE"
 NAT_LAN_CUSTOM_001_COUNT=$(sudo iptables --table nat --list  --verbose --numeric | grep --count "NAT_LAN_CUSTOM_001")

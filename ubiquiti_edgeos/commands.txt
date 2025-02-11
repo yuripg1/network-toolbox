@@ -7,37 +7,27 @@ delete system login user ubnt
 
 # Interfaces configuration
 delete interfaces ethernet eth1 address
-delete interfaces switch switch0 mtu
 set interfaces ethernet eth0 description eth0-wan
-set interfaces ethernet eth0 mac D2:21:F9:48:20:D2
+set interfaces ethernet eth0 mac D0:21:F9:90:67:BD
 set interfaces ethernet eth0 mtu 1500
-set interfaces ethernet eth1 description eth1-lan
-set interfaces ethernet eth1 mac D2:21:F9:DD:C8:50
+set interfaces ethernet eth1 mac D0:21:F9:82:0D:94
 set interfaces ethernet eth1 mtu 1500
-set interfaces ethernet eth2 disable
-set interfaces ethernet eth2 mac D2:21:F9:0E:FB:47
+set interfaces ethernet eth2 mac D0:21:F9:D5:0A:39
 set interfaces ethernet eth2 mtu 1500
-set interfaces ethernet eth3 disable
-set interfaces ethernet eth3 mac D2:21:F9:5E:0D:50
+set interfaces ethernet eth3 mac D0:21:F9:0E:6E:DA
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 disable
-set interfaces ethernet eth4 mac D2:21:F9:A6:A5:35
+set interfaces ethernet eth4 mac D0:21:F9:76:B7:33
 set interfaces ethernet eth4 mtu 1500
-set interfaces switch switch0 mtu 1500
 
-# Connection tracking timeouts
-set system conntrack timeout icmp 30
-set system conntrack timeout other 600
-set system conntrack timeout tcp close 10
-set system conntrack timeout tcp close-wait 60
-set system conntrack timeout tcp established 432000
-set system conntrack timeout tcp fin-wait 120
-set system conntrack timeout tcp last-ack 30
-set system conntrack timeout tcp syn-recv 60
-set system conntrack timeout tcp syn-sent 120
-set system conntrack timeout tcp time-wait 120
-set system conntrack timeout udp other 30
-set system conntrack timeout udp stream 180
+# Switch configuration
+delete interfaces switch switch0 mtu
+set interfaces switch switch0 description switch0-lan
+set interfaces switch switch0 mtu 1500
+set interfaces switch switch0 switch-port interface eth1 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth2 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth3 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
+set interfaces switch switch0 switch-port vlan-aware enable
 
 # IPv4 kernel configuration
 set firewall ip-src-route disable
@@ -73,7 +63,8 @@ set firewall name INPUT_WAN_IN rule 7500 protocol icmp
 set interfaces loopback lo address 10.189.117.1/32
 
 # IPv4 LAN
-set interfaces ethernet eth1 address 10.182.186.1/24
+set interfaces switch switch0 vif 10 address 10.182.186.1/24
+set interfaces switch switch0 vif 10 description switch0-lan-vif-10
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
@@ -189,22 +180,22 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source port 547
 set interfaces loopback lo address fd1a:ac95:26c8:c75f::1/128
 
 # IPv6 LAN
-set interfaces ethernet eth1 ipv6 dup-addr-detect-transmits 1
-set interfaces ethernet eth1 ipv6 router-advert cur-hop-limit 64
-set interfaces ethernet eth1 ipv6 router-advert default-preference medium
-set interfaces ethernet eth1 ipv6 router-advert link-mtu 1492
-set interfaces ethernet eth1 ipv6 router-advert managed-flag false
-set interfaces ethernet eth1 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
-set interfaces ethernet eth1 ipv6 router-advert other-config-flag false
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 autonomous-flag true
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 on-link-flag true
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
-set interfaces ethernet eth1 ipv6 router-advert prefix ::/64 valid-lifetime 64800
-set interfaces ethernet eth1 ipv6 router-advert send-advert true
+set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
+set interfaces switch switch0 vif 10 ipv6 router-advert cur-hop-limit 64
+set interfaces switch switch0 vif 10 ipv6 router-advert default-preference medium
+set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
+set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
+set interfaces switch switch0 vif 10 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
+set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 autonomous-flag true
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 on-link-flag true
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 valid-lifetime 64800
+set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 
 # IPv6 WAN
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface eth1 host-address ::1190:1cd9:750e:8422
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address ::1190:1cd9:750e:8422
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
@@ -228,11 +219,25 @@ set system static-host-mapping host-name router.lan inet fd1a:ac95:26c8:c75f::1
 
 # DNS configuration
 set service dns forwarding cache-size 10000
-set service dns forwarding listen-on eth1
-set service dns forwarding name-server 2001:4860:4860::8844
-set service dns forwarding name-server 2001:4860:4860::8888
+set service dns forwarding listen-on switch0.10
+set service dns forwarding name-server 8.8.4.4
+set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
+
+# Connection tracking timeouts
+set system conntrack timeout icmp 30
+set system conntrack timeout other 600
+set system conntrack timeout tcp close 10
+set system conntrack timeout tcp close-wait 60
+set system conntrack timeout tcp established 432000
+set system conntrack timeout tcp fin-wait 120
+set system conntrack timeout tcp last-ack 30
+set system conntrack timeout tcp syn-recv 60
+set system conntrack timeout tcp syn-sent 120
+set system conntrack timeout tcp time-wait 120
+set system conntrack timeout udp other 30
+set system conntrack timeout udp stream 180
 
 # Clock configuration
 delete system ntp server
@@ -292,3 +297,5 @@ $ sudo chmod +x /config/scripts/post-config.d/ipv6_nat_lan.sh
 $ sudo chmod +x /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
 $ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
 $ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
+
+$ sudo rm -rf /home/ubnt
