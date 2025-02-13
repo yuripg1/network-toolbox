@@ -106,22 +106,22 @@
 ### IPv4 DNS query redirection
 
 ```
-/ip firewall address-list add address=10.195.123.1/32 list=ip-dns-address-list
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ip firewall address-list add address=10.195.123.1/32 list=ip-dns-addresses
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 ```
 
 ### IPv4 NAT
 
 ```
-/ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-address-list
+/ip firewall address-list add address=10.175.202.0/24 list=ip-lan-addresses
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-addresses
 ```
 
 ### IPv4 workaround for ISP blocking of inbound UDP packets on port 123
 
 ```
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-address-list src-port=123 to-ports=49152-65535 place-before=2
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-addresses src-port=123 to-ports=49152-65535 place-before=2
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 ```
 
@@ -147,7 +147,7 @@
 ### IPv6 firewall rules
 
 ```
-/ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
+/ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv6-forward-wan-in
 /ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
@@ -157,11 +157,11 @@
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 ```
 
@@ -196,9 +196,9 @@
 ### IPv6 DNS query redirection
 
 ```
-/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address-list
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-addresses
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 ```
 
 ### IPv6 workaround for ISP blocking of inbound UDP packets on port 123
@@ -364,8 +364,8 @@
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 /ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
 /ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=router.lan ttl=5m type=AAAA
-/ip firewall address-list add address=10.195.123.1/32 list=ip-dns-address-list
-/ip firewall address-list add address=10.175.202.0/24 list=ip-lan-address-list
+/ip firewall address-list add address=10.195.123.1/32 list=ip-dns-addresses
+/ip firewall address-list add address=10.175.202.0/24 list=ip-lan-addresses
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ip-forward-wan-in
 /ip firewall filter add action=return chain=ip-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop invalid packets" connection-state=invalid
@@ -377,10 +377,10 @@
 /ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interfaces new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interfaces passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=tcp
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-address-list src-port=123 to-ports=49152-65535
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-address-list
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-addresses src-port=123 to-ports=49152-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-addresses
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
@@ -394,8 +394,8 @@
 /ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo no-dad=no
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
 /ipv6 dhcp-client add add-default-route=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
-/ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-address-list
-/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address-list
+/ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
+/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-addresses
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv6-forward-wan-in
 /ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
@@ -405,16 +405,16 @@
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-address-list
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-address-list src-port=547
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses src-port=547
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interfaces new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interfaces passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address-list dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-preference=medium
