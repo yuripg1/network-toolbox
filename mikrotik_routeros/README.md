@@ -52,7 +52,7 @@
 ### IPv4 kernel configuration
 
 ```
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=8h ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 ```
 
 ### IPv4 firewall rules
@@ -265,7 +265,7 @@
 /ip service set ssh disabled=no port=22
 /ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
-/ip service set winbox disabled=yes
+/ip service set winbox disabled=no port=8291
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 ```
@@ -350,7 +350,7 @@
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether8 learn=yes pvid=10
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=none
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=8h ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
@@ -388,7 +388,7 @@
 /ip service set ssh disabled=no port=22
 /ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
-/ip service set winbox disabled=yes
+/ip service set winbox disabled=no port=8291
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo no-dad=no

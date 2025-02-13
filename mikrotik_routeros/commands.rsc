@@ -33,7 +33,7 @@
 /interface list add include=wan-interfaces name=masquerade-interfaces
 
 # IPv4 kernel configuration
-/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes arp-timeout=8h ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes
+/ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 
 # IPv4 firewall rules
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ip-forward-wan-in
@@ -168,7 +168,7 @@
 /ip service set ssh disabled=no port=22
 /ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
-/ip service set winbox disabled=yes
+/ip service set winbox disabled=no port=8291
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 
