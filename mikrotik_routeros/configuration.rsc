@@ -1,4 +1,4 @@
-/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=yes frame-types=admit-only-vlan-tagged igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none vlan-filtering=yes
+/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-only-vlan-tagged igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none vlan-filtering=yes
 /interface ethernet set [ find default-name=ether1 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:41:3E:50 mtu=1500 name=ether1-wan
 /interface ethernet set [ find default-name=ether2 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D2:32:3B mtu=1500
 /interface ethernet set [ find default-name=ether3 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:93:38:59 mtu=1500
@@ -82,7 +82,7 @@
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo no-dad=no
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
 /ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-addresses
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv6-forward-wan-in
@@ -98,7 +98,7 @@
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses src-port=547
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interfaces new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interfaces passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535

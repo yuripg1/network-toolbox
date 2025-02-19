@@ -105,7 +105,6 @@ firewall {
             protocol udp
             source {
                 address fe80::/10
-                port 547
             }
         }
     }

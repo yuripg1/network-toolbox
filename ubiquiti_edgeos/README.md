@@ -225,7 +225,6 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description "accept dhcpv6 pa
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination port 546
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source address fe80::/10
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source port 547
 ```
 
 ### IPv6 loopback configuration
@@ -521,7 +520,6 @@ firewall {
             protocol udp
             source {
                 address fe80::/10
-                port 547
             }
         }
     }
