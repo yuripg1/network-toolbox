@@ -1,4 +1,5 @@
-# Ping output MUST contain timestamp information (use the "-D" argument)
+# Ping output MUST print out timestamp information (use the "-D" argument)
+# Ping output MUST print out unanswered requests (use the "-O" argument)
 # Example of expected ping command:
 # ping -c 21601 -D -i 1 -M do -n -O -s 1372 8.8.8.8 > ./ping_01.txt
 # Set the "data_directory_path" variable to point to the directory containing the output of the ping command(s)

@@ -6,6 +6,7 @@
 ## Scripts
 
 * [NTP test script](./scripts/ntp_test)
+* [Ping analyzer script](./scripts/ping_analyzer/ping_analyzer.py)
 
 ## Network diagram
 
