@@ -16,7 +16,8 @@
 /interface ethernet set [ find default-name=sfp-sfpplus1 ] arp=enabled arp-timeout=auto disabled=yes l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D0:2F:04 mtu=1500
 
 # Switch configuration
-/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-only-vlan-tagged igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none vlan-filtering=yes
+/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-all igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none pvid=1 vlan-filtering=yes
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface vlan add arp=enabled arp-timeout=auto interface=bridge-lan loop-protect=off mtu=1500 name=bridge-lan-vlan-10 vlan-id=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=10

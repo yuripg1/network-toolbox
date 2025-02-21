@@ -29,7 +29,8 @@
 ### Switch configuration
 
 ```
-/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-only-vlan-tagged igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none vlan-filtering=yes
+/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-all igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none pvid=1 vlan-filtering=yes
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface vlan add arp=enabled arp-timeout=auto interface=bridge-lan loop-protect=off mtu=1500 name=bridge-lan-vlan-10 vlan-id=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=10
@@ -315,7 +316,7 @@
 ## Final configuration
 
 ```
-/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=yes frame-types=admit-only-vlan-tagged igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none vlan-filtering=yes
+/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-all igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none pvid=1 vlan-filtering=yes
 /interface ethernet set [ find default-name=ether1 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:41:3E:50 mtu=1500 name=ether1-wan
 /interface ethernet set [ find default-name=ether2 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D2:32:3B mtu=1500
 /interface ethernet set [ find default-name=ether3 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:93:38:59 mtu=1500
@@ -358,6 +359,7 @@
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interfaces
@@ -450,11 +452,11 @@
 > /ip address print
 Flags: D - DYNAMIC
 Columns: ADDRESS, NETWORK, INTERFACE
-#   ADDRESS           NETWORK        INTERFACE
-0   10.195.123.1/32   10.195.123.1   lo
-1   10.175.202.1/24   10.175.202.0   bridge-lan-vlan-10
-2   10.123.203.2/24   10.123.203.0   ether1-wan
-3 D 187.90.225.52/32  189.97.102.55  ether1-wan-vlan-600-pppoe-client
+#   ADDRESS            NETWORK        INTERFACE
+0   10.195.123.1/32    10.195.123.1   lo
+1   10.175.202.1/24    10.175.202.0   bridge-lan-vlan-10
+2   10.123.203.2/24    10.123.203.0   ether1-wan
+3 D 201.42.157.185/32  189.97.102.55  ether1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -464,7 +466,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, v - VPN
 Columns: DST-ADDRESS, GATEWAY, DISTANCE
     DST-ADDRESS       GATEWAY                           DISTANCE
-DAv 0.0.0.0/0         ether1-wan-vlan-600-pppoe-client         1
+DAv 0.0.0.0/0         ether1-wan-vlan-600-pppoe-client         2
 DAc 10.123.203.0/24   ether1-wan                               0
 DAc 10.175.202.0/24   bridge-lan-vlan-10                       0
 DAc 10.195.123.1/32   lo                                       0
@@ -479,14 +481,14 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
 0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                                no
-1  G 2804:7f4:ca02:1737:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10                yes
+1  G 2804:7f4:ca02:386b:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10                yes
 2 D  ::1/128                                                           lo                                no
 3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10                no
 4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                        no
-5 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan                        no
-6 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan-vlan-600               no
-7 DL fe80::e5e9:672f:0:e/64                                            ether1-wan-vlan-600-pppoe-client  no
-8 DG 2804:7f4:c02f:1a04:e5e9:672f:0:e/64                               ether1-wan-vlan-600-pppoe-client  no         2d23h57m47s
+5 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan-vlan-600               no
+6 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan                        no
+7 DL fe80::eb96:65b0:0:e/64                                            ether1-wan-vlan-600-pppoe-client  no
+8 DG 2804:7f4:c02f:5430:eb96:65b0:0:e/64                               ether1-wan-vlan-600-pppoe-client  no         2d22h34m46s
 ```
 
 ### IPv6 routes
@@ -496,15 +498,15 @@ Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, d - DHCP, v - VPN
 Columns: DST-ADDRESS, GATEWAY, DISTANCE
     DST-ADDRESS                 GATEWAY                                                     DISTANCE
-DAv ::/0                        ether1-wan-vlan-600-pppoe-client                                   1
-D d ::/0                        fe80::a21c:8dff:fef1:1934%ether1-wan-vlan-600-pppoe-client         2
-DAc 2804:7f4:c02f:1a04::/64     ether1-wan-vlan-600-pppoe-client                                   0
-D d 2804:7f4:ca02:1737::/64                                                                        2
-DAc 2804:7f4:ca02:1737::/64     bridge-lan-vlan-10                                                 0
+DAv ::/0                        ether1-wan-vlan-600-pppoe-client                                   2
+D d ::/0                        fe80::a21c:8dff:fef1:1934%ether1-wan-vlan-600-pppoe-client         3
+DAc 2804:7f4:c02f:5430::/64     ether1-wan-vlan-600-pppoe-client                                   0
+D d 2804:7f4:ca02:386b::/64                                                                        3
+DAc 2804:7f4:ca02:386b::/64     bridge-lan-vlan-10                                                 0
 DAc fe80::/64                   bridge-lan-vlan-10                                                 0
 DAc fe80::/64                   bridge-lan                                                         0
-DAc fe80::/64                   ether1-wan                                                         0
 DAc fe80::/64                   ether1-wan-vlan-600                                                0
+DAc fe80::/64                   ether1-wan                                                         0
 DAc fe80::/64                   ether1-wan-vlan-600-pppoe-client                                   0
 DAc ::1/128                     lo                                                                 0
 DAc fd9b:69ab:e45c:4aa6::1/128  lo                                                                 0

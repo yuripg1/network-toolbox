@@ -1,4 +1,4 @@
-/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-only-vlan-tagged igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none vlan-filtering=yes
+/interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 forward-reserved-addresses=no frame-types=admit-all igmp-snooping=no ingress-filtering=yes mtu=1500 name=bridge-lan protocol-mode=none pvid=1 vlan-filtering=yes
 /interface ethernet set [ find default-name=ether1 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:41:3E:50 mtu=1500 name=ether1-wan
 /interface ethernet set [ find default-name=ether2 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D2:32:3B mtu=1500
 /interface ethernet set [ find default-name=ether3 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:93:38:59 mtu=1500
@@ -41,6 +41,7 @@
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interfaces
