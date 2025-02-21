@@ -61,7 +61,7 @@
 # IPv4 WAN
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
 /interface vlan add arp=enabled arp-timeout=auto interface=ether1-wan loop-protect=off mtu=1500 name=ether1-wan-vlan-600 vlan-id=600
-/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=2 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interfaces
 
 # IPv4 TCP MSS clamping
@@ -119,7 +119,7 @@
 
 # IPv6 WAN
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=yes default-route-distance=3 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
 
 # IPv6 TCP MSS clamping
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interfaces new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
@@ -195,3 +195,6 @@
 /queue interface set ether7 queue=only-hardware-queue
 /queue interface set ether8 queue=only-hardware-queue
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
+
+# Configure CPU frequency
+/system routerboard settings set cpu-frequency=1400MHz

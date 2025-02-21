@@ -18,7 +18,7 @@
 /ip pool add name=ip-dhcp-server-pool-vlan-10 ranges=10.175.202.2-10.175.202.253
 /ip dhcp-server add address-pool=ip-dhcp-server-pool-vlan-10 authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=12h name=ip-dhcp-server-vlan-10
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
-/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=1 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=2 disabled=no interface=ether1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=ether1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /queue interface set ether1-wan queue=only-hardware-queue
 /queue interface set ether2 queue=only-hardware-queue
 /queue interface set ether3 queue=only-hardware-queue
@@ -82,7 +82,7 @@
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no interface=lo no-dad=no
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=yes default-route-distance=2 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=yes default-route-distance=3 interface=ether1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
 /ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-addresses
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv6-forward-wan-in
@@ -115,6 +115,7 @@
 /system ntp client servers add address=time2.google.com iburst=yes
 /system ntp client servers add address=time3.google.com iburst=yes
 /system ntp client servers add address=time4.google.com iburst=yes
+/system routerboard settings set cpu-frequency=1400MHz
 /tool bandwidth-server set enabled=no
 /tool graphing interface add interface=ether1-wan-vlan-600-pppoe-client store-on-disk=no
 /tool graphing interface add interface=bridge-lan-vlan-10 store-on-disk=no
