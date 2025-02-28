@@ -248,7 +248,8 @@ interfaces {
         switch-port {
             interface eth1 {
                 vlan {
-                    pvid 10
+                    pvid 1
+                    vid 10
                 }
             }
             interface eth2 {
@@ -387,7 +388,32 @@ system {
     conntrack {
         expect-table-size 2048
         hash-size 32768
+        modules {
+            ftp {
+                disable
+            }
+            gre {
+                disable
+            }
+            h323 {
+                disable
+            }
+            pptp {
+                disable
+            }
+            sip {
+                disable
+            }
+            tftp {
+                disable
+            }
+        }
         table-size 262144
+        tcp {
+            half-open-connections 512
+            loose enable
+            max-retrans 3
+        }
         timeout {
             icmp 30
             other 600

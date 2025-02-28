@@ -36,7 +36,8 @@ set interfaces ethernet eth4 mtu 1500
 delete interfaces switch switch0 mtu
 set interfaces switch switch0 description switch0-lan
 set interfaces switch switch0 mtu 1500
-set interfaces switch switch0 switch-port interface eth1 vlan pvid 10
+set interfaces switch switch0 switch-port interface eth1 vlan pvid 1
+set interfaces switch switch0 switch-port interface eth1 vlan vid 10
 set interfaces switch switch0 switch-port interface eth2 vlan pvid 10
 set interfaces switch switch0 switch-port interface eth3 vlan pvid 10
 set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
@@ -297,6 +298,7 @@ set service dns forwarding options domain-needed
 ### Connection tracking timeouts
 
 ```
+set system conntrack tcp loose enable
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
 set system conntrack timeout tcp close 10
@@ -320,6 +322,17 @@ set system ntp server time1.google.com
 set system ntp server time2.google.com
 set system ntp server time3.google.com
 set system ntp server time4.google.com
+```
+
+### Disabling of unneeded helpers
+
+```
+set system conntrack modules ftp disable
+set system conntrack modules gre disable
+set system conntrack modules h323 disable
+set system conntrack modules pptp disable
+set system conntrack modules sip disable
+set system conntrack modules tftp disable
 ```
 
 ### Host name configuration
@@ -663,7 +676,8 @@ interfaces {
         switch-port {
             interface eth1 {
                 vlan {
-                    pvid 10
+                    pvid 1
+                    vid 10
                 }
             }
             interface eth2 {
@@ -802,7 +816,32 @@ system {
     conntrack {
         expect-table-size 2048
         hash-size 32768
+        modules {
+            ftp {
+                disable
+            }
+            gre {
+                disable
+            }
+            h323 {
+                disable
+            }
+            pptp {
+                disable
+            }
+            sip {
+                disable
+            }
+            tftp {
+                disable
+            }
+        }
         table-size 262144
+        tcp {
+            half-open-connections 512
+            loose enable
+            max-retrans 3
+        }
         timeout {
             icmp 30
             other 600
@@ -881,7 +920,7 @@ $ sudo ip -brief -4 address
 lo               UNKNOWN        127.0.0.1/8 10.189.117.1/32
 eth0@itf0        UP             10.123.203.2/24
 switch0.10@switch0 UP             10.182.186.1/24
-pppoe0           UNKNOWN        191.254.122.31 peer 189.97.102.55/32
+pppoe0           UNKNOWN        200.168.75.124 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
@@ -892,8 +931,8 @@ default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev switch0.10 proto kernel scope link src 10.182.186.1
 10.189.117.1 dev lo proto kernel scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 191.254.122.31
-191.254.122.31 dev pppoe0 proto kernel scope link
+189.97.102.55 dev pppoe0 proto kernel scope link src 200.168.75.124
+200.168.75.124 dev pppoe0 proto kernel scope link
 ```
 
 ### IPv6 addresses
@@ -908,17 +947,17 @@ eth2@itf0        UP             fe80::d221:f9ff:fed5:a39/64
 eth3@itf0        UP             fe80::d221:f9ff:fe0e:6eda/64
 eth4@itf0        UP             fe80::d221:f9ff:fe76:b733/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
-switch0.10@switch0 UP             2804:7f4:ca02:1795:1190:1cd9:750e:8422/64 fe80::d221:f9ff:fee1:353/64
+switch0.10@switch0 UP             2804:7f4:ca02:5005:1190:1cd9:750e:8422/64 fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d221:f9ff:fe90:67bd/64
-pppoe0           UNKNOWN        2804:7f4:c02f:1ae0:f56d:30d2:8380:62cf/64 fe80::f56d:30d2:8380:62cf/10
+pppoe0           UNKNOWN        2804:7f4:c02f:7a82:6539:89d9:33bf:3762/64 fe80::6539:89d9:33bf:3762/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c02f:1ae0::/64 dev pppoe0 proto kernel metric 256 expires 258991sec pref medium
-2804:7f4:ca02:1795::/64 dev switch0.10 proto kernel metric 256 pref medium
+2804:7f4:c02f:7a82::/64 dev pppoe0 proto kernel metric 256 expires 259000sec pref medium
+2804:7f4:ca02:5005::/64 dev switch0.10 proto kernel metric 256 pref medium
 unreachable fd1a:ac95:26c8:c75f::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
@@ -931,7 +970,7 @@ fe80::/64 dev switch0.10 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1591sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1600sec pref medium
 ```
 
 ## Resources

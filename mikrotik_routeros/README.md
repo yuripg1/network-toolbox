@@ -31,10 +31,10 @@
 ```
 /interface bridge settings set allow-fast-path=yes use-ip-firewall=no
 /interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 fast-forward=yes forward-reserved-addresses=no frame-types=admit-all igmp-snooping=no ingress-filtering=yes max-learned-entries=auto mtu=1500 name=bridge-lan protocol-mode=none pvid=1 vlan-filtering=yes
-/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
-/interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan,ether2 vlan-ids=1
+/interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,ether2 untagged=ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface vlan add arp=enabled arp-timeout=auto interface=bridge-lan loop-protect=off mtu=1500 name=bridge-lan-vlan-10 vlan-id=10
-/interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=10
+/interface bridge port add bridge=bridge-lan frame-types=admit-all hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=1
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether3 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether4 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether5 learn=yes pvid=10
@@ -239,6 +239,18 @@
 /system ntp client set enabled=yes mode=unicast
 ```
 
+### Disabling of unneeded helpers
+
+```
+/ip firewall service-port set ftp disabled=yes
+/ip firewall service-port set tftp disabled=yes
+/ip firewall service-port set irc disabled=yes
+/ip firewall service-port set h323 disabled=yes
+/ip firewall service-port set sip disabled=yes
+/ip firewall service-port set pptp disabled=yes
+/ip firewall service-port set rtsp disabled=yes
+```
+
 ### Host name configuration
 
 ```
@@ -343,7 +355,7 @@
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
 /system logging action set [ find name=memory ] memory-lines=10000
 /ip smb set enabled=no
-/interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=10
+/interface bridge port add bridge=bridge-lan frame-types=admit-all hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=1
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether3 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether4 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether5 learn=yes pvid=10
@@ -355,8 +367,8 @@
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
-/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
-/interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan,ether2 vlan-ids=1
+/interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,ether2 untagged=ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interfaces
 /interface list member add interface=ether1-wan list=masquerade-interfaces
@@ -386,6 +398,13 @@
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-addresses src-port=123 to-ports=49152-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-addresses
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall service-port set ftp disabled=yes
+/ip firewall service-port set tftp disabled=yes
+/ip firewall service-port set irc disabled=yes
+/ip firewall service-port set h323 disabled=yes
+/ip firewall service-port set sip disabled=yes
+/ip firewall service-port set pptp disabled=yes
+/ip firewall service-port set rtsp disabled=yes
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
 /ip service set www disabled=no port=80
@@ -451,7 +470,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 0   10.195.123.1/32    10.195.123.1   lo
 1   10.175.202.1/24    10.175.202.0   bridge-lan-vlan-10
 2   10.123.203.2/24    10.123.203.0   ether1-wan
-3 D 201.42.157.185/32  189.97.102.55  ether1-wan-vlan-600-pppoe-client
+3 D 200.168.75.124/32  189.97.102.55  ether1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -476,14 +495,14 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                         ADVERTISE  VALID
 0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                                no
-1  G 2804:7f4:ca02:386b:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10                yes
+1  G 2804:7f4:ca02:5009:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10                yes
 2 D  ::1/128                                                           lo                                no
-3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10                no
-4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                        no
-5 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan-vlan-600               no
-6 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan                        no
-7 DL fe80::eb96:65b0:0:e/64                                            ether1-wan-vlan-600-pppoe-client  no
-8 DG 2804:7f4:c02f:5430:eb96:65b0:0:e/64                               ether1-wan-vlan-600-pppoe-client  no         2d22h34m46s
+3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                        no
+4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10                no
+5 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan                        no
+6 DL fe80::4aa9:8aff:fe41:3e50/64                                      ether1-wan-vlan-600               no
+7 DL fe80::15bb:505:0:e/64                                             ether1-wan-vlan-600-pppoe-client  no
+8 DG 2804:7f4:c02f:7a8e:15bb:505:0:e/64                                ether1-wan-vlan-600-pppoe-client  no         2d23h55m12s
 ```
 
 ### IPv6 routes
@@ -495,13 +514,13 @@ Columns: DST-ADDRESS, GATEWAY, DISTANCE
     DST-ADDRESS                 GATEWAY                                                     DISTANCE
 DAv ::/0                        ether1-wan-vlan-600-pppoe-client                                   2
 D d ::/0                        fe80::a21c:8dff:fef1:1934%ether1-wan-vlan-600-pppoe-client         3
-DAc 2804:7f4:c02f:5430::/64     ether1-wan-vlan-600-pppoe-client                                   0
-D d 2804:7f4:ca02:386b::/64                                                                        3
-DAc 2804:7f4:ca02:386b::/64     bridge-lan-vlan-10                                                 0
-DAc fe80::/64                   bridge-lan-vlan-10                                                 0
+DAc 2804:7f4:c02f:7a8e::/64     ether1-wan-vlan-600-pppoe-client                                   0
+D d 2804:7f4:ca02:5009::/64                                                                        3
+DAc 2804:7f4:ca02:5009::/64     bridge-lan-vlan-10                                                 0
 DAc fe80::/64                   bridge-lan                                                         0
-DAc fe80::/64                   ether1-wan-vlan-600                                                0
+DAc fe80::/64                   bridge-lan-vlan-10                                                 0
 DAc fe80::/64                   ether1-wan                                                         0
+DAc fe80::/64                   ether1-wan-vlan-600                                                0
 DAc fe80::/64                   ether1-wan-vlan-600-pppoe-client                                   0
 DAc ::1/128                     lo                                                                 0
 DAc fd9b:69ab:e45c:4aa6::1/128  lo                                                                 0

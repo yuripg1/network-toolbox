@@ -30,7 +30,7 @@
 /queue interface set sfp-sfpplus1 queue=only-hardware-queue
 /system logging action set [ find name=memory ] memory-lines=10000
 /ip smb set enabled=no
-/interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=10
+/interface bridge port add bridge=bridge-lan frame-types=admit-all hw=yes ingress-filtering=yes interface=ether2 learn=yes pvid=1
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether3 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether4 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether5 learn=yes pvid=10
@@ -42,8 +42,8 @@
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes disable-ipv6=no forward=yes
-/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan vlan-ids=1
-/interface bridge vlan add bridge=bridge-lan tagged=bridge-lan untagged=ether2,ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
+/interface bridge vlan add bridge=bridge-lan untagged=bridge-lan,ether2 vlan-ids=1
+/interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,ether2 untagged=ether3,ether4,ether5,ether6,ether7,ether8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /interface list member add interface=ether1-wan-vlan-600-pppoe-client list=wan-interfaces
 /interface list member add interface=ether1-wan list=masquerade-interfaces
@@ -73,6 +73,13 @@
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-addresses src-port=123 to-ports=49152-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-addresses
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall service-port set ftp disabled=yes
+/ip firewall service-port set tftp disabled=yes
+/ip firewall service-port set irc disabled=yes
+/ip firewall service-port set h323 disabled=yes
+/ip firewall service-port set sip disabled=yes
+/ip firewall service-port set pptp disabled=yes
+/ip firewall service-port set rtsp disabled=yes
 /ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
 /ip service set www disabled=no port=80
