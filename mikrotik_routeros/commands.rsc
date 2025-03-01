@@ -5,15 +5,15 @@
 /user remove admin
 
 # Interfaces configuration
-/interface ethernet set [ find default-name=ether1 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:41:3E:50 mtu=1500 name=ether1-wan
-/interface ethernet set [ find default-name=ether2 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D2:32:3B mtu=1500
-/interface ethernet set [ find default-name=ether3 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:93:38:59 mtu=1500
-/interface ethernet set [ find default-name=ether4 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:C2:ED:8C mtu=1500
-/interface ethernet set [ find default-name=ether5 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:5D:38:CB mtu=1500
-/interface ethernet set [ find default-name=ether6 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:CB:0D:50 mtu=1500
-/interface ethernet set [ find default-name=ether7 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:9F:ED:76 mtu=1500
-/interface ethernet set [ find default-name=ether8 ] arp=enabled arp-timeout=auto disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:1C:70:66 mtu=1500
-/interface ethernet set [ find default-name=sfp-sfpplus1 ] arp=enabled arp-timeout=auto disabled=yes l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D0:2F:04 mtu=1500
+/interface ethernet set [ find default-name=ether1 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:41:3E:50 mtu=1500 name=ether1-wan
+/interface ethernet set [ find default-name=ether2 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D2:32:3B mtu=1500
+/interface ethernet set [ find default-name=ether3 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:93:38:59 mtu=1500
+/interface ethernet set [ find default-name=ether4 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:C2:ED:8C mtu=1500
+/interface ethernet set [ find default-name=ether5 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:5D:38:CB mtu=1500
+/interface ethernet set [ find default-name=ether6 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:CB:0D:50 mtu=1500
+/interface ethernet set [ find default-name=ether7 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:9F:ED:76 mtu=1500
+/interface ethernet set [ find default-name=ether8 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:1C:70:66 mtu=1500
+/interface ethernet set [ find default-name=sfp-sfpplus1 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=yes l2mtu=1504 loop-protect=off mac-address=48:A9:8A:D0:2F:04 mtu=1500
 
 # Switch configuration
 /interface bridge settings set allow-fast-path=yes use-ip-firewall=no
@@ -29,15 +29,11 @@
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether7 learn=yes pvid=10
 /interface bridge port add bridge=bridge-lan frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=ether8 learn=yes pvid=10
 
-# Initial configuration of interface lists
-/interface list add name=lan-interfaces
-/interface list add name=wan-interfaces
-/interface list add include=wan-interfaces name=masquerade-interfaces
-
 # IPv4 kernel configuration
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 
 # IPv4 firewall rules
+/interface list add name=wan-interfaces
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ip-forward-wan-in
 /ip firewall filter add action=return chain=ip-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop invalid packets" connection-state=invalid
@@ -52,6 +48,7 @@
 /ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
 
 # IPv4 LAN
+/interface list add name=lan-interfaces
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
 /ip dhcp-server option add code=26 force=no name=ip-dhcp-server-vlan-10-option-26 value="'1492'"
@@ -76,10 +73,11 @@
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 
 # IPv4 NAT
+/interface list add include=wan-interfaces name=masquerade-interfaces
 /ip firewall address-list add address=10.175.202.0/24 list=ip-lan-addresses
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-addresses
 
-# IPv4 workaround for ISP blocking of inbound UDP packets on port 123
+# IPv4 workaround for ISP blocking of incoming NTP packets
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-addresses src-port=123 to-ports=49152-65535 place-before=2
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 
@@ -132,7 +130,7 @@
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 
-# IPv6 workaround for ISP blocking of inbound UDP packets on port 123
+# IPv6 workaround for ISP blocking of incoming NTP packets
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 
 # IPv6 static DNS configuration
@@ -141,7 +139,7 @@
 # DNS configuration
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 
-# Connection tracking timeouts
+# Connection tracking configuration
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
 # Clock configuration

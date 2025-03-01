@@ -1,5 +1,5 @@
 # Credential configuration
-set system login user user925232615 authentication plaintext-password password478924191
+set system login user user925232615 authentication plaintext-password 'password478924191'
 set system login user user925232615 level admin
 
 # Default credential removal
@@ -8,19 +8,28 @@ delete system login user ubnt
 # Interfaces configuration
 delete interfaces ethernet eth1 address
 set interfaces ethernet eth0 description eth0-wan
-set interfaces ethernet eth0 mac D0:21:F9:90:67:BD
+set interfaces ethernet eth0 duplex auto
+set interfaces ethernet eth0 mac 'D0:21:F9:90:67:BD'
 set interfaces ethernet eth0 mtu 1500
-set interfaces ethernet eth1 mac D0:21:F9:82:0D:94
+set interfaces ethernet eth0 speed auto
+set interfaces ethernet eth1 duplex auto
+set interfaces ethernet eth1 mac 'D0:21:F9:82:0D:94'
 set interfaces ethernet eth1 mtu 1500
-set interfaces ethernet eth2 mac D0:21:F9:D5:0A:39
+set interfaces ethernet eth1 speed auto
+set interfaces ethernet eth2 duplex auto
+set interfaces ethernet eth2 mac 'D0:21:F9:D5:0A:39'
 set interfaces ethernet eth2 mtu 1500
-set interfaces ethernet eth3 mac D0:21:F9:0E:6E:DA
+set interfaces ethernet eth2 speed auto
+set interfaces ethernet eth3 duplex auto
+set interfaces ethernet eth3 mac 'D0:21:F9:0E:6E:DA'
 set interfaces ethernet eth3 mtu 1500
-set interfaces ethernet eth4 mac D0:21:F9:76:B7:33
+set interfaces ethernet eth3 speed auto
+set interfaces ethernet eth4 duplex auto
+set interfaces ethernet eth4 mac 'D0:21:F9:76:B7:33'
 set interfaces ethernet eth4 mtu 1500
+set interfaces ethernet eth4 speed auto
 
 # Switch configuration
-delete interfaces switch switch0 mtu
 set interfaces switch switch0 description switch0-lan
 set interfaces switch switch0 mtu 1500
 set interfaces switch switch0 switch-port interface eth1 vlan pvid 1
@@ -40,22 +49,22 @@ set firewall syn-cookies enable
 # IPv4 firewall rules
 set firewall name FORWARD_WAN_IN default-action drop
 set firewall name FORWARD_WAN_IN rule 3333 action accept
-set firewall name FORWARD_WAN_IN rule 3333 description "accept established,related packets"
+set firewall name FORWARD_WAN_IN rule 3333 description 'accept established,related packets'
 set firewall name FORWARD_WAN_IN rule 3333 state established enable
 set firewall name FORWARD_WAN_IN rule 3333 state related enable
 set firewall name FORWARD_WAN_IN rule 6666 action drop
-set firewall name FORWARD_WAN_IN rule 6666 description "drop invalid packets"
+set firewall name FORWARD_WAN_IN rule 6666 description 'drop invalid packets'
 set firewall name FORWARD_WAN_IN rule 6666 state invalid enable
 set firewall name INPUT_WAN_IN default-action drop
 set firewall name INPUT_WAN_IN rule 2500 action accept
-set firewall name INPUT_WAN_IN rule 2500 description "accept established,related packets"
+set firewall name INPUT_WAN_IN rule 2500 description 'accept established,related packets'
 set firewall name INPUT_WAN_IN rule 2500 state established enable
 set firewall name INPUT_WAN_IN rule 2500 state related enable
 set firewall name INPUT_WAN_IN rule 5000 action drop
-set firewall name INPUT_WAN_IN rule 5000 description "drop invalid packets"
+set firewall name INPUT_WAN_IN rule 5000 description 'drop invalid packets'
 set firewall name INPUT_WAN_IN rule 5000 state invalid enable
 set firewall name INPUT_WAN_IN rule 7500 action accept
-set firewall name INPUT_WAN_IN rule 7500 description "accept icmp echo request packets"
+set firewall name INPUT_WAN_IN rule 7500 description 'accept icmp echo request packets'
 set firewall name INPUT_WAN_IN rule 7500 icmp code 0
 set firewall name INPUT_WAN_IN rule 7500 icmp type 8
 set firewall name INPUT_WAN_IN rule 7500 protocol icmp
@@ -71,8 +80,8 @@ set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-r
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 43200
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option interface-mtu 1492;"
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters "option broadcast-address 10.182.186.255;"
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
 
 # Default address removal
 delete interfaces ethernet eth0 address
@@ -95,27 +104,29 @@ set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 # See scripts/ipv4_nat_lan.sh
 
 # IPv4 NAT
+set firewall group address-group LAN_ADDRESSES address 10.182.186.0/24
 set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source address 10.182.186.0/24
+set service nat rule 7000 source group address-group LAN_ADDRESSES
 set service nat rule 7000 type masquerade
 
-# IPv4 workaround for ISP blocking of inbound UDP packets on port 123
+# IPv4 workaround for ISP blocking of incoming NTP packets
+set firewall group port-group NTP_PORT port 123
 set service nat rule 6000 outbound-interface pppoe0
 set service nat rule 6000 outside-address port 49152-65535
 set service nat rule 6000 protocol udp
-set service nat rule 6000 source address 10.182.186.0/24
-set service nat rule 6000 source port 123
+set service nat rule 6000 source group address-group LAN_ADDRESSES
+set service nat rule 6000 source group port-group NTP_PORT
 set service nat rule 6000 type masquerade
 set service nat rule 8000 outbound-interface pppoe0
 set service nat rule 8000 outside-address port 49152-65535
 set service nat rule 8000 protocol udp
-set service nat rule 8000 source port 123
+set service nat rule 8000 source group port-group NTP_PORT
 set service nat rule 8000 type source
 
 # IPv4 modem access configuration
 set interfaces ethernet eth0 address 10.123.203.2/24
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source address 10.182.186.0/24
+set service nat rule 9000 source group address-group LAN_ADDRESSES
 set service nat rule 9000 type masquerade
 
 # IPv4 static DNS configuration
@@ -126,58 +137,60 @@ set firewall ipv6-receive-redirects disable
 set firewall ipv6-src-route disable
 
 # IPv6 firewall rules
+set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
+set firewall group port-group DHCPV6_PORT port 546
 set firewall ipv6-name IPV6_FORWARD_WAN_IN default-action drop
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 action accept
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 description "accept established,related packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 description 'accept established,related packets'
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 state established enable
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 state related enable
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 action drop
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 description "drop invalid packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 description 'drop invalid packets'
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 5000 state invalid enable
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 action accept
-set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 description 'accept icmpv6 echo request packets'
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 icmpv6 type 128/0
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN default-action drop
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 description "accept established,related packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 description 'accept established,related packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state established enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state related enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 description "drop invalid packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 description 'drop invalid packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 state invalid enable
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 description "accept icmpv6 echo request packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 description 'accept icmpv6 echo request packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 icmpv6 type 128/0
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 description "accept icmpv6 router solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 description 'accept icmpv6 router solicitation packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 icmpv6 type 133/0
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 description "accept icmpv6 router advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 description 'accept icmpv6 router advertisement packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 icmpv6 type 134/0
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 description "accept icmpv6 neighbor solicitation packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 description 'accept icmpv6 neighbor solicitation packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 icmpv6 type 135/0
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description "accept icmpv6 neighbor advertisement packets"
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description 'accept icmpv6 neighbor advertisement packets'
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 icmpv6 type 136/0
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description "accept dhcpv6 packets"
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination port 546
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description 'accept dhcpv6 packets'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination group port-group DHCPV6_PORT
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source address fe80::/10
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 
 # IPv6 loopback configuration
-set interfaces loopback lo address fd1a:ac95:26c8:c75f::1/128
+set interfaces loopback lo address 'fd1a:ac95:26c8:c75f::1/128'
 
 # IPv6 LAN
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
@@ -185,17 +198,17 @@ set interfaces switch switch0 vif 10 ipv6 router-advert cur-hop-limit 64
 set interfaces switch switch0 vif 10 ipv6 router-advert default-preference medium
 set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
 set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
-set interfaces switch switch0 vif 10 ipv6 router-advert name-server fd1a:ac95:26c8:c75f::1
+set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:26c8:c75f::1'
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 autonomous-flag true
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 on-link-flag true
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 preferred-lifetime 43200
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix ::/64 valid-lifetime 64800
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-flag true
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 43200
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 64800
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 
 # IPv6 WAN
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address ::1190:1cd9:750e:8422
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address '::1190:1cd9:750e:8422'
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
@@ -211,11 +224,11 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 # IPv6 DNS query redirection
 # See scripts/ipv6_nat_lan.sh
 
-# IPv6 workaround for ISP blocking of inbound UDP packets on port 123
+# IPv6 workaround for ISP blocking of incoming NTP packets
 # See scripts/ipv6_nat_wan.sh
 
 # IPv6 static DNS configuration
-set system static-host-mapping host-name router.lan inet fd1a:ac95:26c8:c75f::1
+set system static-host-mapping host-name router.lan inet 'fd1a:ac95:26c8:c75f::1'
 
 # DNS configuration
 set service dns forwarding cache-size 10000
@@ -225,7 +238,7 @@ set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
-# Connection tracking timeouts
+# Connection tracking configuration
 set system conntrack tcp loose enable
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
@@ -242,11 +255,11 @@ set system conntrack timeout udp stream 180
 
 # Clock configuration
 delete system ntp server
-set system time-zone America/Sao_Paulo
 set system ntp server time1.google.com
 set system ntp server time2.google.com
 set system ntp server time3.google.com
 set system ntp server time4.google.com
+set system time-zone America/Sao_Paulo
 
 # Disabling of unneeded helpers
 set system conntrack modules ftp disable
@@ -266,8 +279,6 @@ set service ubnt-discover disable
 set service unms disable
 
 # Management channels configuration
-delete service gui
-delete service ssh
 set service gui http-port 80
 set service gui https-port 443
 set service gui older-ciphers disable
