@@ -104,18 +104,22 @@ set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1492
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
 set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
+set interfaces ethernet eth1 description eth1
 set interfaces ethernet eth1 duplex auto
 set interfaces ethernet eth1 mac 'D0:21:F9:82:0D:94'
 set interfaces ethernet eth1 mtu 1500
 set interfaces ethernet eth1 speed auto
+set interfaces ethernet eth2 description eth2
 set interfaces ethernet eth2 duplex auto
 set interfaces ethernet eth2 mac 'D0:21:F9:D5:0A:39'
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth2 speed auto
+set interfaces ethernet eth3 description eth3
 set interfaces ethernet eth3 duplex auto
 set interfaces ethernet eth3 mac 'D0:21:F9:0E:6E:DA'
 set interfaces ethernet eth3 mtu 1500
 set interfaces ethernet eth3 speed auto
+set interfaces ethernet eth4 description eth4
 set interfaces ethernet eth4 duplex auto
 set interfaces ethernet eth4 mac 'D0:21:F9:76:B7:33'
 set interfaces ethernet eth4 mtu 1500
@@ -141,13 +145,13 @@ set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:2
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-flag true
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 43200
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 64800
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 57600
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 86400
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 43200
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 57600
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'

@@ -22,18 +22,22 @@ set interfaces ethernet eth0 duplex auto
 set interfaces ethernet eth0 mac 'D0:21:F9:90:67:BD'
 set interfaces ethernet eth0 mtu 1500
 set interfaces ethernet eth0 speed auto
+set interfaces ethernet eth1 description eth1
 set interfaces ethernet eth1 duplex auto
 set interfaces ethernet eth1 mac 'D0:21:F9:82:0D:94'
 set interfaces ethernet eth1 mtu 1500
 set interfaces ethernet eth1 speed auto
+set interfaces ethernet eth2 description eth2
 set interfaces ethernet eth2 duplex auto
 set interfaces ethernet eth2 mac 'D0:21:F9:D5:0A:39'
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth2 speed auto
+set interfaces ethernet eth3 description eth3
 set interfaces ethernet eth3 duplex auto
 set interfaces ethernet eth3 mac 'D0:21:F9:0E:6E:DA'
 set interfaces ethernet eth3 mtu 1500
 set interfaces ethernet eth3 speed auto
+set interfaces ethernet eth4 description eth4
 set interfaces ethernet eth4 duplex auto
 set interfaces ethernet eth4 mac 'D0:21:F9:76:B7:33'
 set interfaces ethernet eth4 mtu 1500
@@ -103,7 +107,7 @@ set interfaces switch switch0 vif 10 description switch0-lan-vif-10
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 43200
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 57600
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
@@ -259,8 +263,8 @@ set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:2
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-flag true
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 43200
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 64800
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 57600
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 86400
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 ```
 
@@ -543,18 +547,22 @@ set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1492
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
 set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
+set interfaces ethernet eth1 description eth1
 set interfaces ethernet eth1 duplex auto
 set interfaces ethernet eth1 mac 'D0:21:F9:82:0D:94'
 set interfaces ethernet eth1 mtu 1500
 set interfaces ethernet eth1 speed auto
+set interfaces ethernet eth2 description eth2
 set interfaces ethernet eth2 duplex auto
 set interfaces ethernet eth2 mac 'D0:21:F9:D5:0A:39'
 set interfaces ethernet eth2 mtu 1500
 set interfaces ethernet eth2 speed auto
+set interfaces ethernet eth3 description eth3
 set interfaces ethernet eth3 duplex auto
 set interfaces ethernet eth3 mac 'D0:21:F9:0E:6E:DA'
 set interfaces ethernet eth3 mtu 1500
 set interfaces ethernet eth3 speed auto
+set interfaces ethernet eth4 description eth4
 set interfaces ethernet eth4 duplex auto
 set interfaces ethernet eth4 mac 'D0:21:F9:76:B7:33'
 set interfaces ethernet eth4 mtu 1500
@@ -580,13 +588,13 @@ set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:2
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-flag true
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 43200
-set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 64800
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 57600
+set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 86400
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 set service dhcp-server shared-network-name LAN authoritative enable
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 43200
+set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 57600
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
@@ -665,7 +673,7 @@ $ sudo ip -brief -4 address
 lo               UNKNOWN        127.0.0.1/8 10.189.117.1/32
 eth0@itf0        UP             10.123.203.2/24
 switch0.10@switch0 UP             10.182.186.1/24
-pppoe0           UNKNOWN        200.168.75.124 peer 189.97.102.55/32
+pppoe0           UNKNOWN        201.42.157.128 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
@@ -676,8 +684,8 @@ default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev switch0.10 proto kernel scope link src 10.182.186.1
 10.189.117.1 dev lo proto kernel scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 200.168.75.124
-200.168.75.124 dev pppoe0 proto kernel scope link
+189.97.102.55 dev pppoe0 proto kernel scope link src 201.42.157.128
+201.42.157.128 dev pppoe0 proto kernel scope link
 ```
 
 ### IPv6 addresses
@@ -692,30 +700,30 @@ eth2@itf0        UP             fe80::d221:f9ff:fed5:a39/64
 eth3@itf0        UP             fe80::d221:f9ff:fe0e:6eda/64
 eth4@itf0        UP             fe80::d221:f9ff:fe76:b733/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
-switch0.10@switch0 UP             2804:7f4:ca02:5005:1190:1cd9:750e:8422/64 fe80::d221:f9ff:fee1:353/64
+switch0.10@switch0 UP             2804:7f4:ca02:6729:1190:1cd9:750e:8422/64 fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d221:f9ff:fe90:67bd/64
-pppoe0           UNKNOWN        2804:7f4:c02f:7a82:6539:89d9:33bf:3762/64 fe80::6539:89d9:33bf:3762/10
+pppoe0           UNKNOWN        2804:7f4:c02f:a3eb:e8a8:270d:201f:c75d/64 fe80::e8a8:270d:201f:c75d/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c02f:7a82::/64 dev pppoe0 proto kernel metric 256 expires 259000sec pref medium
-2804:7f4:ca02:5005::/64 dev switch0.10 proto kernel metric 256 pref medium
+2804:7f4:c02f:a3eb::/64 dev pppoe0 proto kernel metric 256 expires 258874sec pref medium
+2804:7f4:ca02:6729::/64 dev switch0.10 proto kernel metric 256 pref medium
 unreachable fd1a:ac95:26c8:c75f::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
 fe80::/64 dev eth0 proto kernel metric 256 pref medium
-fe80::/64 dev eth2 proto kernel metric 256 pref medium
-fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev eth4 proto kernel metric 256 pref medium
 fe80::/64 dev eth3 proto kernel metric 256 pref medium
+fe80::/64 dev eth2 proto kernel metric 256 pref medium
+fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev switch0.10 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1600sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1474sec pref medium
 ```
 
 ## Resources
