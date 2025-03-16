@@ -70,27 +70,27 @@ set firewall syn-cookies enable
 ### IPv4 firewall rules
 
 ```
-set firewall name FORWARD_WAN_IN default-action drop
-set firewall name FORWARD_WAN_IN rule 3333 action accept
-set firewall name FORWARD_WAN_IN rule 3333 description 'accept established,related packets'
-set firewall name FORWARD_WAN_IN rule 3333 state established enable
-set firewall name FORWARD_WAN_IN rule 3333 state related enable
-set firewall name FORWARD_WAN_IN rule 6666 action drop
-set firewall name FORWARD_WAN_IN rule 6666 description 'drop invalid packets'
-set firewall name FORWARD_WAN_IN rule 6666 state invalid enable
-set firewall name INPUT_WAN_IN default-action drop
-set firewall name INPUT_WAN_IN rule 2500 action accept
-set firewall name INPUT_WAN_IN rule 2500 description 'accept established,related packets'
-set firewall name INPUT_WAN_IN rule 2500 state established enable
-set firewall name INPUT_WAN_IN rule 2500 state related enable
-set firewall name INPUT_WAN_IN rule 5000 action drop
-set firewall name INPUT_WAN_IN rule 5000 description 'drop invalid packets'
-set firewall name INPUT_WAN_IN rule 5000 state invalid enable
-set firewall name INPUT_WAN_IN rule 7500 action accept
-set firewall name INPUT_WAN_IN rule 7500 description 'accept icmp echo request packets'
-set firewall name INPUT_WAN_IN rule 7500 icmp code 0
-set firewall name INPUT_WAN_IN rule 7500 icmp type 8
-set firewall name INPUT_WAN_IN rule 7500 protocol icmp
+set firewall name IPV4_FORWARD_WAN_IN default-action drop
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 action accept
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 description 'accept established,related packets'
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 state established enable
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 state related enable
+set firewall name IPV4_FORWARD_WAN_IN rule 6666 action drop
+set firewall name IPV4_FORWARD_WAN_IN rule 6666 description 'drop invalid packets'
+set firewall name IPV4_FORWARD_WAN_IN rule 6666 state invalid enable
+set firewall name IPV4_INPUT_WAN_IN default-action drop
+set firewall name IPV4_INPUT_WAN_IN rule 2500 action accept
+set firewall name IPV4_INPUT_WAN_IN rule 2500 description 'accept established,related packets'
+set firewall name IPV4_INPUT_WAN_IN rule 2500 state established enable
+set firewall name IPV4_INPUT_WAN_IN rule 2500 state related enable
+set firewall name IPV4_INPUT_WAN_IN rule 5000 action drop
+set firewall name IPV4_INPUT_WAN_IN rule 5000 description 'drop invalid packets'
+set firewall name IPV4_INPUT_WAN_IN rule 5000 state invalid enable
+set firewall name IPV4_INPUT_WAN_IN rule 7500 action accept
+set firewall name IPV4_INPUT_WAN_IN rule 7500 description 'accept icmp echo request packets'
+set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp code 0
+set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp type 8
+set firewall name IPV4_INPUT_WAN_IN rule 7500 protocol icmp
 ```
 
 ### IPv4 loopback configuration
@@ -104,13 +104,13 @@ set interfaces loopback lo address 10.189.117.1/32
 ```
 set interfaces switch switch0 vif 10 address 10.182.186.1/24
 set interfaces switch switch0 vif 10 description switch0-lan-vif-10
-set service dhcp-server shared-network-name LAN authoritative enable
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 57600
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
+set service dhcp-server shared-network-name VIF_10 authoritative enable
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 default-router 10.182.186.1
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 dns-server 10.189.117.1
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 57600
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
 ```
 
 ### Default address removal
@@ -125,8 +125,8 @@ delete interfaces ethernet eth0 address
 set interfaces ethernet eth0 vif 600 description eth0-wan-vif-600
 set interfaces ethernet eth0 vif 600 pppoe 0 default-route auto
 set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vif-600-pppoe
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name FORWARD_WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name INPUT_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name IPV4_FORWARD_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name IPV4_INPUT_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 mtu 1492
 set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
@@ -144,9 +144,9 @@ See **[ipv4_nat_lan.sh](./scripts/ipv4_nat_lan.sh)**
 ### IPv4 NAT
 
 ```
-set firewall group address-group LAN_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_MASQUERADE_ADDRESSES address 10.182.186.0/24
 set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group LAN_ADDRESSES
+set service nat rule 7000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 7000 type masquerade
 ```
 
@@ -157,7 +157,7 @@ set firewall group port-group NTP_PORT port 123
 set service nat rule 6000 outbound-interface pppoe0
 set service nat rule 6000 outside-address port 49152-65535
 set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group LAN_ADDRESSES
+set service nat rule 6000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 6000 source group port-group NTP_PORT
 set service nat rule 6000 type masquerade
 set service nat rule 8000 outbound-interface pppoe0
@@ -172,7 +172,7 @@ set service nat rule 8000 type source
 ```
 set interfaces ethernet eth0 address 10.123.203.2/24
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source group address-group LAN_ADDRESSES
+set service nat rule 9000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 9000 type masquerade
 ```
 
@@ -441,7 +441,7 @@ $ sudo rm -rf /home/ubnt
 ## Final configuration
 
 ```
-set firewall group address-group LAN_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_MASQUERADE_ADDRESSES address 10.182.186.0/24
 set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
 set firewall group port-group DHCPV6_PORT port 546
 set firewall group port-group NTP_PORT port 123
@@ -497,27 +497,27 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source group ipv6-address-gro
 set firewall ipv6-receive-redirects disable
 set firewall ipv6-src-route disable
 set firewall ip-src-route disable
-set firewall name FORWARD_WAN_IN default-action drop
-set firewall name FORWARD_WAN_IN rule 3333 action accept
-set firewall name FORWARD_WAN_IN rule 3333 description 'accept established,related packets'
-set firewall name FORWARD_WAN_IN rule 3333 state established enable
-set firewall name FORWARD_WAN_IN rule 3333 state related enable
-set firewall name FORWARD_WAN_IN rule 6666 action drop
-set firewall name FORWARD_WAN_IN rule 6666 description 'drop invalid packets'
-set firewall name FORWARD_WAN_IN rule 6666 state invalid enable
-set firewall name INPUT_WAN_IN default-action drop
-set firewall name INPUT_WAN_IN rule 2500 action accept
-set firewall name INPUT_WAN_IN rule 2500 description 'accept established,related packets'
-set firewall name INPUT_WAN_IN rule 2500 state established enable
-set firewall name INPUT_WAN_IN rule 2500 state related enable
-set firewall name INPUT_WAN_IN rule 5000 action drop
-set firewall name INPUT_WAN_IN rule 5000 description 'drop invalid packets'
-set firewall name INPUT_WAN_IN rule 5000 state invalid enable
-set firewall name INPUT_WAN_IN rule 7500 action accept
-set firewall name INPUT_WAN_IN rule 7500 description 'accept icmp echo request packets'
-set firewall name INPUT_WAN_IN rule 7500 icmp code 0
-set firewall name INPUT_WAN_IN rule 7500 icmp type 8
-set firewall name INPUT_WAN_IN rule 7500 protocol icmp
+set firewall name IPV4_FORWARD_WAN_IN default-action drop
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 action accept
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 description 'accept established,related packets'
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 state established enable
+set firewall name IPV4_FORWARD_WAN_IN rule 3333 state related enable
+set firewall name IPV4_FORWARD_WAN_IN rule 6666 action drop
+set firewall name IPV4_FORWARD_WAN_IN rule 6666 description 'drop invalid packets'
+set firewall name IPV4_FORWARD_WAN_IN rule 6666 state invalid enable
+set firewall name IPV4_INPUT_WAN_IN default-action drop
+set firewall name IPV4_INPUT_WAN_IN rule 2500 action accept
+set firewall name IPV4_INPUT_WAN_IN rule 2500 description 'accept established,related packets'
+set firewall name IPV4_INPUT_WAN_IN rule 2500 state established enable
+set firewall name IPV4_INPUT_WAN_IN rule 2500 state related enable
+set firewall name IPV4_INPUT_WAN_IN rule 5000 action drop
+set firewall name IPV4_INPUT_WAN_IN rule 5000 description 'drop invalid packets'
+set firewall name IPV4_INPUT_WAN_IN rule 5000 state invalid enable
+set firewall name IPV4_INPUT_WAN_IN rule 7500 action accept
+set firewall name IPV4_INPUT_WAN_IN rule 7500 description 'accept icmp echo request packets'
+set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp code 0
+set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp type 8
+set firewall name IPV4_INPUT_WAN_IN rule 7500 protocol icmp
 set firewall receive-redirects disable
 set firewall send-redirects enable
 set firewall source-validation disable
@@ -537,9 +537,9 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall in ipv6-name IPV6_FORWARD_WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name FORWARD_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall in name IPV4_FORWARD_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 firewall local ipv6-name IPV6_INPUT_WAN_IN
-set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name INPUT_WAN_IN
+set interfaces ethernet eth0 vif 600 pppoe 0 firewall local name IPV4_INPUT_WAN_IN
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 address autoconf
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
@@ -591,13 +591,13 @@ set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-f
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred-lifetime 57600
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 86400
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
-set service dhcp-server shared-network-name LAN authoritative enable
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 default-router 10.182.186.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 lease 57600
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.253
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
-set service dhcp-server shared-network-name LAN subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
+set service dhcp-server shared-network-name VIF_10 authoritative enable
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 default-router 10.182.186.1
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 dns-server 10.189.117.1
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 57600
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on switch0.10
 set service dns forwarding name-server 8.8.4.4
@@ -610,11 +610,11 @@ set service gui older-ciphers disable
 set service nat rule 6000 outbound-interface pppoe0
 set service nat rule 6000 outside-address port 49152-65535
 set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group LAN_ADDRESSES
+set service nat rule 6000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 6000 source group port-group NTP_PORT
 set service nat rule 6000 type masquerade
 set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group LAN_ADDRESSES
+set service nat rule 7000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 7000 type masquerade
 set service nat rule 8000 outbound-interface pppoe0
 set service nat rule 8000 outside-address port 49152-65535
@@ -622,7 +622,7 @@ set service nat rule 8000 protocol udp
 set service nat rule 8000 source group port-group NTP_PORT
 set service nat rule 8000 type source
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source group address-group LAN_ADDRESSES
+set service nat rule 9000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 9000 type masquerade
 set service ssh port 22
 set service ssh protocol-version v2

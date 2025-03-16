@@ -34,15 +34,15 @@
 
 # IPv4 firewall rules
 /interface list add name=wan-interfaces
-/ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ip-forward-wan-in
-/ip firewall filter add action=return chain=ip-forward-wan-in comment="return established,related packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop invalid packets" connection-state=invalid
-/ip firewall filter add action=drop chain=ip-forward-wan-in comment="drop remaining packets"
-/ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ip-input-wan-in
-/ip firewall filter add action=return chain=ip-input-wan-in comment="return established,related packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop invalid packets" connection-state=invalid
-/ip firewall filter add action=return chain=ip-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
-/ip firewall filter add action=drop chain=ip-input-wan-in comment="drop remaining packets"
+/ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv4-forward-wan-in
+/ip firewall filter add action=return chain=ipv4-forward-wan-in comment="return established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop remaining packets"
+/ip firewall filter add action=jump chain=input comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv4-input-wan-in
+/ip firewall filter add action=return chain=ipv4-input-wan-in comment="return established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=return chain=ipv4-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
 
 # IPv4 loopback configuration
 /ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
@@ -51,11 +51,11 @@
 /interface list add name=lan-interfaces
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
-/ip dhcp-server option add code=26 force=no name=ip-dhcp-server-vlan-10-option-26 value="'1492'"
-/ip dhcp-server option add code=28 force=no name=ip-dhcp-server-vlan-10-option-28 value="'10.175.202.255'"
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ip-dhcp-server-vlan-10-option-26,ip-dhcp-server-vlan-10-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
-/ip pool add name=ip-dhcp-server-pool-vlan-10 ranges=10.175.202.2-10.175.202.253
-/ip dhcp-server add address-pool=ip-dhcp-server-pool-vlan-10 authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ip-dhcp-server-vlan-10
+/ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
+/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
+/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip dhcp-server add address-pool=ipv4-vlan-10-dhcp-server-pool authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server
 
 # IPv4 WAN
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=required use-mpls=no
@@ -68,17 +68,17 @@
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interfaces passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 
 # IPv4 DNS query redirection
-/ip firewall address-list add address=10.195.123.1/32 list=ip-dns-addresses
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ip-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ip firewall address-list add address=10.195.123.1/32 list=ipv4-dns-address
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 
 # IPv4 NAT
 /interface list add include=wan-interfaces name=masquerade-interfaces
-/ip firewall address-list add address=10.175.202.0/24 list=ip-lan-addresses
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ip-lan-addresses
+/ip firewall address-list add address=10.175.202.0/24 list=ipv4-masquerade-addresses
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=masquerade-interfaces src-address-list=ipv4-masquerade-addresses
 
 # IPv4 workaround for ISP blocking of incoming NTP packets
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ip-lan-addresses src-port=123 to-ports=49152-65535 place-before=2
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interfaces protocol=udp src-address-list=ipv4-masquerade-addresses src-port=123 to-ports=49152-65535 place-before=2
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 
 # IPv4 modem access configuration
@@ -119,16 +119,16 @@
 
 # IPv6 WAN
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=yes custom-duid=0003000148a98a413e50 default-route-distance=3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no custom-duid=0003000148a98a413e50 default-route-distance=3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 
 # IPv6 TCP MSS clamping
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interfaces new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interfaces passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 
 # IPv6 DNS query redirection
-/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-addresses
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-addresses dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
 
 # IPv6 workaround for ISP blocking of incoming NTP packets
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
@@ -143,7 +143,6 @@
 /ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=yes tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
 # Clock configuration
-/ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes
@@ -180,6 +179,9 @@
 /ip service set winbox disabled=no port=8291
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
+
+# Cloud features configuration
+/ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
 
 # Logging configuration
 /system logging action set [ find name=memory ] memory-lines=10000
