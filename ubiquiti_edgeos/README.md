@@ -341,7 +341,7 @@ set system ntp server time4.google.com
 set system time-zone America/Sao_Paulo
 ```
 
-### Disabling of unneeded helpers
+### Disabling of unneeded NAT helpers
 
 ```
 set system conntrack modules ftp disable
