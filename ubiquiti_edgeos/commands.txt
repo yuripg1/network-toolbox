@@ -47,7 +47,7 @@ set interfaces switch switch0 switch-port vlan-aware enable
 set firewall ip-src-route disable
 set firewall receive-redirects disable
 set firewall send-redirects enable
-set firewall source-validation disable
+set firewall source-validation loose
 set firewall syn-cookies enable
 
 # IPv4 firewall rules
@@ -300,11 +300,7 @@ set system offload ipsec disable
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
 
-$ scp ./scripts/ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv4_mangle_wan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv6_mangle_wan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
 
 $ sudo mv /home/user925232615/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv4_nat_lan.sh
 $ sudo mv /home/user925232615/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh

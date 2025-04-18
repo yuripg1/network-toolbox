@@ -63,7 +63,7 @@ set interfaces switch switch0 switch-port vlan-aware enable
 set firewall ip-src-route disable
 set firewall receive-redirects disable
 set firewall send-redirects enable
-set firewall source-validation disable
+set firewall source-validation loose
 set firewall syn-cookies enable
 ```
 
@@ -405,11 +405,7 @@ set system traffic-analysis dpi disable
 ### Upload
 
 ```
-$ scp ./scripts/ipv4_nat_lan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv6_nat_lan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv4_mangle_wan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv6_mangle_wan.sh user925232615@router.lan:/home/user925232615
-$ scp ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
 ```
 
 ### Setup
@@ -520,7 +516,7 @@ set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp type 8
 set firewall name IPV4_INPUT_WAN_IN rule 7500 protocol icmp
 set firewall receive-redirects disable
 set firewall send-redirects enable
-set firewall source-validation disable
+set firewall source-validation loose
 set firewall syn-cookies enable
 set interfaces ethernet eth0 address 10.123.203.2/24
 set interfaces ethernet eth0 description eth0-wan
