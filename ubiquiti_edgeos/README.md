@@ -60,6 +60,8 @@ set interfaces switch switch0 switch-port vlan-aware enable
 ### IPv4 kernel configuration
 
 ```
+set firewall all-ping enable
+set firewall broadcast-ping disable
 set firewall ip-src-route disable
 set firewall receive-redirects disable
 set firewall send-redirects enable
@@ -437,6 +439,8 @@ $ sudo rm -rf /home/ubnt
 ## Final configuration
 
 ```
+set firewall all-ping enable
+set firewall broadcast-ping disable
 set firewall group address-group IPV4_MASQUERADE_ADDRESSES address 10.182.186.0/24
 set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
 set firewall group port-group DHCPV6_PORT port 546

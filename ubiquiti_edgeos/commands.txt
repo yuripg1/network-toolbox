@@ -44,6 +44,8 @@ set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
 set interfaces switch switch0 switch-port vlan-aware enable
 
 # IPv4 kernel configuration
+set firewall all-ping enable
+set firewall broadcast-ping disable
 set firewall ip-src-route disable
 set firewall receive-redirects disable
 set firewall send-redirects enable
