@@ -414,21 +414,9 @@ $ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_
 ### Setup
 
 ```
-$ sudo mv /home/user925232615/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv4_nat_lan.sh
-$ sudo mv /home/user925232615/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh
-$ sudo mv /home/user925232615/ipv4_mangle_wan.sh /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
-$ sudo mv /home/user925232615/ipv6_mangle_wan.sh /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
-$ sudo mv /home/user925232615/ipv6_nat_wan.sh /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
-$ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh
-$ sudo chown root:root /config/scripts/post-config.d/ipv6_nat_lan.sh
-$ sudo chown root:root /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
-$ sudo chown root:root /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
-$ sudo chown root:root /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
-$ sudo chmod +x /config/scripts/post-config.d/ipv4_nat_lan.sh
-$ sudo chmod +x /config/scripts/post-config.d/ipv6_nat_lan.sh
-$ sudo chmod +x /etc/ppp/ip-up.d/ipv4_mangle_wan.sh
-$ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_mangle_wan.sh
-$ sudo chmod +x /etc/ppp/ipv6-up.d/ipv6_nat_wan.sh
+$ sudo mv /home/user925232615/ipv4_nat_lan.sh /home/user925232615/ipv6_nat_lan.sh /home/user925232615/ipv4_mangle_wan.sh /home/user925232615/ipv6_mangle_wan.sh /home/user925232615/ipv6_nat_wan.sh /config/scripts/post-config.d
+$ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
+$ sudo chmod +x /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
 ```
 
 ## Cleanup
