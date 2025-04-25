@@ -113,6 +113,7 @@ set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
+set service dhcp-server static-arp enable
 ```
 
 ### Default address removal
@@ -598,6 +599,7 @@ set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
+set service dhcp-server static-arp enable
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on switch0.10
 set service dns forwarding name-server 8.8.4.4
