@@ -263,8 +263,8 @@ set interfaces switch switch0 vif 10 ipv6 router-advert default-lifetime 9000
 set interfaces switch switch0 vif 10 ipv6 router-advert default-preference medium
 set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
 set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
-set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 1800
-set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 600
+set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 600
+set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 200
 set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:26c8:c75f::1'
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
@@ -577,8 +577,8 @@ set interfaces switch switch0 vif 10 ipv6 router-advert default-lifetime 9000
 set interfaces switch switch0 vif 10 ipv6 router-advert default-preference medium
 set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
 set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
-set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 1800
-set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 600
+set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 600
+set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 200
 set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:26c8:c75f::1'
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
