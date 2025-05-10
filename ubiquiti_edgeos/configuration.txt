@@ -140,9 +140,12 @@ set interfaces switch switch0 vif 10 address 10.182.186.1/24
 set interfaces switch switch0 vif 10 description switch0-lan-vif-10
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
 set interfaces switch switch0 vif 10 ipv6 router-advert cur-hop-limit 64
+set interfaces switch switch0 vif 10 ipv6 router-advert default-lifetime 9000
 set interfaces switch switch0 vif 10 ipv6 router-advert default-preference medium
 set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
 set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
+set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 1800
+set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 600
 set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:26c8:c75f::1'
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
