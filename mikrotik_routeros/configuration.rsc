@@ -85,7 +85,7 @@
 /ip service set ssh disabled=no port=22
 /ip service set www-ssl disabled=yes
 /ip service set api disabled=yes
-/ip service set winbox disabled=yes
+/ip service set winbox disabled=no port=8291
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
