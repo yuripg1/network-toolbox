@@ -120,7 +120,7 @@
 
 # IPv6 WAN
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=1 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 
 # IPv6 TCP MSS clamping
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
