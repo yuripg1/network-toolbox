@@ -52,8 +52,8 @@
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
 /ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
-/ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=router.lan ttl=5m type=AAAA
+/ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
+/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=home-router.lan ttl=5m type=AAAA
 /ip firewall address-list add address=10.195.123.1/32 list=ipv4-dns-address
 /ip firewall address-list add address=10.175.202.0/24 list=ipv4-masquerade-addresses
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interfaces" in-interface-list=wan-interfaces jump-target=ipv4-forward-wan-in

@@ -85,7 +85,7 @@
 /ip address add address=10.123.203.2/24 interface=eth1-wan network=10.123.203.0
 
 # IPv4 static DNS configuration
-/ip dns static add address=10.195.123.1 name=router.lan ttl=5m type=A
+/ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
 
 # IPv6 kernel configuration
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
@@ -133,7 +133,7 @@
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interfaces protocol=udp src-port=123 to-ports=49152-65535
 
 # IPv6 static DNS configuration
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=router.lan ttl=5m type=AAAA
+/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=home-router.lan ttl=5m type=AAAA
 
 # DNS configuration
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
