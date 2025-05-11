@@ -13,10 +13,15 @@ set system login user user925232615 level admin
 delete system login user ubnt
 ```
 
-### Interfaces configuration
+### Default DHCP client removal
 
 ```
 delete interfaces ethernet eth1 address
+```
+
+### Interfaces configuration
+
+```
 set interfaces ethernet eth0 description eth0-wan
 set interfaces ethernet eth0 duplex auto
 set interfaces ethernet eth0 mac 'D0:21:F9:90:67:BD'
@@ -147,20 +152,20 @@ See **[ipv4_nat_lan.sh](./scripts/ipv4_nat_lan.sh)**
 ### IPv4 NAT
 
 ```
-set firewall group address-group IPV4_MASQUERADE_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_PRIVATE_ADDRESSES address 10.182.186.0/24
 set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group IPV4_MASQUERADE_ADDRESSES
+set service nat rule 7000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 7000 type masquerade
 ```
 
-### IPv4 workaround for ISP blocking of incoming NTP packets
+### IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
 
 ```
 set firewall group port-group NTP_PORT port 123
 set service nat rule 6000 outbound-interface pppoe0
 set service nat rule 6000 outside-address port 49152-65535
 set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group IPV4_MASQUERADE_ADDRESSES
+set service nat rule 6000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 6000 source group port-group NTP_PORT
 set service nat rule 6000 type masquerade
 set service nat rule 8000 outbound-interface pppoe0
@@ -173,10 +178,13 @@ set service nat rule 8000 type source
 ### IPv4 modem access configuration
 
 ```
+set firewall group address-group IPV4_MODEM_ADDRESS address 10.123.203.1
 set interfaces ethernet eth0 address 10.123.203.2/24
+set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source group address-group IPV4_MASQUERADE_ADDRESSES
-set service nat rule 9000 type masquerade
+set service nat rule 9000 outside-address address 10.123.203.2
+set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
+set service nat rule 9000 type source
 ```
 
 ### IPv4 static DNS configuration
@@ -297,7 +305,7 @@ See **[ipv6_mangle_wan.sh](./scripts/ipv6_mangle_wan.sh)**
 
 See **[ipv6_nat_lan.sh](./scripts/ipv6_nat_lan.sh)**
 
-### IPv6 workaround for ISP blocking of incoming NTP packets
+### IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
 
 See **[ipv6_nat_wan.sh](./scripts/ipv6_nat_wan.sh)**
 
@@ -411,7 +419,7 @@ set system traffic-analysis dpi disable
 ### Upload
 
 ```
-$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@home-router.lan:/home/user925232615
 ```
 
 ### Setup
@@ -433,7 +441,8 @@ $ sudo rm -rf /home/ubnt
 ```
 set firewall all-ping enable
 set firewall broadcast-ping disable
-set firewall group address-group IPV4_MASQUERADE_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_MODEM_ADDRESS address 10.123.203.1
+set firewall group address-group IPV4_PRIVATE_ADDRESSES address 10.182.186.0/24
 set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
 set firewall group port-group DHCPV6_PORT port 546
 set firewall group port-group NTP_PORT port 123
@@ -606,20 +615,22 @@ set service gui older-ciphers disable
 set service nat rule 6000 outbound-interface pppoe0
 set service nat rule 6000 outside-address port 49152-65535
 set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group IPV4_MASQUERADE_ADDRESSES
+set service nat rule 6000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 6000 source group port-group NTP_PORT
 set service nat rule 6000 type masquerade
 set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group IPV4_MASQUERADE_ADDRESSES
+set service nat rule 7000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 7000 type masquerade
 set service nat rule 8000 outbound-interface pppoe0
 set service nat rule 8000 outside-address port 49152-65535
 set service nat rule 8000 protocol udp
 set service nat rule 8000 source group port-group NTP_PORT
 set service nat rule 8000 type source
+set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source group address-group IPV4_MASQUERADE_ADDRESSES
-set service nat rule 9000 type masquerade
+set service nat rule 9000 outside-address address 10.123.203.2
+set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
+set service nat rule 9000 type source
 set service ssh port 22
 set service ssh protocol-version v2
 set service ubnt-discover disable

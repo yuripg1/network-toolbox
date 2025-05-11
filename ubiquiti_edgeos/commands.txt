@@ -5,8 +5,10 @@ set system login user user925232615 level admin
 # Default credential removal
 delete system login user ubnt
 
-# Interfaces configuration
+# Default DHCP client removal
 delete interfaces ethernet eth1 address
+
+# Interfaces configuration
 set interfaces ethernet eth0 description eth0-wan
 set interfaces ethernet eth0 duplex auto
 set interfaces ethernet eth0 mac 'D0:21:F9:90:67:BD'
@@ -111,17 +113,17 @@ set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 # See scripts/ipv4_nat_lan.sh
 
 # IPv4 NAT
-set firewall group address-group IPV4_MASQUERADE_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_PRIVATE_ADDRESSES address 10.182.186.0/24
 set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group IPV4_MASQUERADE_ADDRESSES
+set service nat rule 7000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 7000 type masquerade
 
-# IPv4 workaround for ISP blocking of incoming NTP packets
+# IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
 set firewall group port-group NTP_PORT port 123
 set service nat rule 6000 outbound-interface pppoe0
 set service nat rule 6000 outside-address port 49152-65535
 set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group IPV4_MASQUERADE_ADDRESSES
+set service nat rule 6000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 6000 source group port-group NTP_PORT
 set service nat rule 6000 type masquerade
 set service nat rule 8000 outbound-interface pppoe0
@@ -131,10 +133,13 @@ set service nat rule 8000 source group port-group NTP_PORT
 set service nat rule 8000 type source
 
 # IPv4 modem access configuration
+set firewall group address-group IPV4_MODEM_ADDRESS address 10.123.203.1
 set interfaces ethernet eth0 address 10.123.203.2/24
+set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 source group address-group IPV4_MASQUERADE_ADDRESSES
-set service nat rule 9000 type masquerade
+set service nat rule 9000 outside-address address 10.123.203.2
+set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
+set service nat rule 9000 type source
 
 # IPv4 static DNS configuration
 set system static-host-mapping host-name home-router.lan inet 10.189.117.1
@@ -234,7 +239,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 # IPv6 DNS query redirection
 # See scripts/ipv6_nat_lan.sh
 
-# IPv6 workaround for ISP blocking of incoming NTP packets
+# IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
 # See scripts/ipv6_nat_wan.sh
 
 # IPv6 static DNS configuration
@@ -306,7 +311,7 @@ set system offload ipsec disable
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
 
-$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@home-router.lan:/home/user925232615
 
 $ sudo mv /home/user925232615/ipv4_nat_lan.sh /home/user925232615/ipv6_nat_lan.sh /home/user925232615/ipv4_mangle_wan.sh /home/user925232615/ipv6_mangle_wan.sh /home/user925232615/ipv6_nat_wan.sh /config/scripts/post-config.d
 $ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
