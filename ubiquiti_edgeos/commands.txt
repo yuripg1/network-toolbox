@@ -137,7 +137,7 @@ set service nat rule 9000 source group address-group IPV4_MASQUERADE_ADDRESSES
 set service nat rule 9000 type masquerade
 
 # IPv4 static DNS configuration
-set system static-host-mapping host-name router.lan inet 10.189.117.1
+set system static-host-mapping host-name home-router.lan inet 10.189.117.1
 
 # IPv6 kernel configuration
 set firewall ipv6-receive-redirects disable
@@ -238,7 +238,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 # See scripts/ipv6_nat_wan.sh
 
 # IPv6 static DNS configuration
-set system static-host-mapping host-name router.lan inet 'fd1a:ac95:26c8:c75f::1'
+set system static-host-mapping host-name home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
 
 # DNS configuration
 set service dns forwarding cache-size 10000

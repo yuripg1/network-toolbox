@@ -182,7 +182,7 @@ set service nat rule 9000 type masquerade
 ### IPv4 static DNS configuration
 
 ```
-set system static-host-mapping host-name router.lan inet 10.189.117.1
+set system static-host-mapping host-name home-router.lan inet 10.189.117.1
 ```
 
 ### IPv6 kernel configuration
@@ -304,7 +304,7 @@ See **[ipv6_nat_wan.sh](./scripts/ipv6_nat_wan.sh)**
 ### IPv6 static DNS configuration
 
 ```
-set system static-host-mapping host-name router.lan inet 'fd1a:ac95:26c8:c75f::1'
+set system static-host-mapping host-name home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
 ```
 
 ### DNS configuration
@@ -654,8 +654,8 @@ set system ntp server time3.google.com
 set system ntp server time4.google.com
 set system offload hwnat disable
 set system offload ipsec disable
-set system static-host-mapping host-name router.lan inet 10.189.117.1
-set system static-host-mapping host-name router.lan inet 'fd1a:ac95:26c8:c75f::1'
+set system static-host-mapping host-name home-router.lan inet 10.189.117.1
+set system static-host-mapping host-name home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
 set system time-zone America/Sao_Paulo
 set system traffic-analysis dpi disable
 ```
