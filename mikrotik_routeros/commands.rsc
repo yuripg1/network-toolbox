@@ -88,6 +88,7 @@
 
 # IPv4 static DNS configuration
 /ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
+/ip dns static add address=10.195.123.1 name=ipv4.home-router.lan ttl=5m type=A
 
 # IPv6 kernel configuration
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
@@ -136,6 +137,7 @@
 
 # IPv6 static DNS configuration
 /ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=ipv6.home-router.lan ttl=5m type=AAAA
 
 # DNS configuration
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
