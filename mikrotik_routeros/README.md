@@ -86,9 +86,10 @@
 ### IPv4 WAN
 
 ```
-/ppp profile add change-tcp-mss=no interface-list=wan-interface name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
 /interface vlan add arp=enabled arp-timeout=auto interface=eth1-wan loop-protect=off mtu=1500 name=eth1-wan-vlan-600 vlan-id=600
 /interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=2 disabled=no interface=eth1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=eth1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
+/interface list member add interface=eth1-wan-vlan-600-pppoe-client list=wan-interface
 ```
 
 ### IPv4 TCP MSS clamping
@@ -345,7 +346,7 @@
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
-/ppp profile add change-tcp-mss=no interface-list=wan-interface name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
+/ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
 /interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=2 disabled=no interface=eth1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=eth1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /queue interface set eth1-wan queue=only-hardware-queue
 /queue interface set eth2 queue=only-hardware-queue
@@ -373,6 +374,7 @@
 /interface bridge vlan add bridge=bridge-lan untagged=bridge-lan,eth2 vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,eth2 untagged=eth3,eth4,eth5,eth6,eth7,eth8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
+/interface list member add interface=eth1-wan-vlan-600-pppoe-client list=wan-interface
 /interface list member add interface=eth1-wan list=modem-interface
 /ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
 /ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
