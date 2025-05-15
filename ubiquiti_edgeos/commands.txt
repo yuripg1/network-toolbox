@@ -314,7 +314,7 @@ set system offload ipsec disable
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
 
-$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@home-router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@ipv6.home-router.lan:/home/user925232615
 
 $ sudo mv /home/user925232615/ipv4_nat_lan.sh /home/user925232615/ipv6_nat_lan.sh /home/user925232615/ipv4_mangle_wan.sh /home/user925232615/ipv6_mangle_wan.sh /home/user925232615/ipv6_nat_wan.sh /config/scripts/post-config.d
 $ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh

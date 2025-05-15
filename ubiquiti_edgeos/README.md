@@ -422,7 +422,7 @@ set system traffic-analysis dpi disable
 ### Upload
 
 ```
-$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@home-router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@ipv6.home-router.lan:/home/user925232615
 ```
 
 ### Setup
@@ -686,7 +686,7 @@ $ sudo ip -brief -4 address
 lo               UNKNOWN        127.0.0.1/8 10.189.117.1/32
 eth0@itf0        UP             10.123.203.2/24
 switch0.10@switch0 UP             10.182.186.1/24
-pppoe0           UNKNOWN        201.42.157.128 peer 189.97.102.55/32
+pppoe0           UNKNOWN        187.90.225.130 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
@@ -697,8 +697,8 @@ default dev pppoe0 scope link
 10.123.203.0/24 dev eth0 proto kernel scope link src 10.123.203.2
 10.182.186.0/24 dev switch0.10 proto kernel scope link src 10.182.186.1
 10.189.117.1 dev lo proto kernel scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 201.42.157.128
-201.42.157.128 dev pppoe0 proto kernel scope link
+187.90.225.130 dev pppoe0 proto kernel scope link
+189.97.102.55 dev pppoe0 proto kernel scope link src 187.90.225.130
 ```
 
 ### IPv6 addresses
@@ -713,22 +713,22 @@ eth2@itf0        UP             fe80::d221:f9ff:fed5:a39/64
 eth3@itf0        UP             fe80::d221:f9ff:fe0e:6eda/64
 eth4@itf0        UP             fe80::d221:f9ff:fe76:b733/64
 switch0@itf0     UP             fe80::d221:f9ff:fee1:353/64
-switch0.10@switch0 UP             2804:7f4:ca02:6729:1190:1cd9:750e:8422/64 fe80::d221:f9ff:fee1:353/64
+switch0.10@switch0 UP             2804:7f4:ca00:407a:1190:1cd9:750e:8422/64 fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0    UP             fe80::d221:f9ff:fe90:67bd/64
-pppoe0           UNKNOWN        2804:7f4:c02f:a3eb:e8a8:270d:201f:c75d/64 fe80::e8a8:270d:201f:c75d/10
+pppoe0           UNKNOWN        2804:7f4:c02f:8be3:61d5:c89c:a5c4:e740/64 fe80::61d5:c89c:a5c4:e740/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c02f:a3eb::/64 dev pppoe0 proto kernel metric 256 expires 258874sec pref medium
-2804:7f4:ca02:6729::/64 dev switch0.10 proto kernel metric 256 pref medium
+2804:7f4:c02f:8be3::/64 dev pppoe0 proto kernel metric 256 expires 258905sec pref medium
+2804:7f4:ca00:407a::/64 dev switch0.10 proto kernel metric 256 pref medium
 unreachable fd1a:ac95:26c8:c75f::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
-fe80::/64 dev eth0 proto kernel metric 256 pref medium
 fe80::/64 dev eth4 proto kernel metric 256 pref medium
+fe80::/64 dev eth0 proto kernel metric 256 pref medium
 fe80::/64 dev eth3 proto kernel metric 256 pref medium
 fe80::/64 dev eth2 proto kernel metric 256 pref medium
 fe80::/64 dev eth1 proto kernel metric 256 pref medium
@@ -736,7 +736,7 @@ fe80::/64 dev switch0.10 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1474sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1505sec pref medium
 ```
 
 ## Resources

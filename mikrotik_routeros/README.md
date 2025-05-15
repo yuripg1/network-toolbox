@@ -480,7 +480,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 0   10.195.123.1/32   10.195.123.1   lo
 1   10.175.202.1/24   10.175.202.0   bridge-lan-vlan-10
 2   10.123.203.2/24   10.123.203.0   eth1-wan
-3 D 201.42.157.71/32  189.97.102.55  eth1-wan-vlan-600-pppoe-client
+3 D 191.17.99.245/32  189.97.102.55  eth1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -488,13 +488,13 @@ Columns: ADDRESS, NETWORK, INTERFACE
 ```
 > /ip route print
 Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, v - VPN
-Columns: DST-ADDRESS, GATEWAY, DISTANCE
-    DST-ADDRESS       GATEWAY                         DISTANCE
-DAv 0.0.0.0/0         eth1-wan-vlan-600-pppoe-client         2
-DAc 10.123.203.0/24   eth1-wan                               0
-DAc 10.175.202.0/24   bridge-lan-vlan-10                     0
-DAc 10.195.123.1/32   lo                                     0
-DAc 189.97.102.55/32  eth1-wan-vlan-600-pppoe-client         0
+Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
+    DST-ADDRESS       GATEWAY                         ROUTING-TABLE  DISTANCE
+DAv 0.0.0.0/0         eth1-wan-vlan-600-pppoe-client  main                  2
+DAc 10.123.203.0/24   eth1-wan                        main                  0
+DAc 10.175.202.0/24   bridge-lan-vlan-10              main                  0
+DAc 10.195.123.1/32   lo                              main                  0
+DAc 189.97.102.55/32  eth1-wan-vlan-600-pppoe-client  main                  0
 ```
 
 ### IPv6 addresses
@@ -505,14 +505,14 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                       ADVERTISE  VALID
 0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                              no
-1  G 2804:7f4:ca02:672f:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
+1  G 2804:7f4:ca00:4084:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
 2 D  ::1/128                                                           lo                              no
-3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
-4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
-5 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan-vlan-600               no
-6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan                        no
-7 DL fe80::ec88:f592:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
-8 DG 2804:7f4:c02f:a403:ec88:f592:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h56m1s
+3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
+4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
+5 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan                        no
+6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan-vlan-600               no
+7 DL fe80::24a2:7ded:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
+8 DG 2804:7f4:c02f:8c03:24a2:7ded:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h57m4s
 ```
 
 ### IPv6 routes
@@ -520,20 +520,20 @@ Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 ```
 > /ipv6 route print
 Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, d - DHCP, v - VPN
-Columns: DST-ADDRESS, GATEWAY, DISTANCE
-    DST-ADDRESS                 GATEWAY                                                   DISTANCE
-DAv ::/0                        eth1-wan-vlan-600-pppoe-client                                   2
-D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-wan-vlan-600-pppoe-client         3
-DAc 2804:7f4:c02f:a403::/64     eth1-wan-vlan-600-pppoe-client                                   0
-D d 2804:7f4:ca02:672f::/64                                                                      3
-DAc 2804:7f4:ca02:672f::/64     bridge-lan-vlan-10                                               0
-DAc fe80::/64                   bridge-lan-vlan-10                                               0
-DAc fe80::/64                   bridge-lan                                                       0
-DAc fe80::/64                   eth1-wan-vlan-600                                                0
-DAc fe80::/64                   eth1-wan                                                         0
-DAc fe80::/64                   eth1-wan-vlan-600-pppoe-client                                   0
-DAc ::1/128                     lo                                                               0
-DAc fd9b:69ab:e45c:4aa6::1/128  lo                                                               0
+Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
+    DST-ADDRESS                 GATEWAY                                                   ROUTING-TABLE  DISTANCE
+DAv ::/0                        eth1-wan-vlan-600-pppoe-client                            main                  2
+D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-wan-vlan-600-pppoe-client  main                  3
+DAc 2804:7f4:c02f:8c03::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
+D d 2804:7f4:ca00:4084::/64                                                               main                  1
+DAc 2804:7f4:ca00:4084::/64     bridge-lan-vlan-10                                        main                  0
+DAc fe80::/64                   bridge-lan                                                main                  0
+DAc fe80::/64                   bridge-lan-vlan-10                                        main                  0
+DAc fe80::/64                   eth1-wan                                                  main                  0
+DAc fe80::/64                   eth1-wan-vlan-600                                         main                  0
+DAc fe80::/64                   eth1-wan-vlan-600-pppoe-client                            main                  0
+DAc ::1/128                     lo                                                        main                  0
+DAc fd9b:69ab:e45c:4aa6::1/128  lo                                                        main                  0
 ```
 
 ## Resources
