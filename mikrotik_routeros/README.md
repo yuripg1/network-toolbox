@@ -76,9 +76,10 @@
 /interface list add name=lan-interfaces
 /interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
 /ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
+/ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 ```
@@ -342,6 +343,7 @@
 /interface list add name=wan-interface
 /interface list add name=lan-interfaces
 /interface list add name=modem-interface
+/ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
@@ -380,7 +382,7 @@
 /ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
 /ip address add address=10.123.203.2/24 interface=eth1-wan network=10.123.203.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
+/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=8.8.8.8,8.8.4.4
 /ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
 /ip dns static add address=10.195.123.1 name=ipv4.home-router.lan ttl=5m type=A

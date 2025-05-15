@@ -88,6 +88,7 @@ set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 defaul
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 dns-server 10.189.117.1
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 57600
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
+set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option default-ip-ttl 64;'
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
 set service dhcp-server static-arp enable
