@@ -251,8 +251,8 @@ set system static-host-mapping host-name ipv6.home-router.lan inet 'fd1a:ac95:26
 # DNS configuration
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on switch0.10
-set service dns forwarding name-server 8.8.4.4
-set service dns forwarding name-server 8.8.8.8
+set service dns forwarding name-server 2001:4860:4860::8844
+set service dns forwarding name-server 2001:4860:4860::8888
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
