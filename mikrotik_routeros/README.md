@@ -184,7 +184,7 @@
 
 ```
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=1 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=2 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 ```
 
 ### IPv6 TCP MSS clamping
@@ -426,7 +426,7 @@
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
 /ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
-/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=1 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
+/ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=2 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
 /ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-forward-wan-in
@@ -476,11 +476,11 @@
 > /ip address print
 Flags: D - DYNAMIC
 Columns: ADDRESS, NETWORK, INTERFACE
-#   ADDRESS           NETWORK        INTERFACE
-0   10.195.123.1/32   10.195.123.1   lo
-1   10.175.202.1/24   10.175.202.0   bridge-lan-vlan-10
-2   10.123.203.2/24   10.123.203.0   eth1-wan
-3 D 191.17.99.245/32  189.97.102.55  eth1-wan-vlan-600-pppoe-client
+#   ADDRESS            NETWORK        INTERFACE
+0   10.195.123.1/32    10.195.123.1   lo
+1   10.175.202.1/24    10.175.202.0   bridge-lan-vlan-10
+2   10.123.203.2/24    10.123.203.0   eth1-wan
+3 D 187.114.43.254/32  189.97.102.55  eth1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -505,14 +505,14 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                       ADVERTISE  VALID
 0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                              no
-1  G 2804:7f4:ca00:4084:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
+1  G 2804:7f4:ca00:4d32:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
 2 D  ::1/128                                                           lo                              no
 3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
 4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
 5 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan                        no
 6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan-vlan-600               no
-7 DL fe80::24a2:7ded:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
-8 DG 2804:7f4:c02f:8c03:24a2:7ded:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h57m4s
+7 DL fe80::bc07:fed0:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
+8 DG 2804:7f4:c02f:9e52:bc07:fed0:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h55m55s
 ```
 
 ### IPv6 routes
@@ -524,9 +524,9 @@ Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
     DST-ADDRESS                 GATEWAY                                                   ROUTING-TABLE  DISTANCE
 DAv ::/0                        eth1-wan-vlan-600-pppoe-client                            main                  2
 D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-wan-vlan-600-pppoe-client  main                  3
-DAc 2804:7f4:c02f:8c03::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
-D d 2804:7f4:ca00:4084::/64                                                               main                  1
-DAc 2804:7f4:ca00:4084::/64     bridge-lan-vlan-10                                        main                  0
+DAc 2804:7f4:c02f:9e52::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
+D d 2804:7f4:ca00:4d32::/64                                                               main                  2
+DAc 2804:7f4:ca00:4d32::/64     bridge-lan-vlan-10                                        main                  0
 DAc fe80::/64                   bridge-lan                                                main                  0
 DAc fe80::/64                   bridge-lan-vlan-10                                        main                  0
 DAc fe80::/64                   eth1-wan                                                  main                  0
