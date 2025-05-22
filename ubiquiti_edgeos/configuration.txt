@@ -1,7 +1,7 @@
 set firewall all-ping enable
 set firewall broadcast-ping disable
-set firewall group address-group IPV4_MODEM_ADDRESS address 10.123.203.1
-set firewall group address-group IPV4_PRIVATE_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_MODEM_ADDRESS address 192.168.237.1
+set firewall group address-group IPV4_PRIVATE_ADDRESSES address 192.168.103.0/24
 set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
 set firewall group port-group DHCPV6_PORT port 546
 set firewall group port-group NTP_PORT port 123
@@ -82,7 +82,7 @@ set firewall receive-redirects disable
 set firewall send-redirects enable
 set firewall source-validation loose
 set firewall syn-cookies enable
-set interfaces ethernet eth0 address 10.123.203.2/24
+set interfaces ethernet eth0 address 192.168.237.2/30
 set interfaces ethernet eth0 description eth0-wan
 set interfaces ethernet eth0 duplex auto
 set interfaces ethernet eth0 mac 'D0:21:F9:90:67:BD'
@@ -92,7 +92,7 @@ set interfaces ethernet eth0 vif 600 description eth0-wan-vif-600
 set interfaces ethernet eth0 vif 600 pppoe 0 default-route auto
 set interfaces ethernet eth0 vif 600 pppoe 0 description eth0-wan-vif-600-pppoe
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address '::1190:1cd9:750e:8422'
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address '::6e86:3d5b:dc42:add2'
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
@@ -127,8 +127,8 @@ set interfaces ethernet eth4 duplex auto
 set interfaces ethernet eth4 mac 'D0:21:F9:76:B7:33'
 set interfaces ethernet eth4 mtu 1500
 set interfaces ethernet eth4 speed auto
-set interfaces loopback lo address 10.189.117.1/32
-set interfaces loopback lo address 'fd1a:ac95:26c8:c75f::1/128'
+set interfaces loopback lo address 192.168.167.1/32
+set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'
 set interfaces switch switch0 description switch0-lan
 set interfaces switch switch0 mtu 1500
 set interfaces switch switch0 switch-port interface eth1 vlan pvid 1
@@ -137,7 +137,7 @@ set interfaces switch switch0 switch-port interface eth2 vlan pvid 10
 set interfaces switch switch0 switch-port interface eth3 vlan pvid 10
 set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
 set interfaces switch switch0 switch-port vlan-aware enable
-set interfaces switch switch0 vif 10 address 10.182.186.1/24
+set interfaces switch switch0 vif 10 address 192.168.103.254/24
 set interfaces switch switch0 vif 10 description switch0-lan-vif-10
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
 set interfaces switch switch0 vif 10 ipv6 router-advert cur-hop-limit 64
@@ -147,7 +147,7 @@ set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
 set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 600
 set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 200
-set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:26c8:c75f::1'
+set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd45:1e52:2abe:4c85::1'
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-flag true
@@ -155,18 +155,18 @@ set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 86400
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 set service dhcp-server shared-network-name VIF_10 authoritative enable
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 default-router 10.182.186.1
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 57600
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option default-ip-ttl 64;'
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 default-router 192.168.103.254
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 dns-server 192.168.167.1
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 lease 57600
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 start 192.168.103.1 stop 192.168.103.253
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subnet-parameters 'option default-ip-ttl 64;'
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subnet-parameters 'option interface-mtu 1492;'
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subnet-parameters 'option broadcast-address 192.168.103.255;'
 set service dhcp-server static-arp enable
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on switch0.10
-set service dns forwarding name-server 2001:4860:4860::8844
-set service dns forwarding name-server 2001:4860:4860::8888
+set service dns forwarding name-server '2001:4860:4860::8844'
+set service dns forwarding name-server '2001:4860:4860::8888'
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 set service gui http-port 80
@@ -188,7 +188,7 @@ set service nat rule 8000 source group port-group NTP_PORT
 set service nat rule 8000 type source
 set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 outside-address address 10.123.203.2
+set service nat rule 9000 outside-address address 192.168.237.2
 set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 9000 type source
 set service ssh port 22
@@ -217,17 +217,17 @@ set system conntrack timeout udp other 30
 set system conntrack timeout udp stream 180
 set system crash-handler send-crash-report false
 set system host-name Home-Router
-set system login user user925232615 authentication plaintext-password 'password478924191'
-set system login user user925232615 level admin
+set system login user username920169077 authentication plaintext-password 'password767865354'
+set system login user username920169077 level admin
 set system ntp server time1.google.com
 set system ntp server time2.google.com
 set system ntp server time3.google.com
 set system ntp server time4.google.com
 set system offload hwnat disable
 set system offload ipsec disable
-set system static-host-mapping host-name home-router.lan inet 10.189.117.1
-set system static-host-mapping host-name ipv4.home-router.lan inet 10.189.117.1
-set system static-host-mapping host-name home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
-set system static-host-mapping host-name ipv6.home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
+set system static-host-mapping host-name home-router.lan inet 192.168.167.1
+set system static-host-mapping host-name home-router.lan inet 'fd45:1e52:2abe:4c85::1'
+set system static-host-mapping host-name ipv4.home-router.lan inet 192.168.167.1
+set system static-host-mapping host-name ipv6.home-router.lan inet 'fd45:1e52:2abe:4c85::1'
 set system time-zone America/Sao_Paulo
 set system traffic-analysis dpi disable

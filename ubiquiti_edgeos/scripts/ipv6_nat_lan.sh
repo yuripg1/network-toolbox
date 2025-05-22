@@ -1,6 +1,6 @@
 #!/bin/sh
 LAN_INTERFACE="switch0.10"
-IPV6_DNS_ADDRESS="fd1a:ac95:26c8:c75f::1/128"
+IPV6_DNS_ADDRESS="fd45:1e52:2abe:4c85::1/128"
 logger "Applying IPv6 NAT rules on LAN interface $LAN_INTERFACE"
 IPV6_NAT_LAN_1_COUNT=$(sudo ip6tables --table nat --list  --verbose --numeric | grep --count "IPV6_NAT_LAN_1")
 if [ "$IPV6_NAT_LAN_1_COUNT" -eq "0" ]; then

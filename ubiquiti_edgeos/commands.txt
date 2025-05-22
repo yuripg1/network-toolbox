@@ -1,6 +1,6 @@
 # Credential configuration
-set system login user user925232615 authentication plaintext-password 'password478924191'
-set system login user user925232615 level admin
+set system login user username920169077 authentication plaintext-password 'password767865354'
+set system login user username920169077 level admin
 
 # Default credential removal
 delete system login user ubnt
@@ -77,20 +77,20 @@ set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp code 0
 set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp type 8
 set firewall name IPV4_INPUT_WAN_IN rule 7500 protocol icmp
 
-# IPv4 loopback configuration
-set interfaces loopback lo address 10.189.117.1/32
+# IPv4 loopback address configuration
+set interfaces loopback lo address 192.168.167.1/32
 
 # IPv4 LAN
-set interfaces switch switch0 vif 10 address 10.182.186.1/24
+set interfaces switch switch0 vif 10 address 192.168.103.254/24
 set interfaces switch switch0 vif 10 description switch0-lan-vif-10
 set service dhcp-server shared-network-name VIF_10 authoritative enable
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 default-router 10.182.186.1
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 dns-server 10.189.117.1
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 lease 57600
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 start 10.182.186.2 stop 10.182.186.254
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option default-ip-ttl 64;'
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option interface-mtu 1492;'
-set service dhcp-server shared-network-name VIF_10 subnet 10.182.186.0/24 subnet-parameters 'option broadcast-address 10.182.186.255;'
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 default-router 192.168.103.254
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 dns-server 192.168.167.1
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 lease 57600
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 start 192.168.103.1 stop 192.168.103.253
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subnet-parameters 'option default-ip-ttl 64;'
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subnet-parameters 'option interface-mtu 1492;'
+set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subnet-parameters 'option broadcast-address 192.168.103.255;'
 set service dhcp-server static-arp enable
 
 # Default address removal
@@ -114,7 +114,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 # See scripts/ipv4_nat_lan.sh
 
 # IPv4 NAT
-set firewall group address-group IPV4_PRIVATE_ADDRESSES address 10.182.186.0/24
+set firewall group address-group IPV4_PRIVATE_ADDRESSES address 192.168.103.0/24
 set service nat rule 7000 outbound-interface pppoe0
 set service nat rule 7000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 7000 type masquerade
@@ -134,17 +134,17 @@ set service nat rule 8000 source group port-group NTP_PORT
 set service nat rule 8000 type source
 
 # IPv4 modem access configuration
-set firewall group address-group IPV4_MODEM_ADDRESS address 10.123.203.1
-set interfaces ethernet eth0 address 10.123.203.2/24
+set firewall group address-group IPV4_MODEM_ADDRESS address 192.168.237.1
+set interfaces ethernet eth0 address 192.168.237.2/30
 set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
 set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 outside-address address 10.123.203.2
+set service nat rule 9000 outside-address address 192.168.237.2
 set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
 set service nat rule 9000 type source
 
 # IPv4 static DNS configuration
-set system static-host-mapping host-name home-router.lan inet 10.189.117.1
-set system static-host-mapping host-name ipv4.home-router.lan inet 10.189.117.1
+set system static-host-mapping host-name home-router.lan inet 192.168.167.1
+set system static-host-mapping host-name ipv4.home-router.lan inet 192.168.167.1
 
 # IPv6 kernel configuration
 set firewall ipv6-receive-redirects disable
@@ -203,8 +203,8 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination group port-group 
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 
-# IPv6 loopback configuration
-set interfaces loopback lo address 'fd1a:ac95:26c8:c75f::1/128'
+# IPv6 loopback address configuration
+set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'
 
 # IPv6 LAN
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
@@ -215,7 +215,7 @@ set interfaces switch switch0 vif 10 ipv6 router-advert link-mtu 1492
 set interfaces switch switch0 vif 10 ipv6 router-advert managed-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert max-interval 600
 set interfaces switch switch0 vif 10 ipv6 router-advert min-interval 200
-set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd1a:ac95:26c8:c75f::1'
+set interfaces switch switch0 vif 10 ipv6 router-advert name-server 'fd45:1e52:2abe:4c85::1'
 set interfaces switch switch0 vif 10 ipv6 router-advert other-config-flag false
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' autonomous-flag true
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' on-link-flag true
@@ -225,7 +225,7 @@ set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 
 # IPv6 WAN
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
-set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address '::1190:1cd9:750e:8422'
+set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10 host-address '::6e86:3d5b:dc42:add2'
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
@@ -245,14 +245,14 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 # See scripts/ipv6_nat_wan.sh
 
 # IPv6 static DNS configuration
-set system static-host-mapping host-name home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
-set system static-host-mapping host-name ipv6.home-router.lan inet 'fd1a:ac95:26c8:c75f::1'
+set system static-host-mapping host-name home-router.lan inet 'fd45:1e52:2abe:4c85::1'
+set system static-host-mapping host-name ipv6.home-router.lan inet 'fd45:1e52:2abe:4c85::1'
 
 # DNS configuration
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on switch0.10
-set service dns forwarding name-server 2001:4860:4860::8844
-set service dns forwarding name-server 2001:4860:4860::8888
+set service dns forwarding name-server '2001:4860:4860::8844'
+set service dns forwarding name-server '2001:4860:4860::8888'
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
 
@@ -314,9 +314,9 @@ set system offload ipsec disable
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
 
-$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh user925232615@ipv6.home-router.lan:/home/user925232615
+$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh username920169077@ipv6.home-router.lan:/home/username920169077
 
-$ sudo mv /home/user925232615/ipv4_nat_lan.sh /home/user925232615/ipv6_nat_lan.sh /home/user925232615/ipv4_mangle_wan.sh /home/user925232615/ipv6_mangle_wan.sh /home/user925232615/ipv6_nat_wan.sh /config/scripts/post-config.d
+$ sudo mv /home/username920169077/ipv4_nat_lan.sh /home/username920169077/ipv6_nat_lan.sh /home/username920169077/ipv4_mangle_wan.sh /home/username920169077/ipv6_mangle_wan.sh /home/username920169077/ipv6_nat_wan.sh /config/scripts/post-config.d
 $ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
 $ sudo chmod +x /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
 
