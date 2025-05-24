@@ -3,7 +3,7 @@
 ### Credential configuration
 
 ```
-/user add group=full name=user749646300 password=password936275503
+/user add group=full name=username920169077 password=password767865354
 ```
 
 ### Default credential removal
@@ -64,23 +64,23 @@
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
 ```
 
-### IPv4 loopback configuration
+### IPv4 loopback address configuration
 
 ```
-/ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
+/ip address add address=192.168.167.1/32 interface=lo network=192.168.167.1
 ```
 
 ### IPv4 LAN
 
 ```
-/interface list add name=lan-interfaces
-/interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
-/ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
+/interface list add name=lan-vlan-10-interface
+/interface list member add interface=bridge-lan-vlan-10 list=lan-vlan-10-interface
+/ip address add address=192.168.103.254/24 interface=bridge-lan-vlan-10 network=192.168.103.0
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
-/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
-/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
+/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 ```
 
@@ -103,15 +103,15 @@
 ### IPv4 DNS query redirection
 
 ```
-/ip firewall address-list add address=10.195.123.1/32 list=ipv4-dns-address
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ip firewall address-list add address=192.168.167.1/32 list=ipv4-dns-address
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 ```
 
 ### IPv4 NAT
 
 ```
-/ip firewall address-list add address=10.175.202.0/24 list=ipv4-private-addresses
+/ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
 ```
 
@@ -127,16 +127,16 @@
 ```
 /interface list add name=modem-interface
 /interface list member add interface=eth1-wan list=modem-interface
-/ip address add address=10.123.203.2/24 interface=eth1-wan network=10.123.203.0
-/ip firewall address-list add address=10.123.203.1/32 list=ipv4-modem-address
-/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=10.123.203.2
+/ip address add address=192.168.237.2/30 interface=eth1-wan network=192.168.237.0
+/ip firewall address-list add address=192.168.237.1/32 list=ipv4-modem-address
+/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
 ```
 
 ### IPv4 static DNS configuration
 
 ```
-/ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=10.195.123.1 name=ipv4.home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
 ```
 
 ### IPv6 kernel configuration
@@ -166,10 +166,10 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 ```
 
-### IPv6 loopback configuration
+### IPv6 loopback address configuration
 
 ```
-/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
+/ipv6 address add address=fd45:1e52:2abe:4c85::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
 ```
 
 ### IPv6 LAN
@@ -177,13 +177,13 @@
 ```
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
 ```
 
 ### IPv6 WAN
 
 ```
-/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
+/ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
 /ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=2 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 ```
 
@@ -197,9 +197,9 @@
 ### IPv6 DNS query redirection
 
 ```
-/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 ```
 
 ### IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
@@ -211,8 +211,8 @@
 ### IPv6 static DNS configuration
 
 ```
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
 ```
 
 ### DNS configuration
@@ -341,12 +341,12 @@
 /interface vlan add arp=enabled arp-timeout=auto interface=bridge-lan loop-protect=off mtu=1500 name=bridge-lan-vlan-10 vlan-id=10
 /interface vlan add arp=enabled arp-timeout=auto interface=eth1-wan loop-protect=off mtu=1500 name=eth1-wan-vlan-600 vlan-id=600
 /interface list add name=wan-interface
-/interface list add name=lan-interfaces
+/interface list add name=lan-vlan-10-interface
 /interface list add name=modem-interface
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
-/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
-/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
+/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
 /interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=2 disabled=no interface=eth1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=eth1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
@@ -375,22 +375,22 @@
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
 /interface bridge vlan add bridge=bridge-lan untagged=bridge-lan,eth2 vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,eth2 untagged=eth3,eth4,eth5,eth6,eth7,eth8 vlan-ids=10
-/interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
+/interface list member add interface=bridge-lan-vlan-10 list=lan-vlan-10-interface
 /interface list member add interface=eth1-wan-vlan-600-pppoe-client list=wan-interface
 /interface list member add interface=eth1-wan list=modem-interface
-/ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
-/ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
-/ip address add address=10.123.203.2/24 interface=eth1-wan network=10.123.203.0
+/ip address add address=192.168.167.1/32 interface=lo network=192.168.167.1
+/ip address add address=192.168.103.254/24 interface=bridge-lan-vlan-10 network=192.168.103.0
+/ip address add address=192.168.237.2/30 interface=eth1-wan network=192.168.237.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
-/ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=10.195.123.1 name=ipv4.home-router.lan ttl=5m type=A
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=ipv6.home-router.lan ttl=5m type=AAAA
-/ip firewall address-list add address=10.195.123.1/32 list=ipv4-dns-address
-/ip firewall address-list add address=10.175.202.0/24 list=ipv4-private-addresses
-/ip firewall address-list add address=10.123.203.1/32 list=ipv4-modem-address
+/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip firewall address-list add address=192.168.167.1/32 list=ipv4-dns-address
+/ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
+/ip firewall address-list add address=192.168.237.1/32 list=ipv4-modem-address
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv4-forward-wan-in
 /ip firewall filter add action=return chain=ipv4-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop invalid packets" connection-state=invalid
@@ -402,12 +402,12 @@
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-private-addresses src-port=123 to-ports=49152-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
-/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=10.123.203.2
+/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
 /ip firewall service-port set ftp disabled=yes
 /ip firewall service-port set tftp disabled=yes
 /ip firewall service-port set irc disabled=yes
@@ -424,11 +424,11 @@
 /ip service set winbox disabled=no port=8291
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
-/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
-/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
+/ipv6 address add address=fd45:1e52:2abe:4c85::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
+/ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
 /ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=2 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
-/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address
+/ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-forward-wan-in
 /ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
@@ -446,11 +446,11 @@
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
@@ -476,11 +476,11 @@
 > /ip address print
 Flags: D - DYNAMIC
 Columns: ADDRESS, NETWORK, INTERFACE
-#   ADDRESS            NETWORK        INTERFACE
-0   10.195.123.1/32    10.195.123.1   lo
-1   10.175.202.1/24    10.175.202.0   bridge-lan-vlan-10
-2   10.123.203.2/24    10.123.203.0   eth1-wan
-3 D 187.114.43.254/32  189.97.102.55  eth1-wan-vlan-600-pppoe-client
+#   ADDRESS             NETWORK        INTERFACE
+0   192.168.167.1/32    192.168.167.1  lo
+1   192.168.103.254/24  192.168.103.0  bridge-lan-vlan-10
+2   192.168.237.2/30    192.168.237.0  eth1-wan
+3 D 179.174.46.32/32    189.97.102.55  eth1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -491,10 +491,10 @@ Flags: D - DYNAMIC; A - ACTIVE; c - CONNECT, v - VPN
 Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
     DST-ADDRESS       GATEWAY                         ROUTING-TABLE  DISTANCE
 DAv 0.0.0.0/0         eth1-wan-vlan-600-pppoe-client  main                  2
-DAc 10.123.203.0/24   eth1-wan                        main                  0
-DAc 10.175.202.0/24   bridge-lan-vlan-10              main                  0
-DAc 10.195.123.1/32   lo                              main                  0
+DAc 192.168.103.0/24  bridge-lan-vlan-10              main                  0
+DAc 192.168.237.0/30  eth1-wan                        main                  0
 DAc 189.97.102.55/32  eth1-wan-vlan-600-pppoe-client  main                  0
+DAc 192.168.167.1/32  lo                              main                  0
 ```
 
 ### IPv6 addresses
@@ -504,15 +504,15 @@ DAc 189.97.102.55/32  eth1-wan-vlan-600-pppoe-client  main                  0
 Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                       ADVERTISE  VALID
-0  G fd9b:69ab:e45c:4aa6::1/128                                        lo                              no
-1  G 2804:7f4:ca00:4d32:72c7:90fa:ba4d:9e56/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
+0  G fd45:1e52:2abe:4c85::1/128                                        lo                              no
+1  G 2804:7f4:ca00:73fd:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
 2 D  ::1/128                                                           lo                              no
-3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
-4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
+3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
+4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
 5 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan                        no
 6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan-vlan-600               no
-7 DL fe80::bc07:fed0:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
-8 DG 2804:7f4:c02f:9e52:bc07:fed0:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h55m55s
+7 DL fe80::291f:ed10:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
+8 DG 2804:7f4:c02f:d6e8:291f:ed10:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h53m57s
 ```
 
 ### IPv6 routes
@@ -524,16 +524,16 @@ Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
     DST-ADDRESS                 GATEWAY                                                   ROUTING-TABLE  DISTANCE
 DAv ::/0                        eth1-wan-vlan-600-pppoe-client                            main                  2
 D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-wan-vlan-600-pppoe-client  main                  3
-DAc 2804:7f4:c02f:9e52::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
-D d 2804:7f4:ca00:4d32::/64                                                               main                  2
-DAc 2804:7f4:ca00:4d32::/64     bridge-lan-vlan-10                                        main                  0
-DAc fe80::/64                   bridge-lan                                                main                  0
+DAc 2804:7f4:c02f:d6e8::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
+D d 2804:7f4:ca00:73fd::/64                                                               main                  2
+DAc 2804:7f4:ca00:73fd::/64     bridge-lan-vlan-10                                        main                  0
 DAc fe80::/64                   bridge-lan-vlan-10                                        main                  0
+DAc fe80::/64                   bridge-lan                                                main                  0
 DAc fe80::/64                   eth1-wan                                                  main                  0
 DAc fe80::/64                   eth1-wan-vlan-600                                         main                  0
 DAc fe80::/64                   eth1-wan-vlan-600-pppoe-client                            main                  0
 DAc ::1/128                     lo                                                        main                  0
-DAc fd9b:69ab:e45c:4aa6::1/128  lo                                                        main                  0
+DAc fd45:1e52:2abe:4c85::1/128  lo                                                        main                  0
 ```
 
 ## Resources

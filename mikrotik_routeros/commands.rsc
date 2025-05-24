@@ -1,5 +1,5 @@
 # Credential configuration
-/user add group=full name=user749646300 password=password936275503
+/user add group=full name=username920169077 password=password767865354
 
 # Default credential removal
 /user remove admin
@@ -44,18 +44,18 @@
 /ip firewall filter add action=return chain=ipv4-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
 
-# IPv4 loopback configuration
-/ip address add address=10.195.123.1/32 interface=lo network=10.195.123.1
+# IPv4 loopback address configuration
+/ip address add address=192.168.167.1/32 interface=lo network=192.168.167.1
 
 # IPv4 LAN
-/interface list add name=lan-interfaces
-/interface list member add interface=bridge-lan-vlan-10 list=lan-interfaces
-/ip address add address=10.175.202.1/24 interface=bridge-lan-vlan-10 network=10.175.202.0
+/interface list add name=lan-vlan-10-interface
+/interface list member add interface=bridge-lan-vlan-10 list=lan-vlan-10-interface
+/ip address add address=192.168.103.254/24 interface=bridge-lan-vlan-10 network=192.168.103.0
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
-/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'10.175.202.255'"
-/ip dhcp-server network add address=10.175.202.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=10.195.123.1 gateway=10.175.202.1
-/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=10.175.202.2-10.175.202.254
+/ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
+/ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 
 # IPv4 WAN
@@ -69,12 +69,12 @@
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 
 # IPv4 DNS query redirection
-/ip firewall address-list add address=10.195.123.1/32 list=ipv4-dns-address
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ip firewall address-list add address=192.168.167.1/32 list=ipv4-dns-address
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
+/ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 
 # IPv4 NAT
-/ip firewall address-list add address=10.175.202.0/24 list=ipv4-private-addresses
+/ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
 
 # IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
@@ -84,13 +84,13 @@
 # IPv4 modem access configuration
 /interface list add name=modem-interface
 /interface list member add interface=eth1-wan list=modem-interface
-/ip address add address=10.123.203.2/24 interface=eth1-wan network=10.123.203.0
-/ip firewall address-list add address=10.123.203.1/32 list=ipv4-modem-address
-/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=10.123.203.2
+/ip address add address=192.168.237.2/30 interface=eth1-wan network=192.168.237.0
+/ip firewall address-list add address=192.168.237.1/32 list=ipv4-modem-address
+/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
 
 # IPv4 static DNS configuration
-/ip dns static add address=10.195.123.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=10.195.123.1 name=ipv4.home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
 
 # IPv6 kernel configuration
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
@@ -113,16 +113,16 @@
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
-# IPv6 loopback configuration
-/ipv6 address add address=fd9b:69ab:e45c:4aa6::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
+# IPv6 loopback address configuration
+/ipv6 address add address=fd45:1e52:2abe:4c85::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
 
 # IPv6 LAN
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd9b:69ab:e45c:4aa6::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
 
 # IPv6 WAN
-/ipv6 address add address=::72c7:90fa:ba4d:9e56/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
+/ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
 /ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=2 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 
 # IPv6 TCP MSS clamping
@@ -130,16 +130,16 @@
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 
 # IPv6 DNS query redirection
-/ipv6 firewall address-list add address=fd9b:69ab:e45c:4aa6::1/128 list=ipv6-dns-address
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=udp
-/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interfaces protocol=tcp
+/ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
+/ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 
 # IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
 
 # IPv6 static DNS configuration
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd9b:69ab:e45c:4aa6::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
 
 # DNS configuration
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 servers=2001:4860:4860::8888,2001:4860:4860::8844
