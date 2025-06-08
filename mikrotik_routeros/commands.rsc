@@ -47,7 +47,7 @@
 # IPv4 loopback address configuration
 /ip address add address=192.168.167.1/32 interface=lo network=192.168.167.1
 
-# IPv4 LAN
+# IPv4 LAN configuration
 /interface list add name=lan-vlan-10-interface
 /interface list member add interface=bridge-lan-vlan-10 list=lan-vlan-10-interface
 /ip address add address=192.168.103.254/24 interface=bridge-lan-vlan-10 network=192.168.103.0
@@ -58,7 +58,10 @@
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-lan-vlan-10 lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 
-# IPv4 WAN
+# IPv4 address for modem access
+/ip address add address=192.168.237.2/30 interface=eth1-wan network=192.168.237.0
+
+# IPv4 WAN configuration
 /ppp profile add change-tcp-mss=no name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
 /interface vlan add arp=enabled arp-timeout=auto interface=eth1-wan loop-protect=off mtu=1500 name=eth1-wan-vlan-600 vlan-id=600
 /interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 default-route-distance=2 disabled=no interface=eth1-wan-vlan-600 max-mru=1492 max-mtu=1492 name=eth1-wan-vlan-600-pppoe-client password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
@@ -73,20 +76,17 @@
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 
-# IPv4 NAT
-/ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
-
 # IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-private-addresses src-port=123 to-ports=49152-65535 place-before=2
+/ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-private-addresses src-port=123 to-ports=49152-65535
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
 
-# IPv4 modem access configuration
-/interface list add name=modem-interface
-/interface list member add interface=eth1-wan list=modem-interface
-/ip address add address=192.168.237.2/30 interface=eth1-wan network=192.168.237.0
+# IPv4 SNAT for internet access
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
+
+# IPv4 SNAT for modem access
 /ip firewall address-list add address=192.168.237.1/32 list=ipv4-modem-address
-/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
+/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
 
 # IPv4 static DNS configuration
 /ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
@@ -116,12 +116,12 @@
 # IPv6 loopback address configuration
 /ipv6 address add address=fd45:1e52:2abe:4c85::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
 
-# IPv6 LAN
+# IPv6 LAN configuration
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /ipv6 nd set [ find default=yes ] disabled=yes
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-lan-vlan-10 managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
 
-# IPv6 WAN
+# IPv6 WAN configuration
 /ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
 /ipv6 dhcp-client add add-default-route=yes allow-reconfigure=no check-gateway=ping custom-duid=0003000148a98a413e50 default-route-distance=2 default-route-tables=main:3 interface=eth1-wan-vlan-600-pppoe-client pool-name=ipv6-dhcp-client-pool pool-prefix-length=64 prefix-hint=::/64 rapid-commit=yes request=prefix use-interface-duid=no use-peer-dns=no validate-server-duid=yes
 
@@ -175,13 +175,13 @@
 /tool bandwidth-server set enabled=no
 
 # Management channels configuration
-/ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
+/ip service set telnet disabled=yes
+/ip service set www disabled=no port=80
 /ip service set www-ssl disabled=yes
-/ip service set api disabled=yes
 /ip service set winbox disabled=no port=8291
+/ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 

@@ -106,7 +106,7 @@ set firewall name IPV4_INPUT_WAN_IN rule 7500 protocol icmp
 set interfaces loopback lo address 192.168.167.1/32
 ```
 
-### IPv4 LAN
+### IPv4 LAN configuration
 
 ```
 set interfaces switch switch0 vif 10 address 192.168.103.254/24
@@ -122,13 +122,14 @@ set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 subne
 set service dhcp-server static-arp enable
 ```
 
-### Default address removal
+### IPv4 address for modem access
 
 ```
 delete interfaces ethernet eth0 address
+set interfaces ethernet eth0 address 192.168.237.2/30
 ```
 
-### IPv4 WAN
+### IPv4 WAN configuration
 
 ```
 set interfaces ethernet eth0 vif 600 description eth0-wan-vif-600
@@ -144,48 +145,57 @@ set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 
 ### IPv4 TCP MSS clamping
 
-See **[ipv4_mangle_wan.sh](./scripts/ipv4_mangle_wan.sh)**
+See **[firewall.sh](./scripts/firewall.sh)**
+
+```
+WAN_INTERFACE="pppoe0"
+$ sudo iptables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_01" --jump TCPMSS --set-mss 1452
+$ sudo iptables --table mangle --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_02" --jump TCPMSS --set-mss 1452
+```
 
 ### IPv4 DNS query redirection
 
-See **[ipv4_nat_lan.sh](./scripts/ipv4_nat_lan.sh)**
-
-### IPv4 NAT
+See **[firewall.sh](./scripts/firewall.sh)**
 
 ```
-set firewall group address-group IPV4_PRIVATE_ADDRESSES address 192.168.103.0/24
-set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group IPV4_PRIVATE_ADDRESSES
-set service nat rule 7000 type masquerade
+LAN_VLAN_10_INTERFACE="switch0.10"
+$ sudo ipset create DNS_PORT bitmap:port range 53-53
+$ sudo ipset add DNS_PORT 53 -exist
+$ sudo ipset create IPV4_DNS_ADDRESS hash:net family inet hashsize 64 maxelem 1
+$ sudo ipset add IPV4_DNS_ADDRESS "192.168.167.1/32" -exist
+$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV4_NAT_01" --jump REDIRECT
+$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV4_NAT_02" --jump REDIRECT
 ```
 
 ### IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
 
-```
-set firewall group port-group NTP_PORT port 123
-set service nat rule 6000 outbound-interface pppoe0
-set service nat rule 6000 outside-address port 49152-65535
-set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group IPV4_PRIVATE_ADDRESSES
-set service nat rule 6000 source group port-group NTP_PORT
-set service nat rule 6000 type masquerade
-set service nat rule 8000 outbound-interface pppoe0
-set service nat rule 8000 outside-address port 49152-65535
-set service nat rule 8000 protocol udp
-set service nat rule 8000 source group port-group NTP_PORT
-set service nat rule 8000 type source
-```
-
-### IPv4 modem access configuration
+See **[firewall.sh](./scripts/firewall.sh)**
 
 ```
-set firewall group address-group IPV4_MODEM_ADDRESS address 192.168.237.1
-set interfaces ethernet eth0 address 192.168.237.2/30
-set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
-set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 outside-address address 192.168.237.2
-set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
-set service nat rule 9000 type source
+$ sudo ipset create NTP_PORT bitmap:port range 123-123
+$ sudo ipset add NTP_PORT 123 -exist
+$ sudo ipset create IPV4_PRIVATE_ADDRESSES hash:net family inet
+$ sudo ipset add IPV4_PRIVATE_ADDRESSES "192.168.103.0/24" -exist
+$ sudo iptables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set IPV4_PRIVATE_ADDRESSES src --match set --match-set NTP_PORT src --match comment --comment "IPV4_NAT_03" --jump MASQUERADE --to-ports 49152-65535
+$ sudo iptables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set NTP_PORT src --match comment --comment "IPV4_NAT_04" --jump SNAT --to-source :49152-65535
+```
+
+### IPv4 SNAT for internet access
+
+See **[firewall.sh](./scripts/firewall.sh)**
+
+```
+$ sudo iptables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --match set --match-set IPV4_PRIVATE_ADDRESSES src --match comment --comment "IPV4_NAT_05" --jump MASQUERADE
+```
+
+### IPv4 SNAT for modem access
+
+See **[firewall.sh](./scripts/firewall.sh)**
+
+```
+$ sudo ipset create IPV4_MODEM_ADDRESS hash:net family inet hashsize 64 maxelem 1
+$ sudo ipset add IPV4_MODEM_ADDRESS "192.168.237.1/32" -exist
+$ sudo iptables --table nat --append POSTROUTING --match set --match-set IPV4_PRIVATE_ADDRESSES src --match set --match-set IPV4_MODEM_ADDRESS dst --match comment --comment "IPV4_NAT_06" --jump SNAT --to-source 192.168.237.2
 ```
 
 ### IPv4 static DNS configuration
@@ -264,7 +274,7 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source group ipv6-address-gro
 set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'
 ```
 
-### IPv6 LAN
+### IPv6 LAN configuration
 
 ```
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
@@ -284,7 +294,7 @@ set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lif
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 ```
 
-### IPv6 WAN
+### IPv6 WAN configuration
 
 ```
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
@@ -301,15 +311,31 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 
 ### IPv6 TCP MSS clamping
 
-See **[ipv6_mangle_wan.sh](./scripts/ipv6_mangle_wan.sh)**
+See **[firewall.sh](./scripts/firewall.sh)**
+
+```
+$ sudo ip6tables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_01"
+$ sudo ip6tables --table mangle --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_02"
+```
 
 ### IPv6 DNS query redirection
 
-See **[ipv6_nat_lan.sh](./scripts/ipv6_nat_lan.sh)**
+See **[firewall.sh](./scripts/firewall.sh)**
+
+```
+$ sudo ipset create IPV6_DNS_ADDRESS hash:net family inet6 hashsize 64 maxelem 1
+$ sudo ipset add IPV6_DNS_ADDRESS "fd45:1e52:2abe:4c85::1/128" -exist
+$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV6_NAT_01" --jump REDIRECT
+$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV6_NAT_02" --jump REDIRECT
+```
 
 ### IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
 
-See **[ipv6_nat_wan.sh](./scripts/ipv6_nat_wan.sh)**
+See **[firewall.sh](./scripts/firewall.sh)**
+
+```
+$ sudo ip6tables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set NTP_PORT src --match udp --match comment --comment "IPV6_NAT_03" --jump SNAT --to-source :49152-65535
+```
 
 ### IPv6 static DNS configuration
 
@@ -422,15 +448,15 @@ set system traffic-analysis dpi disable
 ### Upload
 
 ```
-$ scp ./scripts/ipv4_nat_lan.sh ./scripts/ipv6_nat_lan.sh ./scripts/ipv4_mangle_wan.sh ./scripts/ipv6_mangle_wan.sh ./scripts/ipv6_nat_wan.sh username920169077@ipv6.home-router.lan:/home/username920169077
+$ scp ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
 ```
 
 ### Setup
 
 ```
-$ sudo mv /home/username920169077/ipv4_nat_lan.sh /home/username920169077/ipv6_nat_lan.sh /home/username920169077/ipv4_mangle_wan.sh /home/username920169077/ipv6_mangle_wan.sh /home/username920169077/ipv6_nat_wan.sh /config/scripts/post-config.d
-$ sudo chown root:root /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
-$ sudo chmod +x /config/scripts/post-config.d/ipv4_nat_lan.sh /config/scripts/post-config.d/ipv6_nat_lan.sh /config/scripts/post-config.d/ipv4_mangle_wan.sh /config/scripts/post-config.d/ipv6_mangle_wan.sh /config/scripts/post-config.d/ipv6_nat_wan.sh
+$ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
+$ sudo chown root:root /config/scripts/post-config.d/firewall.sh
+$ sudo chmod +x /config/scripts/post-config.d/firewall.sh
 ```
 
 ## Cleanup
@@ -444,11 +470,8 @@ $ sudo rm -rf /home/ubnt
 ```
 set firewall all-ping enable
 set firewall broadcast-ping disable
-set firewall group address-group IPV4_MODEM_ADDRESS address 192.168.237.1
-set firewall group address-group IPV4_PRIVATE_ADDRESSES address 192.168.103.0/24
 set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
 set firewall group port-group DHCPV6_PORT port 546
-set firewall group port-group NTP_PORT port 123
 set firewall ipv6-name IPV6_FORWARD_WAN_IN default-action drop
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 action accept
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 2500 description 'accept established,related packets'
@@ -616,25 +639,6 @@ set service dns forwarding options domain-needed
 set service gui http-port 80
 set service gui https-port 443
 set service gui older-ciphers disable
-set service nat rule 6000 outbound-interface pppoe0
-set service nat rule 6000 outside-address port 49152-65535
-set service nat rule 6000 protocol udp
-set service nat rule 6000 source group address-group IPV4_PRIVATE_ADDRESSES
-set service nat rule 6000 source group port-group NTP_PORT
-set service nat rule 6000 type masquerade
-set service nat rule 7000 outbound-interface pppoe0
-set service nat rule 7000 source group address-group IPV4_PRIVATE_ADDRESSES
-set service nat rule 7000 type masquerade
-set service nat rule 8000 outbound-interface pppoe0
-set service nat rule 8000 outside-address port 49152-65535
-set service nat rule 8000 protocol udp
-set service nat rule 8000 source group port-group NTP_PORT
-set service nat rule 8000 type source
-set service nat rule 9000 destination group address-group IPV4_MODEM_ADDRESS
-set service nat rule 9000 outbound-interface eth0
-set service nat rule 9000 outside-address address 192.168.237.2
-set service nat rule 9000 source group address-group IPV4_PRIVATE_ADDRESSES
-set service nat rule 9000 type source
 set service ssh port 22
 set service ssh protocol-version v2
 set service ubnt-discover disable
@@ -646,7 +650,7 @@ set system conntrack modules h323 disable
 set system conntrack modules pptp disable
 set system conntrack modules sip disable
 set system conntrack modules tftp disable
-set system conntrack tcp loose enable
+set system conntrack tcp loose disable
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
 set system conntrack timeout tcp close 10
@@ -675,6 +679,34 @@ set system static-host-mapping host-name ipv4.home-router.lan inet 192.168.167.1
 set system static-host-mapping host-name ipv6.home-router.lan inet 'fd45:1e52:2abe:4c85::1'
 set system time-zone America/Sao_Paulo
 set system traffic-analysis dpi disable
+
+WAN_INTERFACE="pppoe0"
+LAN_VLAN_10_INTERFACE="switch0.10"
+$ sudo ipset create DNS_PORT bitmap:port range 53-53
+$ sudo ipset add DNS_PORT 53 -exist
+$ sudo ipset create NTP_PORT bitmap:port range 123-123
+$ sudo ipset add NTP_PORT 123 -exist
+$ sudo ipset create IPV4_DNS_ADDRESS hash:net family inet hashsize 64 maxelem 1
+$ sudo ipset add IPV4_DNS_ADDRESS "192.168.167.1/32" -exist
+$ sudo ipset create IPV4_PRIVATE_ADDRESSES hash:net family inet
+$ sudo ipset add IPV4_PRIVATE_ADDRESSES "192.168.103.0/24" -exist
+$ sudo ipset create IPV4_MODEM_ADDRESS hash:net family inet hashsize 64 maxelem 1
+$ sudo ipset add IPV4_MODEM_ADDRESS "192.168.237.1/32" -exist
+$ sudo iptables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_01" --jump TCPMSS --set-mss 1452
+$ sudo iptables --table mangle --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_02" --jump TCPMSS --set-mss 1452
+$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV4_NAT_01" --jump REDIRECT
+$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV4_NAT_02" --jump REDIRECT
+$ sudo iptables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set IPV4_PRIVATE_ADDRESSES src --match set --match-set NTP_PORT src --match comment --comment "IPV4_NAT_03" --jump MASQUERADE --to-ports 49152-65535
+$ sudo iptables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set NTP_PORT src --match comment --comment "IPV4_NAT_04" --jump SNAT --to-source :49152-65535
+$ sudo iptables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --match set --match-set IPV4_PRIVATE_ADDRESSES src --match comment --comment "IPV4_NAT_05" --jump MASQUERADE
+$ sudo iptables --table nat --append POSTROUTING --match set --match-set IPV4_PRIVATE_ADDRESSES src --match set --match-set IPV4_MODEM_ADDRESS dst --match comment --comment "IPV4_NAT_06" --jump SNAT --to-source 192.168.237.2
+$ sudo ipset create IPV6_DNS_ADDRESS hash:net family inet6 hashsize 64 maxelem 1
+$ sudo ipset add IPV6_DNS_ADDRESS "fd45:1e52:2abe:4c85::1/128" -exist
+$ sudo ip6tables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_01"
+$ sudo ip6tables --table mangle --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_02"
+$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV6_NAT_01" --jump REDIRECT
+$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV6_NAT_02" --jump REDIRECT
+$ sudo ip6tables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set NTP_PORT src --match udp --match comment --comment "IPV6_NAT_03" --jump SNAT --to-source :49152-65535
 ```
 
 ## End result

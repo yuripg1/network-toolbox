@@ -12,7 +12,6 @@
 /interface vlan add arp=enabled arp-timeout=auto interface=eth1-wan loop-protect=off mtu=1500 name=eth1-wan-vlan-600 vlan-id=600
 /interface list add name=wan-interface
 /interface list add name=lan-vlan-10-interface
-/interface list add name=modem-interface
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
@@ -47,7 +46,6 @@
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,eth2 untagged=eth3,eth4,eth5,eth6,eth7,eth8 vlan-ids=10
 /interface list member add interface=bridge-lan-vlan-10 list=lan-vlan-10-interface
 /interface list member add interface=eth1-wan-vlan-600-pppoe-client list=wan-interface
-/interface list member add interface=eth1-wan list=modem-interface
 /ip address add address=192.168.167.1/32 interface=lo network=192.168.167.1
 /ip address add address=192.168.103.254/24 interface=bridge-lan-vlan-10 network=192.168.103.0
 /ip address add address=192.168.237.2/30 interface=eth1-wan network=192.168.237.0
@@ -75,9 +73,9 @@
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-private-addresses src-port=123 to-ports=49152-65535
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
 /ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
-/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address out-interface-list=modem-interface src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-private-addresses
+/ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address src-address-list=ipv4-private-addresses to-addresses=192.168.237.2
 /ip firewall service-port set ftp disabled=yes
 /ip firewall service-port set tftp disabled=yes
 /ip firewall service-port set irc disabled=yes
@@ -85,13 +83,13 @@
 /ip firewall service-port set sip disabled=yes
 /ip firewall service-port set pptp disabled=yes
 /ip firewall service-port set rtsp disabled=yes
-/ip service set telnet disabled=yes
 /ip service set ftp disabled=yes
-/ip service set www disabled=no port=80
 /ip service set ssh disabled=no port=22
+/ip service set telnet disabled=yes
+/ip service set www disabled=no port=80
 /ip service set www-ssl disabled=yes
-/ip service set api disabled=yes
 /ip service set winbox disabled=no port=8291
+/ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd45:1e52:2abe:4c85::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
