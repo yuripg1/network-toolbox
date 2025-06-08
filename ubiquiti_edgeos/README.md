@@ -358,7 +358,7 @@ set service dns forwarding options domain-needed
 ### Connection tracking configuration
 
 ```
-set system conntrack tcp loose enable
+set system conntrack tcp loose disable
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
 set system conntrack timeout tcp close 10

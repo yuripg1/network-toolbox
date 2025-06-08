@@ -180,7 +180,7 @@ set system conntrack modules h323 disable
 set system conntrack modules pptp disable
 set system conntrack modules sip disable
 set system conntrack modules tftp disable
-set system conntrack tcp loose enable
+set system conntrack tcp loose disable
 set system conntrack timeout icmp 30
 set system conntrack timeout other 600
 set system conntrack timeout tcp close 10
