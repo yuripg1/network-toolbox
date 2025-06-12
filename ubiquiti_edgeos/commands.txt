@@ -5,6 +5,13 @@ set system login user username920169077 level admin
 # Default credential removal
 delete system login user ubnt
 
+# Management channels configuration
+set service gui http-port 45631
+set service gui https-port 18856
+set service gui older-ciphers disable
+set service ssh port 36518
+set service ssh protocol-version v2
+
 # Default DHCP client removal
 delete interfaces ethernet eth1 address
 
@@ -303,13 +310,6 @@ set service ubnt-discover disable
 
 # Disabling of unused services
 set service unms disable
-
-# Management channels configuration
-set service gui http-port 80
-set service gui https-port 443
-set service gui older-ciphers disable
-set service ssh port 22
-set service ssh protocol-version v2
 
 # Disabling of telemetry
 set system analytics-handler send-analytics-report false
