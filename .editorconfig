@@ -1,6 +1,6 @@
 root = true
 
-[*.{csv,editorconfig,gitignore,py,rsc,sh,txt,md}]
+[*.{csv,editorconfig,gitignore,py,rsc,sh,txt,md,cnf}]
 indent_style = space
 indent_size = 2
 end_of_line = lf

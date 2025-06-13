@@ -5,13 +5,6 @@ set system login user username920169077 level admin
 # Default credential removal
 delete system login user ubnt
 
-# Management channels configuration
-set service gui http-port 45631
-set service gui https-port 18856
-set service gui older-ciphers disable
-set service ssh port 36518
-set service ssh protocol-version v2
-
 # Default DHCP client removal
 delete interfaces ethernet eth1 address
 
@@ -322,10 +315,21 @@ set system offload ipsec disable
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
 
-$ scp ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
+$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
 
+$ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
+$ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
+$ sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
+$ sudo chmod 0600 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
 $ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
 $ sudo chown root:root /config/scripts/post-config.d/firewall.sh
-$ sudo chmod +x /config/scripts/post-config.d/firewall.sh
+$ sudo chmod 0700 /config/scripts/post-config.d/firewall.sh
 
-$ sudo rm -rf /home/ubnt
+# Management channels configuration
+set service gui ca-file /config/auth/certificate_authority.crt
+set service gui cert-file /config/auth/management_https.pem
+set service gui http-port 45631
+set service gui https-port 18856
+set service gui older-ciphers disable
+set service ssh port 36518
+set service ssh protocol-version v2
