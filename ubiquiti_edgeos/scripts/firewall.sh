@@ -5,17 +5,18 @@ logger "Applying firewall rules"
 # Interfaces
 
 WAN_INTERFACE="pppoe0"
+
 LAN_VLAN_10_INTERFACE="switch0.10"
 
 # Ports
 
-DNS_PORT_COUNT=$(sudo ipset list | grep --count "DNS_PORT")
-if [ "$DNS_PORT_COUNT" -eq "0" ]; then
-  sudo ipset create DNS_PORT bitmap:port range 53-53
-  logger "DNS_PORT created"
+DNS_PORT_2_COUNT=$(sudo ipset list | grep --count "DNS_PORT_2")
+if [ "$DNS_PORT_2_COUNT" -eq "0" ]; then
+  sudo ipset create DNS_PORT_2 bitmap:port range 53-53
+  logger "DNS_PORT_2 created"
 fi
 
-sudo ipset add DNS_PORT 53 -exist
+sudo ipset add DNS_PORT_2 53 -exist
 
 NTP_PORT_COUNT=$(sudo ipset list | grep --count "NTP_PORT")
 if [ "$NTP_PORT_COUNT" -eq "0" ]; then
@@ -39,7 +40,7 @@ sudo ipset add IPV6_DNS_ADDRESS "fd45:1e52:2abe:4c85::1/128" -exist
 
 IPV6_MANGLE_01_COUNT=$(sudo ip6tables --table mangle --list-rules | grep --count "IPV6_MANGLE_01")
 if [ "$IPV6_MANGLE_01_COUNT" -eq "0" ]; then
-  sudo ip6tables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_01"
+  sudo ip6tables --table mangle --append PREROUTING --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_01"
   logger "IPV6_MANGLE_01 created"
 fi
 
@@ -53,13 +54,13 @@ fi
 
 IPV6_NAT_01_COUNT=$(sudo ip6tables --table nat --list-rules | grep --count "IPV6_NAT_01")
 if [ "$IPV6_NAT_01_COUNT" -eq "0" ]; then
-  sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV6_NAT_01" --jump REDIRECT
+  sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match udp --match comment --comment "IPV6_NAT_01" --jump REDIRECT
   logger "IPV6_NAT_01 created"
 fi
 
 IPV6_NAT_02_COUNT=$(sudo ip6tables --table nat --list-rules | grep --count "IPV6_NAT_02")
 if [ "$IPV6_NAT_02_COUNT" -eq "0" ]; then
-  sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV6_NAT_02" --jump REDIRECT
+  sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match tcp --match comment --comment "IPV6_NAT_02" --jump REDIRECT
   logger "IPV6_NAT_02 created"
 fi
 
@@ -99,7 +100,7 @@ sudo ipset add IPV4_MODEM_ADDRESS "192.168.237.1/32" -exist
 
 IPV4_MANGLE_01_COUNT=$(sudo iptables --table mangle --list-rules | grep --count "IPV4_MANGLE_01")
 if [ "$IPV4_MANGLE_01_COUNT" -eq "0" ]; then
-  sudo iptables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_01" --jump TCPMSS --set-mss 1452
+  sudo iptables --table mangle --append PREROUTING --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_01" --jump TCPMSS --set-mss 1452
   logger "IPV4_MANGLE_01 created"
 fi
 
@@ -113,13 +114,13 @@ fi
 
 IPV4_NAT_01_COUNT=$(sudo iptables --table nat --list-rules | grep --count "IPV4_NAT_01")
 if [ "$IPV4_NAT_01_COUNT" -eq "0" ]; then
-  sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV4_NAT_01" --jump REDIRECT
+  sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match udp --match comment --comment "IPV4_NAT_01" --jump REDIRECT
   logger "IPV4_NAT_01 created"
 fi
 
 IPV4_NAT_02_COUNT=$(sudo iptables --table nat --list-rules | grep --count "IPV4_NAT_02")
 if [ "$IPV4_NAT_02_COUNT" -eq "0" ]; then
-  sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV4_NAT_02" --jump REDIRECT
+  sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match tcp --match comment --comment "IPV4_NAT_02" --jump REDIRECT
   logger "IPV4_NAT_02 created"
 fi
 

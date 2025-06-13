@@ -5,10 +5,12 @@ set system login user username920169077 level admin
 # Default credential removal
 delete system login user ubnt
 
-# Default DHCP client removal
-delete interfaces ethernet eth1 address
+# Configuration of management via SSH
+set service ssh port 36518
+set service ssh protocol-version v2
 
 # Interfaces configuration
+delete interfaces ethernet eth1 address
 set interfaces ethernet eth0 description eth0-wan
 set interfaces ethernet eth0 duplex auto
 set interfaces ethernet eth0 mac 'D0:21:F9:90:67:BD'
@@ -54,7 +56,7 @@ set firewall send-redirects enable
 set firewall source-validation loose
 set firewall syn-cookies enable
 
-# IPv4 firewall rules
+# IPv4 WAN firewall rules
 set firewall name IPV4_FORWARD_WAN_IN default-action drop
 set firewall name IPV4_FORWARD_WAN_IN rule 3333 action accept
 set firewall name IPV4_FORWARD_WAN_IN rule 3333 description 'accept established,related packets'
@@ -77,12 +79,52 @@ set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp code 0
 set firewall name IPV4_INPUT_WAN_IN rule 7500 icmp type 8
 set firewall name IPV4_INPUT_WAN_IN rule 7500 protocol icmp
 
+# IPv4 LAN firewall rules
+set firewall group port-group DNS_PORT port 53
+set firewall group port-group DHCP_PORT port 67
+set firewall group port-group MANAGEMENT_HTTPS_PORT port 18856
+set firewall group port-group MANAGEMENT_SSH_PORT port 36518
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN default-action drop
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 1111 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 1111 description 'allow established,related packets'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 1111 state established enable
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 1111 state related enable
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 2222 action drop
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 2222 description 'drop invalid packets'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 2222 state invalid enable
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 3333 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 3333 description 'allow tcp dns packets'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 3333 destination group port-group DNS_PORT
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 3333 protocol tcp
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 4444 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 4444 description 'allow udp dns packets'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 4444 destination group port-group DNS_PORT
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 4444 protocol udp
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 5555 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 5555 description 'allow dhcp packets'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 5555 destination group port-group DHCP_PORT
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 5555 protocol udp
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 6666 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 6666 description 'allow management via https'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 6666 destination group port-group MANAGEMENT_HTTPS_PORT
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 6666 protocol tcp
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 7777 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 7777 description 'allow management via ssh'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 7777 destination group port-group MANAGEMENT_SSH_PORT
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 7777 protocol tcp
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 8888 action accept
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 8888 description 'allow icmp echo request packets'
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 8888 icmp code 0
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 8888 icmp type 8
+set firewall name IPV4_INPUT_LAN_VLAN_10_IN rule 8888 protocol icmp
+
 # IPv4 loopback address configuration
 set interfaces loopback lo address 192.168.167.1/32
 
 # IPv4 LAN configuration
 set interfaces switch switch0 vif 10 address 192.168.103.254/24
 set interfaces switch switch0 vif 10 description switch0-lan-vif-10
+set interfaces switch switch0 vif 10 firewall local name IPV4_INPUT_LAN_VLAN_10_IN
 set service dhcp-server shared-network-name VIF_10 authoritative enable
 set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 default-router 192.168.103.254
 set service dhcp-server shared-network-name VIF_10 subnet 192.168.103.0/24 dns-server 192.168.167.1
@@ -111,20 +153,20 @@ set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 # IPv4 TCP MSS clamping
 See scripts/firewall.sh
 WAN_INTERFACE="pppoe0"
-$ sudo iptables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_01" --jump TCPMSS --set-mss 1452
+$ sudo iptables --table mangle --append PREROUTING --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_01" --jump TCPMSS --set-mss 1452
 $ sudo iptables --table mangle --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --match comment --comment "IPV4_MANGLE_02" --jump TCPMSS --set-mss 1452
 
-# IPv4 DNS query redirection
+# IPv4 DNAT redirecting all DNS queries to the router
 See scripts/firewall.sh
 LAN_VLAN_10_INTERFACE="switch0.10"
-$ sudo ipset create DNS_PORT bitmap:port range 53-53
-$ sudo ipset add DNS_PORT 53 -exist
+$ sudo ipset create DNS_PORT_2 bitmap:port range 53-53
+$ sudo ipset add DNS_PORT_2 53 -exist
 $ sudo ipset create IPV4_DNS_ADDRESS hash:net family inet hashsize 64 maxelem 1
 $ sudo ipset add IPV4_DNS_ADDRESS "192.168.167.1/32" -exist
-$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV4_NAT_01" --jump REDIRECT
-$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV4_NAT_02" --jump REDIRECT
+$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match udp --match comment --comment "IPV4_NAT_01" --jump REDIRECT
+$ sudo iptables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV4_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match tcp --match comment --comment "IPV4_NAT_02" --jump REDIRECT
 
-# IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
+# IPv4 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
 See scripts/firewall.sh
 $ sudo ipset create NTP_PORT bitmap:port range 123-123
 $ sudo ipset add NTP_PORT 123 -exist
@@ -151,7 +193,7 @@ set system static-host-mapping host-name ipv4.home-router.lan inet 192.168.167.1
 set firewall ipv6-receive-redirects disable
 set firewall ipv6-src-route disable
 
-# IPv6 firewall rules
+# IPv6 WAN firewall rules
 set firewall group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES ipv6-address 'fe80::/10'
 set firewall group port-group DHCPV6_PORT port 546
 set firewall ipv6-name IPV6_FORWARD_WAN_IN default-action drop
@@ -204,10 +246,61 @@ set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 destination group port-group 
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol udp
 set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
 
+# IPv6 LAN firewall rules
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN default-action drop
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 description 'allow established,related packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 state established enable
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 state related enable
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1666 action drop
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1666 description 'drop invalid packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1666 state invalid enable
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 description 'allow tcp dns packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 destination group port-group DNS_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 protocol tcp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 description 'allow udp dns packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 destination group port-group DNS_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 protocol udp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 description 'allow management via https'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 destination group port-group MANAGEMENT_HTTPS_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 protocol tcp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 description 'allow management via ssh'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 destination group port-group MANAGEMENT_SSH_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 protocol tcp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 description 'allow icmpv6 echo request packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 icmpv6 type 128/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 description 'allow icmpv6 router solicitation packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 icmpv6 type 133/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 description 'allow icmpv6 router advertisement packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 icmpv6 type 134/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 description 'allow icmpv6 neighbor solicitation packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 icmpv6 type 135/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 description 'allow icmpv6 neighbor advertisement packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 icmpv6 type 136/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
+
 # IPv6 loopback address configuration
 set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'
 
 # IPv6 LAN configuration
+set interfaces switch switch0 vif 10 firewall local ipv6-name IPV6_INPUT_LAN_VLAN_10_IN
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
 set interfaces switch switch0 vif 10 ipv6 router-advert cur-hop-limit 64
 set interfaces switch switch0 vif 10 ipv6 router-advert default-lifetime 9000
@@ -238,17 +331,17 @@ set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
 
 # IPv6 TCP MSS clamping
 See scripts/firewall.sh
-$ sudo ip6tables --table mangle --append FORWARD --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_01"
+$ sudo ip6tables --table mangle --append PREROUTING --in-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_01"
 $ sudo ip6tables --table mangle --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol tcp --match tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432 --match comment --comment "IPV6_MANGLE_02"
 
-# IPv6 DNS query redirection
+# IPv6 DNAT redirecting all DNS queries to the router
 See scripts/firewall.sh
 $ sudo ipset create IPV6_DNS_ADDRESS hash:net family inet6 hashsize 64 maxelem 1
 $ sudo ipset add IPV6_DNS_ADDRESS "fd45:1e52:2abe:4c85::1/128" -exist
-$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match udp --match comment --comment "IPV6_NAT_01" --jump REDIRECT
-$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT dst --match tcp --match comment --comment "IPV6_NAT_02" --jump REDIRECT
+$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol udp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match udp --match comment --comment "IPV6_NAT_01" --jump REDIRECT
+$ sudo ip6tables --table nat --append PREROUTING --in-interface "$LAN_VLAN_10_INTERFACE" --protocol tcp --match set ! --match-set IPV6_DNS_ADDRESS dst --match set --match-set DNS_PORT_2 dst --match tcp --match comment --comment "IPV6_NAT_02" --jump REDIRECT
 
-# IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
+# IPv6 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
 See scripts/firewall.sh
 $ sudo ip6tables --table nat --append POSTROUTING --out-interface "$WAN_INTERFACE" --protocol udp --match set --match-set NTP_PORT src --match udp --match comment --comment "IPV6_NAT_03" --jump SNAT --to-source :49152-65535
 
@@ -304,6 +397,22 @@ set service ubnt-discover disable
 # Disabling of unused services
 set service unms disable
 
+$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
+
+$ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
+$ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
+$ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
+$ sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem /config/scripts/post-config.d/firewall.sh
+$ sudo chmod 0600 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
+$ sudo chmod 0700 /config/scripts/post-config.d/firewall.sh
+
+# Configuration of management via HTTPS
+set service gui ca-file /config/auth/certificate_authority.crt
+set service gui cert-file /config/auth/management_https.pem
+set service gui http-port 45631
+set service gui https-port 18856
+set service gui older-ciphers disable
+
 # Disabling of telemetry
 set system analytics-handler send-analytics-report false
 set system crash-handler send-crash-report false
@@ -314,22 +423,3 @@ set system offload ipsec disable
 
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
-
-$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
-
-$ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
-$ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
-$ sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
-$ sudo chmod 0600 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
-$ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
-$ sudo chown root:root /config/scripts/post-config.d/firewall.sh
-$ sudo chmod 0700 /config/scripts/post-config.d/firewall.sh
-
-# Management channels configuration
-set service gui ca-file /config/auth/certificate_authority.crt
-set service gui cert-file /config/auth/management_https.pem
-set service gui http-port 45631
-set service gui https-port 18856
-set service gui older-ciphers disable
-set service ssh port 36518
-set service ssh protocol-version v2
