@@ -49,7 +49,7 @@
 /ip firewall filter add action=return chain=ipv4-input-wan-in comment="allow icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
 
-# IPv4 LAN configuration
+# IPv4 LAN firewall rules
 /interface list add name=lan-vlan-10-interface
 /ip firewall filter add action=jump chain=input comment="jump packets coming from lan-vlan-10 interface" in-interface-list=lan-vlan-10-interface jump-target=ipv4-input-lan-vlan-10-in
 /ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow established,related packets" connection-state=established,related

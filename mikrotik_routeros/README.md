@@ -95,7 +95,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
 ```
 
-### IPv4 LAN configuration
+### IPv4 LAN firewall rules
 
 ```
 /interface list add name=lan-vlan-10-interface
