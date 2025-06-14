@@ -43,7 +43,7 @@ set interfaces switch switch0 switch-port interface eth3 vlan pvid 10
 set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
 set interfaces switch switch0 switch-port vlan-aware enable
 
-# Configuration of management via SSH
+# Initial configuration of management channels
 set service ssh port 36518
 set service ssh protocol-version v2
 
@@ -393,8 +393,10 @@ set service ubnt-discover disable
 # Disabling of unused services
 set service unms disable
 
+# Upload of additional files
 $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
 
+# File location, permission and ownership changes
 $ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
 $ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
 $ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem

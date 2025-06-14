@@ -1,10 +1,24 @@
-## Prerequisites
+## Router management
 
-Follow the steps at **[Keys and certificates](../keys_and_certificates)** to create the required keys and certificates
+### Protocols and ports
+
+* HTTPS: TCP/18856 (**[https://home-router.lan:18856/](https://home-router.lan:18856/)**)
+* SSH: TCP/36518
+
+### Credential
+
+Username: **username920169077**</br>
+Password: **password767865354**
+
+## Required files
+
+### Keys and certificates
 
 * certificate_authority.crt
 * management_https.crt
 * management_https.key
+
+Follow the steps at **[Keys and certificates](../keys_and_certificates)** to create the keys and certificates
 
 ## Configuration commands
 
@@ -65,7 +79,7 @@ set interfaces switch switch0 switch-port interface eth4 vlan pvid 10
 set interfaces switch switch0 switch-port vlan-aware enable
 ```
 
-### Configuration of management via SSH
+### Initial configuration of management channels
 
 ```
 set service ssh port 36518
@@ -522,7 +536,7 @@ set service unms disable
 $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@ipv6.home-router.lan:/home/username920169077
 ```
 
-### Files moving, permissions and ownerships
+### File location, permission and ownership changes
 
 ```
 $ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth

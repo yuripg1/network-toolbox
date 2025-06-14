@@ -1,3 +1,26 @@
+## Router management
+
+### Protocols and ports
+
+* HTTPS: TCP/18856 (**[https://home-router.lan:18856/](https://home-router.lan:18856/)**)
+* SSH: TCP/36518
+* WinBox: TCP/24639
+
+### Credential
+
+Username: **username920169077**</br>
+Password: **password767865354**
+
+## Required files
+
+### Keys and certificates
+
+* certificate_authority.crt
+* management_https.crt
+* management_https.key
+
+Follow the steps at **[Keys and certificates](../keys_and_certificates)** to create the keys and certificates
+
 ## Configuration commands
 
 ### Credential configuration
@@ -43,25 +66,50 @@
 /interface bridge port add bridge=bridge-lan broadcast-flood=yes frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth8 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 ```
 
+### Initial configuration of management channels
+
+```
+/ip service set ssh disabled=no port=36518
+/ip service set winbox disabled=no port=24639
+/ip ssh set strong-crypto=yes
+```
+
 ### IPv4 kernel configuration
 
 ```
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=loose secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 ```
 
-### IPv4 firewall rules
+### IPv4 WAN firewall rules
 
 ```
 /interface list add name=wan-interface
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv4-forward-wan-in
-/ip firewall filter add action=return chain=ipv4-forward-wan-in comment="return established,related packets" connection-state=established,related
+/ip firewall filter add action=return chain=ipv4-forward-wan-in comment="allow established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop invalid packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop remaining packets"
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv4-input-wan-in
-/ip firewall filter add action=return chain=ipv4-input-wan-in comment="return established,related packets" connection-state=established,related
+/ip firewall filter add action=return chain=ipv4-input-wan-in comment="allow established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop invalid packets" connection-state=invalid
-/ip firewall filter add action=return chain=ipv4-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=return chain=ipv4-input-wan-in comment="allow icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
+```
+
+### IPv4 LAN configuration
+
+```
+/interface list add name=lan-vlan-10-interface
+/ip firewall filter add action=jump chain=input comment="jump packets coming from lan-vlan-10 interface" in-interface-list=lan-vlan-10-interface jump-target=ipv4-input-lan-vlan-10-in
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-input-lan-vlan-10-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow tcp dns packets" dst-port=53 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow udp dns packets" dst-port=53 protocol=udp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow dhcp packets" dst-port=67 protocol=udp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow management via https" dst-port=18856 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow management via winbox" dst-port=24639 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow management via ssh" dst-port=36518 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ipv4-input-lan-vlan-10-in comment="drop remaining packets"
 ```
 
 ### IPv4 loopback address configuration
@@ -73,7 +121,6 @@
 ### IPv4 LAN configuration
 
 ```
-/interface list add name=lan-vlan-10-interface
 /interface list member add interface=bridge-lan-vlan-10 list=lan-vlan-10-interface
 /ip address add address=192.168.103.254/24 interface=bridge-lan-vlan-10 network=192.168.103.0
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
@@ -106,7 +153,7 @@
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 ```
 
-### IPv4 DNS query redirection
+### IPv4 DNAT redirecting all DNS queries to the router
 
 ```
 /ip firewall address-list add address=192.168.167.1/32 list=ipv4-dns-address
@@ -114,7 +161,7 @@
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 ```
 
-### IPv4 workaround for ISP blocking of incoming NTP packets (UDP/123)
+### IPv4 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
 
 ```
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
@@ -148,25 +195,44 @@
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
 ```
 
-### IPv6 firewall rules
+### IPv6 WAN firewall rules
 
 ```
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-forward-wan-in
-/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="allow established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-input-wan-in
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
+```
+
+### IPv6 LAN firewall rules
+
+```
+/ipv6 firewall filter add action=jump chain=input comment="jump packets coming from lan-vlan-10 interface" in-interface-list=lan-vlan-10-interface jump-target=ipv6-input-lan-vlan-10-in
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-input-lan-vlan-10-in comment="drop invalid packets" connection-state=invalid
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow tcp dns packets" dst-port=53 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow udp dns packets" dst-port=53 protocol=udp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via https" dst-port=18856 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via winbox" dst-port=24639 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via ssh" dst-port=36518 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-input-lan-vlan-10-in comment="drop remaining packets"
 ```
 
 ### IPv6 loopback address configuration
@@ -197,7 +263,7 @@
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 ```
 
-### IPv6 DNS query redirection
+### IPv6 DNAT redirecting all DNS queries to the router
 
 ```
 /ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
@@ -205,7 +271,7 @@
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=tcp
 ```
 
-### IPv6 workaround for ISP blocking of incoming NTP packets (UDP/123)
+### IPv6 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
 
 ```
 /ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
@@ -272,18 +338,29 @@
 /tool bandwidth-server set enabled=no
 ```
 
-### Management channels configuration
+### Upload of additional files
+
+```
+$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@ipv6.home-router.lan:/
+```
+
+### Configuration of management via HTTPS
+
+```
+/certificate import file-name=certificate_authority.crt name=certificate_authority trusted=yes
+/certificate import file-name=management_https.crt name=management_https trusted=yes
+/certificate import file-name=management_https.key name=management_https trusted=yes
+/ip service set www-ssl certificate=management_https disabled=no port=18856
+```
+
+### Disabling of unused management channels
 
 ```
 /ip service set ftp disabled=yes
-/ip service set ssh disabled=no port=22
 /ip service set telnet disabled=yes
-/ip service set www disabled=no port=80
-/ip service set www-ssl disabled=yes
-/ip service set winbox disabled=no port=8291
+/ip service set www disabled=yes
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
-/ip ssh set strong-crypto=yes
 ```
 
 ### Cloud features configuration
@@ -393,14 +470,25 @@
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-private-addresses
 /ip firewall address-list add address=192.168.237.1/32 list=ipv4-modem-address
 /ip firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv4-forward-wan-in
-/ip firewall filter add action=return chain=ipv4-forward-wan-in comment="return established,related packets" connection-state=established,related
+/ip firewall filter add action=return chain=ipv4-forward-wan-in comment="allow established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop invalid packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-forward-wan-in comment="drop remaining packets"
 /ip firewall filter add action=jump chain=input comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv4-input-wan-in
-/ip firewall filter add action=return chain=ipv4-input-wan-in comment="return established,related packets" connection-state=established,related
+/ip firewall filter add action=return chain=ipv4-input-wan-in comment="allow established,related packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop invalid packets" connection-state=invalid
-/ip firewall filter add action=return chain=ipv4-input-wan-in comment="return icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=return chain=ipv4-input-wan-in comment="allow icmp echo request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-input-wan-in comment="drop remaining packets"
+/ip firewall filter add action=jump chain=input comment="jump packets coming from lan-vlan-10 interface" in-interface-list=lan-vlan-10-interface jump-target=ipv4-input-lan-vlan-10-in
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow established,related packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-input-lan-vlan-10-in comment="drop invalid packets" connection-state=invalid
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow tcp dns packets" dst-port=53 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow udp dns packets" dst-port=53 protocol=udp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow dhcp packets" dst-port=67 protocol=udp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow management via https" dst-port=18856 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow management via winbox" dst-port=24639 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow management via ssh" dst-port=36518 protocol=tcp
+/ip firewall filter add action=return chain=ipv4-input-lan-vlan-10-in comment="allow icmp echo request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ipv4-input-lan-vlan-10-in comment="drop remaining packets"
 /ip firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface new-mss=1452 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
@@ -417,13 +505,13 @@
 /ip firewall service-port set pptp disabled=yes
 /ip firewall service-port set rtsp disabled=yes
 /ip service set ftp disabled=yes
-/ip service set ssh disabled=no port=22
 /ip service set telnet disabled=yes
-/ip service set www disabled=no port=80
-/ip service set www-ssl disabled=yes
-/ip service set winbox disabled=no port=8291
+/ip service set www disabled=yes
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
+/ip service set www-ssl certificate=management_https disabled=no port=18856
+/ip service set winbox disabled=no port=24639
+/ip service set ssh disabled=no port=36518
 /ip ssh set strong-crypto=yes
 /ipv6 address add address=fd45:1e52:2abe:4c85::1/128 advertise=no auto-link-local=yes interface=lo no-dad=no
 /ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-lan-vlan-10 no-dad=no
@@ -431,20 +519,34 @@
 /ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-addresses
 /ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
 /ipv6 firewall filter add action=jump chain=forward comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-forward-wan-in
-/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="allow established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-forward-wan-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-forward-wan-in comment="drop remaining packets"
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-input-wan-in
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="return dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
+/ipv6 firewall filter add action=jump chain=input comment="jump packets coming from lan-vlan-10 interface" in-interface-list=lan-vlan-10-interface jump-target=ipv6-input-lan-vlan-10-in
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow established,related packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-input-lan-vlan-10-in comment="drop invalid packets" connection-state=invalid
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow tcp dns packets" dst-port=53 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow udp dns packets" dst-port=53 protocol=udp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via https" dst-port=18856 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via winbox" dst-port=24639 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via ssh" dst-port=36518 protocol=tcp
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-input-lan-vlan-10-in comment="drop remaining packets"
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-vlan-10-interface protocol=udp
@@ -481,7 +583,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 0   192.168.167.1/32    192.168.167.1  lo
 1   192.168.103.254/24  192.168.103.0  bridge-lan-vlan-10
 2   192.168.237.2/30    192.168.237.0  eth1-wan
-3 D 179.174.46.32/32    189.97.102.55  eth1-wan-vlan-600-pppoe-client
+3 D 179.100.124.116/32  189.97.102.55  eth1-wan-vlan-600-pppoe-client
 ```
 
 ### IPv4 routes
@@ -506,14 +608,14 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                       ADVERTISE  VALID
 0  G fd45:1e52:2abe:4c85::1/128                                        lo                              no
-1  G 2804:7f4:ca00:73fd:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
+1  G 2804:7f4:ca00:b8ac:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-lan-vlan-10              yes
 2 D  ::1/128                                                           lo                              no
-3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
-4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
+3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan                      no
+4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-lan-vlan-10              no
 5 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan                        no
 6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-wan-vlan-600               no
-7 DL fe80::291f:ed10:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
-8 DG 2804:7f4:c02f:d6e8:291f:ed10:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h53m57s
+7 DL fe80::9062:2df1:0:e/64                                            eth1-wan-vlan-600-pppoe-client  no
+8 DG 2804:7f4:c02f:4718:9062:2df1:0:e/64                               eth1-wan-vlan-600-pppoe-client  no         2d23h56m46s
 ```
 
 ### IPv6 routes
@@ -525,11 +627,11 @@ Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
     DST-ADDRESS                 GATEWAY                                                   ROUTING-TABLE  DISTANCE
 DAv ::/0                        eth1-wan-vlan-600-pppoe-client                            main                  2
 D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-wan-vlan-600-pppoe-client  main                  3
-DAc 2804:7f4:c02f:d6e8::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
-D d 2804:7f4:ca00:73fd::/64                                                               main                  2
-DAc 2804:7f4:ca00:73fd::/64     bridge-lan-vlan-10                                        main                  0
-DAc fe80::/64                   bridge-lan-vlan-10                                        main                  0
+DAc 2804:7f4:c02f:4718::/64     eth1-wan-vlan-600-pppoe-client                            main                  0
+D d 2804:7f4:ca00:b8ac::/64                                                               main                  2
+DAc 2804:7f4:ca00:b8ac::/64     bridge-lan-vlan-10                                        main                  0
 DAc fe80::/64                   bridge-lan                                                main                  0
+DAc fe80::/64                   bridge-lan-vlan-10                                        main                  0
 DAc fe80::/64                   eth1-wan                                                  main                  0
 DAc fe80::/64                   eth1-wan-vlan-600                                         main                  0
 DAc fe80::/64                   eth1-wan-vlan-600-pppoe-client                            main                  0
