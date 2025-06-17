@@ -209,88 +209,80 @@ set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 description 'allow icmpv6 e
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 icmpv6 type 128/0
 set firewall ipv6-name IPV6_FORWARD_WAN_IN rule 7500 protocol icmpv6
 set firewall ipv6-name IPV6_INPUT_WAN_IN default-action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 description 'allow established,related packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state established enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1111 state related enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 action drop
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 description 'drop invalid packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2222 state invalid enable
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 description 'allow dhcpv6 packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 destination group port-group DHCPV6_PORT
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 protocol udp
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3333 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 description 'allow icmpv6 echo request packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 icmpv6 type 128/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 4444 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 description 'allow icmpv6 router solicitation packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 icmpv6 type 133/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5555 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 description 'allow icmpv6 router advertisement packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 icmpv6 type 134/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6666 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 description 'allow icmpv6 neighbor solicitation packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 icmpv6 type 135/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7777 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 action accept
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 description 'allow icmpv6 neighbor advertisement packets'
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 icmpv6 type 136/0
-set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8888 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1250 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1250 description 'allow established,related packets'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1250 state established enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 1250 state related enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2500 action drop
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2500 description 'drop invalid packets'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 2500 state invalid enable
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3750 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3750 description 'allow dhcpv6 packets from link-local addresses'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3750 destination group port-group DHCPV6_PORT
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3750 protocol udp
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 3750 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5000 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5000 description 'allow icmpv6 echo request packets'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5000 icmpv6 type 128/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 5000 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6250 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6250 description 'allow icmpv6 router advertisement packets from link-local addresses'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6250 icmpv6 type 134/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6250 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 6250 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7500 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7500 description 'allow icmpv6 neighbor solicitation packets'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7500 icmpv6 type 135/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 7500 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8750 action accept
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8750 description 'allow icmpv6 neighbor advertisement packets'
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8750 icmpv6 type 136/0
+set firewall ipv6-name IPV6_INPUT_WAN_IN rule 8750 protocol icmpv6
 
 # IPv6 LAN firewall rules
+set firewall group ipv6-address-group IPV6_LINK_LOCAL_AND_UNSPECIFIED ipv6-address 'fe80::/10'
+set firewall group ipv6-address-group IPV6_LINK_LOCAL_AND_UNSPECIFIED ipv6-address '::'
 set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN default-action drop
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 description 'allow established,related packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 state established enable
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 833 state related enable
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1666 action drop
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1666 description 'drop invalid packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1666 state invalid enable
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 description 'allow tcp dns packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2500 protocol tcp
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 description 'allow udp dns packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3333 protocol udp
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 description 'allow management via https'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 destination group port-group MANAGEMENT_HTTPS_PORT
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4166 protocol tcp
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 description 'allow management via ssh'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 destination group port-group MANAGEMENT_SSH_PORT
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5000 protocol tcp
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 description 'allow icmpv6 echo request packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 icmpv6 type 128/0
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5833 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 description 'allow icmpv6 router solicitation packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 icmpv6 type 133/0
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6666 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 description 'allow icmpv6 router advertisement packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 icmpv6 type 134/0
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7500 source group ipv6-address-group IPV6_LINK_LOCAL_ADDRESSES
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 description 'allow icmpv6 neighbor solicitation packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 icmpv6 type 135/0
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8333 protocol icmpv6
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 action accept
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 description 'allow icmpv6 neighbor advertisement packets'
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 icmpv6 type 136/0
-set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9166 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 909 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 909 description 'allow established,related packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 909 state established enable
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 909 state related enable
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1818 action drop
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1818 description 'drop invalid packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 1818 state invalid enable
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2727 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2727 description 'allow tcp dns packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2727 destination group port-group DNS_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 2727 protocol tcp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3636 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3636 description 'allow udp dns packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3636 destination group port-group DNS_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 3636 protocol udp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4545 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4545 description 'allow management via https'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4545 destination group port-group MANAGEMENT_HTTPS_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 4545 protocol tcp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5454 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5454 description 'allow management via ssh'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5454 destination group port-group MANAGEMENT_SSH_PORT
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 5454 protocol tcp
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6363 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6363 description 'allow icmpv6 echo request packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6363 icmpv6 type 128/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 6363 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7272 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7272 description 'allow icmpv6 router solicitation packets from link-local and unspecified addresses'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7272 icmpv6 type 133/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7272 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 7272 source group ipv6-address-group IPV6_LINK_LOCAL_AND_UNSPECIFIED
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8181 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8181 description 'allow icmpv6 neighbor solicitation packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8181 icmpv6 type 135/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 8181 protocol icmpv6
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9090 action accept
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9090 description 'allow icmpv6 neighbor advertisement packets'
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9090 icmpv6 type 136/0
+set firewall ipv6-name IPV6_INPUT_LAN_VLAN_10_IN rule 9090 protocol icmpv6
 
 # IPv6 loopback address configuration
 set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'

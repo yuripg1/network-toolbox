@@ -123,15 +123,16 @@
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from wan interface" in-interface-list=wan-interface jump-target=ipv6-input-wan-in
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop invalid packets" connection-state=invalid
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow dhcpv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow dhcpv6 packets from link-local addresses" dst-port=546 protocol=udp src-address-list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 router advertisement packets from link-local addresses" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6
 /ipv6 firewall filter add action=return chain=ipv6-input-wan-in comment="allow icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-wan-in comment="drop remaining packets"
 
 # IPv6 LAN firewall rules
+/ipv6 firewall address-list add address=fe80::/10 list=ipv6-link-local-and-unspecified-addresses
+/ipv6 firewall address-list add address=::/128 list=ipv6-link-local-and-unspecified-addresses
 /ipv6 firewall filter add action=jump chain=input comment="jump packets coming from lan-vlan-10 interface" in-interface-list=lan-vlan-10-interface jump-target=ipv6-input-lan-vlan-10-in
 /ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow established,related packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-input-lan-vlan-10-in comment="drop invalid packets" connection-state=invalid
@@ -141,8 +142,7 @@
 /ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via winbox" dst-port=24639 protocol=tcp
 /ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow management via ssh" dst-port=36518 protocol=tcp
 /ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 echo request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
-/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-addresses
+/ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 router solicitation packets from link-local and unspecified addresses" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-link-local-and-unspecified-addresses
 /ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 neighbor solicitation packets" icmp-options=135:0 protocol=icmpv6
 /ipv6 firewall filter add action=return chain=ipv6-input-lan-vlan-10-in comment="allow icmpv6 neighbor advertisement packets" icmp-options=136:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-input-lan-vlan-10-in comment="drop remaining packets"
