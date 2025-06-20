@@ -5,7 +5,7 @@ distinguished_name=dn
 x509_extensions=v3_ca
 
 [dn]
-CN=Certificate-Authority
+CN=Home-Network-CA
 
 [v3_ca]
 basicConstraints=critical,CA:TRUE

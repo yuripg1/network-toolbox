@@ -1,11 +1,11 @@
-# Host name configuration
-/system identity set name=Home-Router
-
 # Credential configuration
 /user add group=full name=username920169077 password=password767865354
 
 # Default credential removal
 /user remove admin
+
+# Host name configuration
+/system identity set name=Home-Router
 
 # Interfaces configuration
 /interface ethernet set [ find default-name=ether1 ] arp=enabled arp-timeout=auto auto-negotiation=yes disabled=no l2mtu=1504 loop-protect=off mac-address=48:A9:8A:41:3E:50 mtu=1500 name=eth1-wan
@@ -23,6 +23,7 @@
 /interface bridge add admin-mac=48:A9:8A:2E:20:84 arp=enabled arp-timeout=auto auto-mac=no dhcp-snooping=no ether-type=0x8100 fast-forward=yes forward-reserved-addresses=no frame-types=admit-all igmp-snooping=no ingress-filtering=yes max-learned-entries=auto mtu=1500 name=bridge-lan protocol-mode=none pvid=1 vlan-filtering=yes
 /interface bridge vlan add bridge=bridge-lan untagged=bridge-lan,eth2 vlan-ids=1
 /interface bridge vlan add bridge=bridge-lan tagged=bridge-lan,eth2 untagged=eth3,eth4,eth5,eth6,eth7,eth8 vlan-ids=10
+/interface vlan add arp=enabled arp-timeout=auto interface=bridge-lan loop-protect=off mtu=1500 name=bridge-lan-vlan-1 vlan-id=1
 /interface vlan add arp=enabled arp-timeout=auto interface=bridge-lan loop-protect=off mtu=1500 name=bridge-lan-vlan-10 vlan-id=10
 /interface bridge port add bridge=bridge-lan broadcast-flood=yes frame-types=admit-all hw=yes ingress-filtering=yes interface=eth2 learn=yes pvid=1 unknown-multicast-flood=yes unknown-unicast-flood=yes
 /interface bridge port add bridge=bridge-lan broadcast-flood=yes frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth3 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
@@ -172,15 +173,19 @@
 /ip smb set enabled=no
 /tool bandwidth-server set enabled=no
 
-# Configuration of management channels (except HTTPS)
+# Configuration of management via SSH
 /ip service set ssh disabled=no port=36518
+/ip ssh set ciphers=aes-gcm host-key-type=ed25519 strong-crypto=yes
+
+# Configuration of management via WinBox
 /ip service set winbox disabled=no port=24639
+
+# Disabling of unused management channels
 /ip service set api disabled=yes
 /ip service set api-ssl disabled=yes
 /ip service set ftp disabled=yes
 /ip service set telnet disabled=yes
 /ip service set www disabled=yes
-/ip ssh set strong-crypto=yes
 
 # Upload of additional files
 # $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@ipv6.home-router.lan:/
