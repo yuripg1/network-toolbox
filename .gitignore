@@ -1,4 +1,5 @@
-scripts/ntp_test/network-toolbox-venv
+scripts/ntp_test/ntp-test-venv
+ubiquiti_edgeos/router_setup/router-setup-venv
 *.key
 *.crt
 *.srl
