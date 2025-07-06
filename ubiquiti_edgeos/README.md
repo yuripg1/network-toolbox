@@ -14,10 +14,10 @@ Password: **password767865354**
 
 ### IPv4
 
-| From \ To | Local                     | LAN                       | WAN                    | Modem                  |
+| From\To   | Local                     | LAN                       | WAN                    | Modem                  |
 |-----------|---------------------------|---------------------------|------------------------|------------------------|
 | Local     | ✅                        | IPV4_ALLOW_ALL_TRAFFIC    | IPV4_ALLOW_ALL_TRAFFIC | IPV4_ALLOW_ALL_TRAFFIC |
-| LAN       | IPV4_LAN_TO_LOCAL         | ✅                        | IPV6_ALLOW_ALL_TRAFFIC | IPV4_LAN_TO_MODEM      |
+| LAN       | IPV4_LAN_TO_LOCAL         | ✅                        | IPV4_ALLOW_ALL_TRAFFIC | IPV4_LAN_TO_MODEM      |
 | WAN       | IPV4_WAN_TO_LOCAL         | IPV4_WAN_TO_LAN           | ✅                     | ❌                     |
 | Modem     | IPV4_ALLOW_RETURN_TRAFFIC | IPV4_ALLOW_RETURN_TRAFFIC | ❌                     | ✅                     |
 
