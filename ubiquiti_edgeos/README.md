@@ -23,7 +23,7 @@ Password: **password767865354**
 
 ### IPv6
 
-| From \ To | Local                     | LAN                       | WAN                    | Modem                  |
+| From\To   | Local                     | LAN                       | WAN                    | Modem                  |
 |-----------|---------------------------|---------------------------|------------------------|------------------------|
 | Local     | ✅                        | IPV6_ALLOW_ALL_TRAFFIC    | IPV6_ALLOW_ALL_TRAFFIC | ❌                     |
 | LAN       | IPV6_LAN_TO_LOCAL         | ✅                        | IPV6_ALLOW_ALL_TRAFFIC | ❌                     |
