@@ -15,21 +15,21 @@ Password: **password767865354**
 
 ### IPv4
 
-| <nobr>From \ To</nobr> | Local                                  | LAN                                    | WAN                                 | Modem                               |
-|------------------------|----------------------------------------|----------------------------------------|-------------------------------------|-------------------------------------|
-| Local                  | ✅                                     | <nobr>ipv4-allow-all-traffic</nobr>    | <nobr>ipv4-allow-all-traffic</nobr> | <nobr>ipv4-allow-all-traffic</nobr> |
-| LAN                    | <nobr>ipv4-lan-to-local</nobr>         | ✅                                     | <nobr>ipv4-allow-all-traffic</nobr> | <nobr>ipv4-lan-to-modem</nobr>      |
-| WAN                    | <nobr>ipv4-wan-to-local</nobr>         | <nobr>ipv4-wan-to-lan</nobr>           | ✅                                  | ❌                                  |
-| Modem                  | <nobr>ipv4-allow-return-traffic</nobr> | <nobr>ipv4-allow-return-traffic</nobr> | ❌                                  | ✅                                  |
+| <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                                  | LAN                                    | WAN                                 | Modem                               |
+|-----------------------------------|----------------------------------------|----------------------------------------|-------------------------------------|-------------------------------------|
+| Local                             | ✅                                     | <nobr>ipv4-allow-all-traffic</nobr>    | <nobr>ipv4-allow-all-traffic</nobr> | <nobr>ipv4-allow-all-traffic</nobr> |
+| LAN                               | <nobr>ipv4-lan-to-local</nobr>         | ✅                                     | <nobr>ipv4-allow-all-traffic</nobr> | <nobr>ipv4-lan-to-modem</nobr>      |
+| WAN                               | <nobr>ipv4-wan-to-local</nobr>         | <nobr>ipv4-wan-to-lan</nobr>           | ✅                                  | ❌                                  |
+| Modem                             | <nobr>ipv4-allow-return-traffic</nobr> | <nobr>ipv4-allow-return-traffic</nobr> | ❌                                  | ✅                                  |
 
 ### IPv6
 
-| <nobr>From \ To</nobr> | Local                          | LAN                                 | WAN                                 | Modem |
-|------------------------|--------------------------------|-------------------------------------|-------------------------------------|-------|
-| Local                  | ✅                             | <nobr>ipv6-allow-all-traffic</nobr> | <nobr>ipv6-allow-all-traffic</nobr> | ❌    |
-| LAN                    | <nobr>ipv6-lan-to-local</nobr> | ✅                                  | <nobr>ipv6-allow-all-traffic</nobr> | ❌    |
-| WAN                    | <nobr>ipv6-wan-to-local</nobr> | <nobr>ipv6-wan-to-lan</nobr>        | ✅                                  | ❌    |
-| Modem                  | ❌                             | ❌                                  | ❌                                  | ✅    |
+| <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                          | LAN                                 | WAN                                 | Modem |
+|-----------------------------------|--------------------------------|-------------------------------------|-------------------------------------|-------|
+| Local                             | ✅                             | <nobr>ipv6-allow-all-traffic</nobr> | <nobr>ipv6-allow-all-traffic</nobr> | ❌    |
+| LAN                               | <nobr>ipv6-lan-to-local</nobr> | ✅                                  | <nobr>ipv6-allow-all-traffic</nobr> | ❌    |
+| WAN                               | <nobr>ipv6-wan-to-local</nobr> | <nobr>ipv6-wan-to-lan</nobr>        | ✅                                  | ❌    |
+| Modem                             | ❌                             | ❌                                  | ❌                                  | ✅    |
 
 ## Required files
 
