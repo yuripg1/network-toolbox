@@ -15,7 +15,7 @@ Password: **password767865354**
 ### IPv4
 
 | <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                                  | LAN                                    | WAN                                 | Modem                               |
-|-----------------------------------|----------------------------------------|----------------------------------------|-------------------------------------|-------------------------------------|
+|----------------------------------:|:--------------------------------------:|:--------------------------------------:|:-----------------------------------:|:-----------------------------------:|
 | Local                             | ✅                                     | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr>    | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> |
 | LAN                               | <nobr>IPV4_LAN_TO_LOCAL</nobr>         | ✅                                     | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV4_LAN_TO_MODEM</nobr>      |
 | WAN                               | <nobr>IPV4_WAN_TO_LOCAL</nobr>         | <nobr>IPV4_WAN_TO_LAN</nobr>           | ✅                                  | ❌                                  |
@@ -24,7 +24,7 @@ Password: **password767865354**
 ### IPv6
 
 | <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                          | LAN                                 | WAN                                 | Modem |
-|-----------------------------------|--------------------------------|-------------------------------------|-------------------------------------|-------|
+|----------------------------------:|:------------------------------:|:-----------------------------------:|:-----------------------------------:|:-----:|
 | Local                             | ✅                             | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | ❌    |
 | LAN                               | <nobr>IPV6_LAN_TO_LOCAL</nobr> | ✅                                  | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | ❌    |
 | WAN                               | <nobr>IPV6_WAN_TO_LOCAL</nobr> | <nobr>IPV6_WAN_TO_LAN</nobr>        | ✅                                  | ❌    |
@@ -224,40 +224,30 @@ set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.167.1
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.103.0/24
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.237.0/30
 set firewall group address-group IPV4_LAN_SOURCES address 192.168.103.0/24
-set firewall group port-group DNS_PORT port 53
 set firewall group port-group DHCP_PORT port 67
+set firewall group port-group DNS_PORT port 53
 set firewall group port-group MANAGEMENT_HTTPS_PORT port 18856
-set firewall group port-group MANAGEMENT_SSH_PORT port 36518
 set firewall group port-group MANAGEMENT_HTTP_PORT port 45631
-set firewall name IPV4_WAN_TO_LAN default-action drop
-set firewall name IPV4_WAN_TO_LAN description 'Check packets going from WAN to LAN'
-set firewall name IPV4_WAN_TO_LAN rule 10 action accept
-set firewall name IPV4_WAN_TO_LAN rule 10 description 'Accept ESTABLISHED,RELATED packets'
-set firewall name IPV4_WAN_TO_LAN rule 10 state established enable
-set firewall name IPV4_WAN_TO_LAN rule 10 state related enable
-set firewall name IPV4_WAN_TO_LAN rule 20 action drop
-set firewall name IPV4_WAN_TO_LAN rule 20 description 'Drop INVALID packets'
-set firewall name IPV4_WAN_TO_LAN rule 20 state invalid enable
-set firewall name IPV4_WAN_TO_LAN rule 30 action drop
-set firewall name IPV4_WAN_TO_LAN rule 30 description 'Drop packets with spoofed source addresses'
-set firewall name IPV4_WAN_TO_LAN rule 30 source group address-group IPV4_INVALID_WAN_SOURCES
-set firewall name IPV4_WAN_TO_LOCAL default-action drop
-set firewall name IPV4_WAN_TO_LOCAL description 'Check packets going from WAN to Local'
-set firewall name IPV4_WAN_TO_LOCAL rule 10 action accept
-set firewall name IPV4_WAN_TO_LOCAL rule 10 description 'Accept ESTABLISHED,RELATED packets'
-set firewall name IPV4_WAN_TO_LOCAL rule 10 state established enable
-set firewall name IPV4_WAN_TO_LOCAL rule 10 state related enable
-set firewall name IPV4_WAN_TO_LOCAL rule 20 action drop
-set firewall name IPV4_WAN_TO_LOCAL rule 20 description 'Drop INVALID packets'
-set firewall name IPV4_WAN_TO_LOCAL rule 20 state invalid enable
-set firewall name IPV4_WAN_TO_LOCAL rule 30 action drop
-set firewall name IPV4_WAN_TO_LOCAL rule 30 description 'Drop packets with spoofed source addresses'
-set firewall name IPV4_WAN_TO_LOCAL rule 30 source group address-group IPV4_INVALID_WAN_SOURCES
-set firewall name IPV4_WAN_TO_LOCAL rule 40 action accept
-set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept ICMP Echo Request packets'
-set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp code 0
-set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp type 8
-set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol icmp
+set firewall group port-group MANAGEMENT_SSH_PORT port 36518
+set firewall name IPV4_ALLOW_ALL_TRAFFIC default-action accept
+set firewall name IPV4_ALLOW_ALL_TRAFFIC description 'Allow all traffic'
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 action accept
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 description 'Accept ESTABLISHED,NEW,RELATED packets'
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 state established enable
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 state new enable
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 state related enable
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 20 action drop
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 20 description 'Drop INVALID packets'
+set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 20 state invalid enable
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC default-action drop
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC description 'Allow return traffic'
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 action accept
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 description 'Accept ESTABLISHED,RELATED packets'
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 state established enable
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 state related enable
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 20 action drop
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 20 description 'Drop INVALID packets'
+set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 20 state invalid enable
 set firewall name IPV4_LAN_TO_LOCAL default-action drop
 set firewall name IPV4_LAN_TO_LOCAL description 'Check packets going from LAN to Local'
 set firewall name IPV4_LAN_TO_LOCAL rule 10 action accept
@@ -313,38 +303,103 @@ set firewall name IPV4_LAN_TO_MODEM rule 30 action accept
 set firewall name IPV4_LAN_TO_MODEM rule 30 description 'Accept management via HTTP'
 set firewall name IPV4_LAN_TO_MODEM rule 30 destination group port-group MANAGEMENT_HTTP_PORT
 set firewall name IPV4_LAN_TO_MODEM rule 30 protocol tcp
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC default-action drop
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC description 'Allow return traffic'
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 action accept
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 description 'Accept ESTABLISHED,RELATED packets'
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 state established enable
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 10 state related enable
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 20 action drop
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 20 description 'Drop INVALID packets'
-set firewall name IPV4_ALLOW_RETURN_TRAFFIC rule 20 state invalid enable
-set firewall name IPV4_ALLOW_ALL_TRAFFIC default-action accept
-set firewall name IPV4_ALLOW_ALL_TRAFFIC description 'Allow all traffic'
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 action accept
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 description 'Accept ESTABLISHED,NEW,RELATED packets'
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 state established enable
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 state new enable
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 state related enable
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 20 action drop
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 20 description 'Drop INVALID packets'
-set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 20 state invalid enable
+set firewall name IPV4_WAN_TO_LAN default-action drop
+set firewall name IPV4_WAN_TO_LAN description 'Check packets going from WAN to LAN'
+set firewall name IPV4_WAN_TO_LAN rule 10 action accept
+set firewall name IPV4_WAN_TO_LAN rule 10 description 'Accept ESTABLISHED,RELATED packets'
+set firewall name IPV4_WAN_TO_LAN rule 10 state established enable
+set firewall name IPV4_WAN_TO_LAN rule 10 state related enable
+set firewall name IPV4_WAN_TO_LAN rule 20 action drop
+set firewall name IPV4_WAN_TO_LAN rule 20 description 'Drop INVALID packets'
+set firewall name IPV4_WAN_TO_LAN rule 20 state invalid enable
+set firewall name IPV4_WAN_TO_LAN rule 30 action drop
+set firewall name IPV4_WAN_TO_LAN rule 30 description 'Drop packets with spoofed source addresses'
+set firewall name IPV4_WAN_TO_LAN rule 30 source group address-group IPV4_INVALID_WAN_SOURCES
+set firewall name IPV4_WAN_TO_LOCAL default-action drop
+set firewall name IPV4_WAN_TO_LOCAL description 'Check packets going from WAN to Local'
+set firewall name IPV4_WAN_TO_LOCAL rule 10 action accept
+set firewall name IPV4_WAN_TO_LOCAL rule 10 description 'Accept ESTABLISHED,RELATED packets'
+set firewall name IPV4_WAN_TO_LOCAL rule 10 state established enable
+set firewall name IPV4_WAN_TO_LOCAL rule 10 state related enable
+set firewall name IPV4_WAN_TO_LOCAL rule 20 action drop
+set firewall name IPV4_WAN_TO_LOCAL rule 20 description 'Drop INVALID packets'
+set firewall name IPV4_WAN_TO_LOCAL rule 20 state invalid enable
+set firewall name IPV4_WAN_TO_LOCAL rule 30 action drop
+set firewall name IPV4_WAN_TO_LOCAL rule 30 description 'Drop packets with spoofed source addresses'
+set firewall name IPV4_WAN_TO_LOCAL rule 30 source group address-group IPV4_INVALID_WAN_SOURCES
+set firewall name IPV4_WAN_TO_LOCAL rule 40 action accept
+set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept ICMP Echo Request packets'
+set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp code 0
+set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp type 8
+set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol icmp
 ```
 
 ### IPv6 firewall rule sets
 
 ```
-set firewall group ipv6-address-group IPV6_INVALID_WAN_SOURCES ipv6-address '::1'
-set firewall group ipv6-address-group IPV6_INVALID_WAN_SOURCES ipv6-address 'fd45:1e52:2abe:4c85::1'
-set firewall group ipv6-address-group IPV6_LINK_LOCAL_SOURCES ipv6-address 'fe80::/64'
 set firewall group ipv6-address-group IPV6_INVALID_LAN_SOURCES ipv6-address '::1'
 set firewall group ipv6-address-group IPV6_INVALID_LAN_SOURCES ipv6-address 'fd45:1e52:2abe:4c85::1'
+set firewall group ipv6-address-group IPV6_INVALID_WAN_SOURCES ipv6-address '::1'
+set firewall group ipv6-address-group IPV6_INVALID_WAN_SOURCES ipv6-address 'fd45:1e52:2abe:4c85::1'
 set firewall group ipv6-address-group IPV6_LAN_SLAAC_SOURCES ipv6-address 'fe80::/64'
 set firewall group ipv6-address-group IPV6_LAN_SLAAC_SOURCES ipv6-address '::'
+set firewall group ipv6-address-group IPV6_LINK_LOCAL_SOURCES ipv6-address 'fe80::/64'
 set firewall group port-group DHCPV6_PORT port 546
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC default-action accept
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC description 'Allow all traffic'
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 action accept
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 description 'Accept ESTABLISHED,NEW,RELATED packets'
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 state established enable
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 state new enable
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 state related enable
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 20 action drop
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 20 description 'Drop INVALID packets'
+set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 20 state invalid enable
+set firewall ipv6-name IPV6_LAN_TO_LOCAL default-action drop
+set firewall ipv6-name IPV6_LAN_TO_LOCAL description 'Check packets going from LAN to Local'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 description 'Accept ESTABLISHED,RELATED packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 state established enable
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 state related enable
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 20 action drop
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 20 description 'Drop INVALID packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 20 state invalid enable
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 description 'Accept ICMPv6 Router Solicitation packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 icmpv6 type 133/0
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 protocol icmpv6
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 source group ipv6-address-group IPV6_LAN_SLAAC_SOURCES
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 action drop
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 description 'Drop packets with spoofed source addresses'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 source group ipv6-address-group IPV6_INVALID_LAN_SOURCES
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept TCP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 destination group port-group DNS_PORT
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol tcp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol udp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 description 'Accept management via HTTPS'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 destination group port-group MANAGEMENT_HTTPS_PORT
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 protocol tcp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 description 'Accept management via SSH'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 destination group port-group MANAGEMENT_SSH_PORT
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 protocol tcp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 description 'Accept ICMPv6 Echo Request packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 icmpv6 type 128/0
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 protocol icmpv6
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 description 'Accept ICMPv6 Neighbor Solicitation packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 icmpv6 type 135/0
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 protocol icmpv6
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 action accept
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 description 'Accept ICMPv6 Neighbor Advertisement packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 icmpv6 type 136/0
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 protocol icmpv6
 set firewall ipv6-name IPV6_WAN_TO_LAN default-action drop
 set firewall ipv6-name IPV6_WAN_TO_LAN description 'Check packets going from WAN to LAN'
 set firewall ipv6-name IPV6_WAN_TO_LAN rule 10 action accept
@@ -395,61 +450,6 @@ set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 action accept
 set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 description 'Accept ICMPv6 Neighbor Advertisement packets'
 set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 icmpv6 type 136/0
 set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 protocol icmpv6
-set firewall ipv6-name IPV6_LAN_TO_LOCAL default-action drop
-set firewall ipv6-name IPV6_LAN_TO_LOCAL description 'Check packets going from LAN to Local'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 description 'Accept ESTABLISHED,RELATED packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 state established enable
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 10 state related enable
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 20 action drop
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 20 description 'Drop INVALID packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 20 state invalid enable
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 description 'Accept ICMPv6 Router Solicitation packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 icmpv6 type 133/0
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 protocol icmpv6
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 30 source group ipv6-address-group IPV6_LAN_SLAAC_SOURCES
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 action drop
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 description 'Drop packets with spoofed source addresses'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 source group ipv6-address-group IPV6_INVALID_LAN_SOURCES
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept TCP DNS packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol tcp
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol udp
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 description 'Accept management via HTTPS'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 destination group port-group MANAGEMENT_HTTPS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 protocol tcp
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 description 'Accept management via SSH'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 destination group port-group MANAGEMENT_SSH_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 80 protocol tcp
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 description 'Accept ICMPv6 Echo Request packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 icmpv6 type 128/0
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 90 protocol icmpv6
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 description 'Accept ICMPv6 Neighbor Solicitation packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 icmpv6 type 135/0
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 100 protocol icmpv6
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 description 'Accept ICMPv6 Neighbor Advertisement packets'
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 icmpv6 type 136/0
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 110 protocol icmpv6
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC default-action accept
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC description 'Allow all traffic'
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 action accept
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 description 'Accept ESTABLISHED,NEW,RELATED packets'
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 state established enable
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 state new enable
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 state related enable
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 20 action drop
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 20 description 'Drop INVALID packets'
-set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 20 state invalid enable
 ```
 
 ### IPv4 firewall zone policies for LAN, Local and Modem

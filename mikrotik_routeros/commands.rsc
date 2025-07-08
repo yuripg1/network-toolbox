@@ -88,15 +88,12 @@
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-lan-dhcp-sources
 /ip firewall address-list add address=0.0.0.0/32 list=ipv4-lan-dhcp-sources
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-lan-sources
-/ip firewall filter add action=accept chain=ipv4-wan-to-lan comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop INVALID packets" connection-state=invalid
-/ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop packets with spoofed source addresses" src-address-list=ipv4-invalid-wan-sources
-/ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop remaining packets"
-/ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop INVALID packets" connection-state=invalid
-/ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv4-invalid-wan-sources
-/ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept ICMP Echo Request packets" icmp-options=8:0 protocol=icmp
-/ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop remaining packets"
+/ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept ESTABLISHED,NEW,RELATED packets" connection-state=established,related,new
+/ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
+/ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
+/ip firewall filter add action=accept chain=ipv4-allow-return-traffic comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop INVALID packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept DHCP packets" dst-port=67 protocol=udp src-address-list=ipv4-lan-dhcp-sources
@@ -112,12 +109,15 @@
 /ip firewall filter add action=drop chain=ipv4-lan-to-modem comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-lan-to-modem comment="Accept management via HTTP" dst-port=45631 protocol=tcp
 /ip firewall filter add action=drop chain=ipv4-lan-to-modem comment="Drop remaining packets"
-/ip firewall filter add action=accept chain=ipv4-allow-return-traffic comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop INVALID packets" connection-state=invalid
-/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop remaining packets"
-/ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept ESTABLISHED,NEW,RELATED packets" connection-state=established,related,new
-/ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
-/ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
+/ip firewall filter add action=accept chain=ipv4-wan-to-lan comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop INVALID packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop packets with spoofed source addresses" src-address-list=ipv4-invalid-wan-sources
+/ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop remaining packets"
+/ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop INVALID packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv4-invalid-wan-sources
+/ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept ICMP Echo Request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop remaining packets"
 
 # IPv6 firewall rule sets
 /ipv6 firewall address-list add address=::1/128 list=ipv6-invalid-wan-sources
@@ -126,6 +126,22 @@
 /ipv6 firewall address-list add address=fe80::/64 list=ipv6-lan-slaac-sources
 /ipv6 firewall address-list add address=::/128 list=ipv6-lan-slaac-sources
 /ipv6 firewall address-list add address=fe80::/64 list=ipv6-lan-sources
+/ipv6 firewall filter add action=accept chain=ipv6-allow-all-traffic comment="Accept ESTABLISHED,NEW,RELATED packets" connection-state=established,related,new
+/ipv6 firewall filter add action=drop chain=ipv6-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
+/ipv6 firewall filter add action=accept chain=ipv6-allow-all-traffic comment="Accept remaining packets"
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
+/ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop INVALID packets" connection-state=invalid
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Router Solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-lan-slaac-sources
+/ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv6-lan-sources
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Neighbor Solicitation packets" icmp-options=135:0 protocol=icmpv6
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Neighbor Advertisement packets" icmp-options=136:0 protocol=icmpv6
+/ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-lan comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-lan comment="Drop INVALID packets" connection-state=invalid
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-lan comment="Drop packets with spoofed source addresses" src-address-list=ipv6-invalid-wan-sources
@@ -140,22 +156,6 @@
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Neighbor Solicitation packets" icmp-options=135:0 protocol=icmpv6
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Neighbor Advertisement packets" icmp-options=136:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop remaining packets"
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop INVALID packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Router Solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-lan-slaac-sources
-/ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv6-lan-sources
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Neighbor Solicitation packets" icmp-options=135:0 protocol=icmpv6
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Neighbor Advertisement packets" icmp-options=136:0 protocol=icmpv6
-/ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop remaining packets"
-/ipv6 firewall filter add action=accept chain=ipv6-allow-all-traffic comment="Accept ESTABLISHED,NEW,RELATED packets" connection-state=established,related,new
-/ipv6 firewall filter add action=drop chain=ipv6-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-allow-all-traffic comment="Accept remaining packets"
 
 # IPv4 firewall zone policies for LAN, Local, Modem and WAN
 /interface list add comment="LAN" name=lan-interface
