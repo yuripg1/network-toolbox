@@ -196,8 +196,8 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept DHCP packets" dst-port=67 protocol=udp src-address-list=ipv4-lan-dhcp-sources
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv4-lan-sources
-/ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
@@ -234,8 +234,8 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Router Solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-lan-slaac-sources
 /ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv6-lan-sources
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
@@ -603,8 +603,8 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept DHCP packets" dst-port=67 protocol=udp src-address-list=ipv4-lan-dhcp-sources
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv4-lan-sources
-/ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
@@ -689,8 +689,8 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Router Solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-lan-slaac-sources
 /ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv6-lan-sources
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
@@ -771,7 +771,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 0   192.168.167.1/32    192.168.167.1  lo
 1   192.168.103.254/24  192.168.103.0  bridge-vlan-10-lan
 2   192.168.237.2/30    192.168.237.0  eth1-modem
-3 D 201.42.158.35/32    189.97.102.55  eth1-vlan-600-pppoe-client-wan
+3 D 152.254.252.240/32  189.97.102.55  eth1-vlan-600-pppoe-client-wan
 ```
 
 ### IPv4 routes
@@ -796,15 +796,15 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                       ADVERTISE  VALID
 0  G fd45:1e52:2abe:4c85::1/128                                        lo                              no
-1  G 2804:7f4:ca01:15de:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-vlan-10-lan              yes
+1  G 2804:7f4:ca01:1bde:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-vlan-10-lan              yes
 2 D  ::1/128                                                           lo                              no
 3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge                          no
 4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-vlan-1                   no
 5 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-vlan-10-lan              no
 6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-modem                      no
 7 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-vlan-600                   no
-8 DL fe80::82fd:1307:0:f/64                                            eth1-vlan-600-pppoe-client-wan  no
-9 DG 2804:7f4:c02f:c82f:82fd:1307:0:f/64                               eth1-vlan-600-pppoe-client-wan  no         2d23h57m13s
+8 DL fe80::8922:ea71:0:f/64                                            eth1-vlan-600-pppoe-client-wan  no
+9 DG 2804:7f4:c02f:d233:8922:ea71:0:f/64                               eth1-vlan-600-pppoe-client-wan  no         2d23h57m12s
 ```
 
 ### IPv6 routes
@@ -817,9 +817,9 @@ Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
 DAv ::/0                        eth1-vlan-600-pppoe-client-wan                            main                  2
 D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-vlan-600-pppoe-client-wan  main                  3
 DAc ::1/128                     lo                                                        main                  0
-DAc 2804:7f4:c02f:c82f::/64     eth1-vlan-600-pppoe-client-wan                            main                  0
-D d 2804:7f4:ca01:15de::/64                                                               main                  2
-DAc 2804:7f4:ca01:15de::/64     bridge-vlan-10-lan                                        main                  0
+DAc 2804:7f4:c02f:d233::/64     eth1-vlan-600-pppoe-client-wan                            main                  0
+D d 2804:7f4:ca01:1bde::/64                                                               main                  2
+DAc 2804:7f4:ca01:1bde::/64     bridge-vlan-10-lan                                        main                  0
 DAc fd45:1e52:2abe:4c85::1/128  lo                                                        main                  0
 DAc fe80::/64                   bridge                                                    main                  0
 DAc fe80::/64                   bridge-vlan-1                                             main                  0

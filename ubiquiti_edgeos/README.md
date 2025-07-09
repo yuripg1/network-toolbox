@@ -270,13 +270,13 @@ set firewall name IPV4_LAN_TO_LOCAL rule 50 description 'Accept DHCP packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 50 destination group port-group DHCP_PORT
 set firewall name IPV4_LAN_TO_LOCAL rule 50 protocol udp
 set firewall name IPV4_LAN_TO_LOCAL rule 60 action accept
-set firewall name IPV4_LAN_TO_LOCAL rule 60 description 'Accept TCP DNS packets'
+set firewall name IPV4_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall name IPV4_LAN_TO_LOCAL rule 60 protocol tcp
+set firewall name IPV4_LAN_TO_LOCAL rule 60 protocol udp
 set firewall name IPV4_LAN_TO_LOCAL rule 70 action accept
-set firewall name IPV4_LAN_TO_LOCAL rule 70 description 'Accept UDP DNS packets'
+set firewall name IPV4_LAN_TO_LOCAL rule 70 description 'Accept TCP DNS packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 70 destination group port-group DNS_PORT
-set firewall name IPV4_LAN_TO_LOCAL rule 70 protocol udp
+set firewall name IPV4_LAN_TO_LOCAL rule 70 protocol tcp
 set firewall name IPV4_LAN_TO_LOCAL rule 80 action accept
 set firewall name IPV4_LAN_TO_LOCAL rule 80 description 'Accept management via HTTPS'
 set firewall name IPV4_LAN_TO_LOCAL rule 80 destination group port-group MANAGEMENT_HTTPS_PORT
@@ -373,13 +373,13 @@ set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 action drop
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 description 'Drop packets with spoofed source addresses'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 source group ipv6-address-group IPV6_INVALID_LAN_SOURCES
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept TCP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept UDP DNS packets'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol tcp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol udp
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept TCP DNS packets'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol udp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol tcp
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 action accept
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 description 'Accept management via HTTPS'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 destination group port-group MANAGEMENT_HTTPS_PORT
@@ -771,13 +771,13 @@ set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 action drop
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 description 'Drop packets with spoofed source addresses'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 source group ipv6-address-group IPV6_INVALID_LAN_SOURCES
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept TCP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept UDP DNS packets'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol tcp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol udp
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept TCP DNS packets'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol udp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol tcp
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 action accept
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 description 'Accept management via HTTPS'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 destination group port-group MANAGEMENT_HTTPS_PORT
@@ -892,13 +892,13 @@ set firewall name IPV4_LAN_TO_LOCAL rule 50 description 'Accept DHCP packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 50 destination group port-group DHCP_PORT
 set firewall name IPV4_LAN_TO_LOCAL rule 50 protocol udp
 set firewall name IPV4_LAN_TO_LOCAL rule 60 action accept
-set firewall name IPV4_LAN_TO_LOCAL rule 60 description 'Accept TCP DNS packets'
+set firewall name IPV4_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall name IPV4_LAN_TO_LOCAL rule 60 protocol tcp
+set firewall name IPV4_LAN_TO_LOCAL rule 60 protocol udp
 set firewall name IPV4_LAN_TO_LOCAL rule 70 action accept
-set firewall name IPV4_LAN_TO_LOCAL rule 70 description 'Accept UDP DNS packets'
+set firewall name IPV4_LAN_TO_LOCAL rule 70 description 'Accept TCP DNS packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 70 destination group port-group DNS_PORT
-set firewall name IPV4_LAN_TO_LOCAL rule 70 protocol udp
+set firewall name IPV4_LAN_TO_LOCAL rule 70 protocol tcp
 set firewall name IPV4_LAN_TO_LOCAL rule 80 action accept
 set firewall name IPV4_LAN_TO_LOCAL rule 80 description 'Accept management via HTTPS'
 set firewall name IPV4_LAN_TO_LOCAL rule 80 destination group port-group MANAGEMENT_HTTPS_PORT
@@ -1155,20 +1155,19 @@ $ sudo ip -brief -4 address
 lo                 UNKNOWN        127.0.0.1/8 192.168.167.1/32
 eth0@itf0          UP             192.168.237.2/30
 switch0.10@switch0 UP             192.168.103.254/24
-pppoe0             UNKNOWN        201.42.158.27 peer 189.97.102.55/32
+pppoe0             UNKNOWN        191.17.99.183 peer 189.97.102.55/32
 ```
 
 ### IPv4 routes
 
 ```
 $ sudo ip -4 route
-0.0.0.0 dev pppoe0 proto kernel scope link
 default dev pppoe0 scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 201.42.158.27
+189.97.102.55 dev pppoe0 proto kernel scope link src 191.17.99.183
+191.17.99.183 dev pppoe0 proto kernel scope link
 192.168.103.0/24 dev switch0.10 proto kernel scope link src 192.168.103.254
 192.168.167.1 dev lo proto kernel scope link
 192.168.237.0/30 dev eth0 proto kernel scope link src 192.168.237.2
-201.42.158.27 dev pppoe0 proto kernel scope link
 ```
 
 ### IPv6 addresses
@@ -1183,18 +1182,18 @@ eth2@itf0          UP             fe80::d221:f9ff:fed5:a39/64
 eth3@itf0          UP             fe80::d221:f9ff:fe0e:6eda/64
 eth4@itf0          UP             fe80::d221:f9ff:fe76:b733/64
 switch0@itf0       UP             fe80::d221:f9ff:fee1:353/64
-switch0.10@switch0 UP             2804:7f4:ca01:15ac:6e86:3d5b:dc42:add2/64 fe80::d221:f9ff:fee1:353/64
+switch0.10@switch0 UP             2804:7f4:ca01:1bc4:6e86:3d5b:dc42:add2/64 fe80::d221:f9ff:fee1:353/64
 switch0.1@switch0  UP             fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0      UP             fe80::d221:f9ff:fe90:67bd/64
-pppoe0             UNKNOWN        2804:7f4:c02f:c7e7:503c:8d10:6852:5626/64 fe80::503c:8d10:6852:5626/10
+pppoe0             UNKNOWN        2804:7f4:c02f:d20e:7021:a542:e26d:b7a9/64 fe80::7021:a542:e26d:b7a9/10
 ```
 
 ### IPv6 routes
 
 ```
 $ sudo ip -6 route
-2804:7f4:c02f:c7e7::/64 dev pppoe0 proto kernel metric 256 expires 259010sec pref medium
-2804:7f4:ca01:15ac::/64 dev switch0.10 proto kernel metric 256 pref medium
+2804:7f4:c02f:d20e::/64 dev pppoe0 proto kernel metric 256 expires 258990sec pref medium
+2804:7f4:ca01:1bc4::/64 dev switch0.10 proto kernel metric 256 pref medium
 unreachable fd45:1e52:2abe:4c85::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
@@ -1208,7 +1207,7 @@ fe80::/64 dev switch0.1 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1610sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1590sec pref medium
 ```
 
 ## Resources

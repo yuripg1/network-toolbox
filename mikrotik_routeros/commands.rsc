@@ -98,8 +98,8 @@
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept DHCP packets" dst-port=67 protocol=udp src-address-list=ipv4-lan-dhcp-sources
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv4-lan-sources
-/ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
@@ -133,8 +133,8 @@
 /ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept ICMPv6 Router Solicitation packets" icmp-options=133:0 protocol=icmpv6 src-address-list=ipv6-lan-slaac-sources
 /ipv6 firewall filter add action=drop chain=ipv6-lan-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv6-lan-sources
-/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept UDP DNS packets" dst-port=53 protocol=udp
+/ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept TCP DNS packets" dst-port=53 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
 /ipv6 firewall filter add action=accept chain=ipv6-lan-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp

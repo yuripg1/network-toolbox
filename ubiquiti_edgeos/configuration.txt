@@ -46,13 +46,13 @@ set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 action drop
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 description 'Drop packets with spoofed source addresses'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 40 source group ipv6-address-group IPV6_INVALID_LAN_SOURCES
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept TCP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 description 'Accept UDP DNS packets'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol tcp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 50 protocol udp
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 action accept
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 description 'Accept TCP DNS packets'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol udp
+set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 60 protocol tcp
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 action accept
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 description 'Accept management via HTTPS'
 set firewall ipv6-name IPV6_LAN_TO_LOCAL rule 70 destination group port-group MANAGEMENT_HTTPS_PORT
@@ -167,13 +167,13 @@ set firewall name IPV4_LAN_TO_LOCAL rule 50 description 'Accept DHCP packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 50 destination group port-group DHCP_PORT
 set firewall name IPV4_LAN_TO_LOCAL rule 50 protocol udp
 set firewall name IPV4_LAN_TO_LOCAL rule 60 action accept
-set firewall name IPV4_LAN_TO_LOCAL rule 60 description 'Accept TCP DNS packets'
+set firewall name IPV4_LAN_TO_LOCAL rule 60 description 'Accept UDP DNS packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 60 destination group port-group DNS_PORT
-set firewall name IPV4_LAN_TO_LOCAL rule 60 protocol tcp
+set firewall name IPV4_LAN_TO_LOCAL rule 60 protocol udp
 set firewall name IPV4_LAN_TO_LOCAL rule 70 action accept
-set firewall name IPV4_LAN_TO_LOCAL rule 70 description 'Accept UDP DNS packets'
+set firewall name IPV4_LAN_TO_LOCAL rule 70 description 'Accept TCP DNS packets'
 set firewall name IPV4_LAN_TO_LOCAL rule 70 destination group port-group DNS_PORT
-set firewall name IPV4_LAN_TO_LOCAL rule 70 protocol udp
+set firewall name IPV4_LAN_TO_LOCAL rule 70 protocol tcp
 set firewall name IPV4_LAN_TO_LOCAL rule 80 action accept
 set firewall name IPV4_LAN_TO_LOCAL rule 80 description 'Accept management via HTTPS'
 set firewall name IPV4_LAN_TO_LOCAL rule 80 destination group port-group MANAGEMENT_HTTPS_PORT
