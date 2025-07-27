@@ -5,7 +5,7 @@ distinguished_name=dn
 req_extensions=req_ext
 
 [dn]
-CN=home-router.lan
+CN=router.internal
 
 [req_ext]
 basicConstraints=CA:FALSE
@@ -22,9 +22,9 @@ subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid:always
 
 [alt_names]
-DNS.1=home-router.lan
-DNS.2=ipv4.home-router.lan
-DNS.3=ipv6.home-router.lan
+DNS.1=router.internal
+DNS.2=ipv4.router.internal
+DNS.3=ipv6.router.internal
 IP.1=192.168.167.1
 IP.2=fd45:1e52:2abe:4c85::1
 IP.3=192.168.103.254

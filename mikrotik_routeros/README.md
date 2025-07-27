@@ -2,7 +2,7 @@
 
 ### Protocols and ports
 
-* HTTPS: TCP/18856 (**[https://home-router.lan:18856/](https://home-router.lan:18856/)**)
+* HTTPS: TCP/18856 (**[https://router.internal:18856/](https://router.internal:18856/)**)
 * SSH: TCP/36518
 * WinBox: TCP/24639
 
@@ -109,7 +109,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 ### DNS configuration
 
 ```
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
 ```
 
 ### IPv4 kernel configuration
@@ -158,22 +158,22 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 ```
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=high
 /ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-vlan-10-lan no-dad=no
 ```
 
 ### IPv4 static DNS configuration
 
 ```
-/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A
 ```
 
 ### IPv6 static DNS configuration
 
 ```
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=router.internal ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.router.internal ttl=5m type=AAAA
 ```
 
 ### IPv4 firewall rule sets
@@ -190,7 +190,6 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
 /ip firewall filter add action=accept chain=ipv4-allow-return-traffic comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
@@ -250,7 +249,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-lan comment="Drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop INVALID packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources
+/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources src-port=547
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Router Advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-sources
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv6-invalid-wan-sources
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
@@ -356,7 +355,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 ```
 
-### IPv4 DNAT redirecting all DNS queries to the router
+### IPv4 DNAT to redirect all DNS queries
 
 ```
 /ip firewall address-list add address=192.168.167.1/32 list=ipv4-dns-address
@@ -364,7 +363,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
 ```
 
-### IPv6 DNAT redirecting all DNS queries to the router
+### IPv6 DNAT to redirect all DNS queries
 
 ```
 /ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
@@ -372,24 +371,25 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
 ```
 
-### IPv4 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
-
-```
-/ip firewall address-list add address=192.168.103.0/24 list=ipv4-wan-nat-sources
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources src-port=123 to-ports=49152-65535
-/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
-```
-
-### IPv6 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
-
-```
-/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
-```
-
 ### IPv4 SNAT of private addresses for internet access
 
 ```
+/ip firewall address-list add address=192.168.103.0/24 list=ipv4-wan-nat-sources
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=tcp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-wan-nat-sources
+```
+
+### IPv4 SNAT to bypass ISP blocking of incoming UDP packets on port 123
+
+```
+/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
+```
+
+### IPv6 SNAT to bypass ISP blocking of incoming UDP packets on port 123
+
+```
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
 ```
 
 ### IPv4 SNAT of private addresses for modem access
@@ -505,7 +505,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 ### Upload of additional files
 
 ```
-$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@ipv6.home-router.lan:/
+$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@192.168.103.254:/
 ```
 
 ### Configuration of management via HTTPS
@@ -577,11 +577,11 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ip address add address=192.168.237.2/30 interface=eth1-modem network=192.168.237.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
 /ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
-/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=router.internal ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.router.internal ttl=5m type=AAAA
 /ip firewall address-list add address=127.0.0.0/8 list=ipv4-invalid-wan-sources
 /ip firewall address-list add address=192.168.167.1/32 list=ipv4-invalid-wan-sources
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-invalid-wan-sources
@@ -597,7 +597,6 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
 /ip firewall filter add action=accept chain=ipv4-allow-return-traffic comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
@@ -652,9 +651,10 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources src-port=123 to-ports=49152-65535
-/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=tcp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-wan-nat-sources
+/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
 /ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address src-address-list=ipv4-modem-nat-sources to-addresses=192.168.237.2
 /ip firewall service-port set ftp disabled=yes
 /ip firewall service-port set h323 disabled=yes
@@ -705,7 +705,7 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-lan comment="Drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop INVALID packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources
+/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources src-port=547
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Router Advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-sources
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv6-invalid-wan-sources
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
@@ -737,9 +737,9 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
-/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=high
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
@@ -771,7 +771,7 @@ Columns: ADDRESS, NETWORK, INTERFACE
 0   192.168.167.1/32    192.168.167.1  lo
 1   192.168.103.254/24  192.168.103.0  bridge-vlan-10-lan
 2   192.168.237.2/30    192.168.237.0  eth1-modem
-3 D 152.254.252.240/32  189.97.102.55  eth1-vlan-600-pppoe-client-wan
+3 D 201.1.26.114/32     189.97.102.55  eth1-vlan-600-pppoe-client-wan
 ```
 
 ### IPv4 routes
@@ -796,15 +796,15 @@ Flags: D - DYNAMIC; G - GLOBAL, L - LINK-LOCAL
 Columns: ADDRESS, FROM-POOL, INTERFACE, ADVERTISE, VALID
 #    ADDRESS                                    FROM-POOL              INTERFACE                       ADVERTISE  VALID
 0  G fd45:1e52:2abe:4c85::1/128                                        lo                              no
-1  G 2804:7f4:ca01:1bde:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-vlan-10-lan              yes
+1  G 2804:7f4:ca01:6254:6e86:3d5b:dc42:add2/64  ipv6-dhcp-client-pool  bridge-vlan-10-lan              yes
 2 D  ::1/128                                                           lo                              no
 3 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge                          no
-4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-vlan-1                   no
-5 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-vlan-10-lan              no
-6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-modem                      no
-7 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-vlan-600                   no
-8 DL fe80::8922:ea71:0:f/64                                            eth1-vlan-600-pppoe-client-wan  no
-9 DG 2804:7f4:c02f:d233:8922:ea71:0:f/64                               eth1-vlan-600-pppoe-client-wan  no         2d23h57m12s
+4 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-vlan-10-lan              no
+5 DL fe80::4aa9:8aff:fe2e:2084/64                                      bridge-vlan-1                   no
+6 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-vlan-600                   no
+7 DL fe80::4aa9:8aff:fe41:3e50/64                                      eth1-modem                      no
+8 DL fe80::8bb6:cece:0:f/64                                            eth1-vlan-600-pppoe-client-wan  no
+9 DG 2804:7f4:c02f:3907:8bb6:cece:0:f/64                               eth1-vlan-600-pppoe-client-wan  no         2d23h57m48s
 ```
 
 ### IPv6 routes
@@ -817,15 +817,15 @@ Columns: DST-ADDRESS, GATEWAY, ROUTING-TABLE, DISTANCE
 DAv ::/0                        eth1-vlan-600-pppoe-client-wan                            main                  2
 D d ::/0                        fe80::a21c:8dff:fef1:1934%eth1-vlan-600-pppoe-client-wan  main                  3
 DAc ::1/128                     lo                                                        main                  0
-DAc 2804:7f4:c02f:d233::/64     eth1-vlan-600-pppoe-client-wan                            main                  0
-D d 2804:7f4:ca01:1bde::/64                                                               main                  2
-DAc 2804:7f4:ca01:1bde::/64     bridge-vlan-10-lan                                        main                  0
+DAc 2804:7f4:c02f:3907::/64     eth1-vlan-600-pppoe-client-wan                            main                  0
+D d 2804:7f4:ca01:6254::/64                                                               main                  2
+DAc 2804:7f4:ca01:6254::/64     bridge-vlan-10-lan                                        main                  0
 DAc fd45:1e52:2abe:4c85::1/128  lo                                                        main                  0
 DAc fe80::/64                   bridge                                                    main                  0
-DAc fe80::/64                   bridge-vlan-1                                             main                  0
 DAc fe80::/64                   bridge-vlan-10-lan                                        main                  0
-DAc fe80::/64                   eth1-modem                                                main                  0
+DAc fe80::/64                   bridge-vlan-1                                             main                  0
 DAc fe80::/64                   eth1-vlan-600                                             main                  0
+DAc fe80::/64                   eth1-modem                                                main                  0
 DAc fe80::/64                   eth1-vlan-600-pppoe-client-wan                            main                  0
 ```
 

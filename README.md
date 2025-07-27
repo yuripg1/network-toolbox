@@ -30,6 +30,97 @@
 
 ![ICMP Test IPv6 - Output - Vivo - 2](./img/icmp_test_ipv6_output_vivo_2.png)
 
+## Ports blocked by the ISP
+
+### IPv4
+
+```
+PORT     STATE    SERVICE        REASON
+19/tcp   filtered chargen        no-response
+21/tcp   filtered ftp            no-response
+23/tcp   filtered telnet         no-response
+25/tcp   filtered smtp           no-response
+53/tcp   filtered domain         no-response
+80/tcp   filtered http           no-response
+81/tcp   filtered hosts2-ns      no-response
+135/tcp  filtered msrpc          no-response
+139/tcp  filtered netbios-ssn    no-response
+443/tcp  filtered https          no-response
+445/tcp  filtered microsoft-ds   no-response
+593/tcp  filtered http-rpc-epmap no-response
+1080/tcp filtered socks          no-response
+1081/tcp filtered pvuniwien      no-response
+3128/tcp filtered squid-http     no-response
+4444/tcp filtered krb524         no-response
+4480/tcp filtered proxy-plus     no-response
+6588/tcp filtered analogx        no-response
+7547/tcp filtered cwmp           no-response
+8080/tcp filtered http-proxy     no-response
+
+PORT     STATE         SERVICE     REASON
+19/udp   open|filtered chargen     no-response
+53/udp   open|filtered domain      no-response
+69/udp   open|filtered tftp        no-response
+81/udp   open|filtered hosts2-ns   no-response
+123/udp  open|filtered ntp         no-response
+135/udp  open|filtered msrpc       no-response
+137/udp  open|filtered netbios-ns  no-response
+138/udp  open|filtered netbios-dgm no-response
+139/udp  open|filtered netbios-ssn no-response
+319/udp  open|filtered ptp-event   no-response
+320/udp  open|filtered ptp-general no-response
+443/udp  open|filtered https       no-response
+1080/udp open|filtered socks       no-response
+1081/udp open|filtered pvuniwien   no-response
+3128/udp open|filtered ndl-aas     no-response
+4480/udp open|filtered unknown     no-response
+6588/udp open|filtered unknown     no-response
+8080/udp open|filtered http-alt    no-response
+```
+
+### IPv6
+
+```
+PORT     STATE    SERVICE        REASON
+21/tcp   filtered ftp            no-response
+23/tcp   filtered telnet         no-response
+25/tcp   filtered smtp           no-response
+53/tcp   filtered domain         no-response
+80/tcp   filtered http           no-response
+81/tcp   filtered hosts2-ns      no-response
+135/tcp  filtered msrpc          no-response
+139/tcp  filtered netbios-ssn    no-response
+443/tcp  filtered https          no-response
+445/tcp  filtered microsoft-ds   no-response
+593/tcp  filtered http-rpc-epmap no-response
+1080/tcp filtered socks          no-response
+1081/tcp filtered pvuniwien      no-response
+3128/tcp filtered squid-http     no-response
+4444/tcp filtered krb524         no-response
+4480/tcp filtered proxy-plus     no-response
+6588/tcp filtered analogx        no-response
+8080/tcp filtered http-proxy     no-response
+
+PORT     STATE         SERVICE     REASON
+53/udp   open|filtered domain      no-response
+69/udp   open|filtered tftp        no-response
+81/udp   open|filtered hosts2-ns   no-response
+123/udp  open|filtered ntp         no-response
+135/udp  open|filtered msrpc       no-response
+137/udp  open|filtered netbios-ns  no-response
+138/udp  open|filtered netbios-dgm no-response
+139/udp  open|filtered netbios-ssn no-response
+319/udp  open|filtered ptp-event   no-response
+320/udp  open|filtered ptp-general no-response
+443/udp  open|filtered https       no-response
+1080/udp open|filtered socks       no-response
+1081/udp open|filtered pvuniwien   no-response
+3128/udp open|filtered ndl-aas     no-response
+4480/udp open|filtered unknown     no-response
+6588/udp open|filtered unknown     no-response
+8080/udp open|filtered http-alt    no-response
+```
+
 ## Ping
 
 ### IPv4

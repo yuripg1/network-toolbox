@@ -41,7 +41,7 @@
 /interface bridge port add bridge=bridge broadcast-flood=yes comment="eth8 - Bridge - VLAN 10" frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth8 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 
 # DNS configuration
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
 
 # IPv4 kernel configuration
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
@@ -69,16 +69,16 @@
 # IPv6 LAN SLAAC configuration
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=high
 /ipv6 address add address=::6e86:3d5b:dc42:add2/64 advertise=yes auto-link-local=yes from-pool=ipv6-dhcp-client-pool interface=bridge-vlan-10-lan no-dad=no
 
 # IPv4 static DNS configuration
-/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A
 
 # IPv6 static DNS configuration
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=router.internal ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.router.internal ttl=5m type=AAAA
 
 # IPv4 firewall rule sets
 /ip firewall address-list add address=127.0.0.0/8 list=ipv4-invalid-wan-sources
@@ -92,7 +92,6 @@
 /ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
 /ip firewall filter add action=accept chain=ipv4-allow-return-traffic comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
@@ -149,7 +148,7 @@
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-lan comment="Drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop INVALID packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources
+/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources src-port=547
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Router Advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-sources
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv6-invalid-wan-sources
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
@@ -233,26 +232,27 @@
 /ipv6 firewall mangle add action=change-mss chain=forward in-interface-list=wan-interface new-mss=1432 passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 
-# IPv4 DNAT redirecting all DNS queries to the router
+# IPv4 DNAT to redirect all DNS queries
 /ip firewall address-list add address=192.168.167.1/32 list=ipv4-dns-address
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
 
-# IPv6 DNAT redirecting all DNS queries to the router
+# IPv6 DNAT to redirect all DNS queries
 /ipv6 firewall address-list add address=fd45:1e52:2abe:4c85::1/128 list=ipv6-dns-address
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
 
-# IPv4 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
-/ip firewall address-list add address=192.168.103.0/24 list=ipv4-wan-nat-sources
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources src-port=123 to-ports=49152-65535
-/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
-
-# IPv6 SNAT workaround for ISP blocking of incoming NTP packets (UDP/123)
-/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
-
 # IPv4 SNAT of private addresses for internet access
+/ip firewall address-list add address=192.168.103.0/24 list=ipv4-wan-nat-sources
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=tcp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-wan-nat-sources
+
+# IPv4 SNAT to bypass ISP blocking of incoming UDP packets on port 123
+/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
+
+# IPv6 SNAT to bypass ISP blocking of incoming UDP packets on port 123
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
 
 # IPv4 SNAT of private addresses for modem access
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-modem-nat-sources
@@ -326,7 +326,7 @@
 /queue interface set sfpplus1 queue=only-hardware-queue
 
 # Upload of additional files
-# $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@ipv6.home-router.lan:/
+# $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@192.168.103.254:/
 
 # Configuration of management via HTTPS
 /certificate import file-name=certificate_authority.crt name=certificate_authority trusted=yes

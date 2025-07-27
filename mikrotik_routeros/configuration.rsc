@@ -55,11 +55,11 @@
 /ip address add address=192.168.237.2/30 interface=eth1-modem network=192.168.237.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
 /ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-concurrent-queries=1000 max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
-/ip dns static add address=192.168.167.1 name=home-router.lan ttl=5m type=A
-/ip dns static add address=192.168.167.1 name=ipv4.home-router.lan ttl=5m type=A
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=home-router.lan ttl=5m type=AAAA
-/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.home-router.lan ttl=5m type=AAAA
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
+/ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=router.internal ttl=5m type=AAAA
+/ip dns static add address=fd45:1e52:2abe:4c85::1 name=ipv6.router.internal ttl=5m type=AAAA
 /ip firewall address-list add address=127.0.0.0/8 list=ipv4-invalid-wan-sources
 /ip firewall address-list add address=192.168.167.1/32 list=ipv4-invalid-wan-sources
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-invalid-wan-sources
@@ -75,7 +75,6 @@
 /ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
 /ip firewall filter add action=accept chain=ipv4-allow-return-traffic comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
-/ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-allow-return-traffic comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-lan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-lan-to-local comment="Drop INVALID packets" connection-state=invalid
@@ -130,9 +129,10 @@
 /ip firewall mangle add action=change-mss chain=postrouting new-mss=1452 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1453-65535
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=udp
 /ip firewall nat add action=redirect chain=dstnat dst-address-list=!ipv4-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources src-port=123 to-ports=49152-65535
-/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=tcp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-wan-nat-sources
+/ip firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
 /ip firewall nat add action=src-nat chain=srcnat dst-address-list=ipv4-modem-address src-address-list=ipv4-modem-nat-sources to-addresses=192.168.237.2
 /ip firewall service-port set ftp disabled=yes
 /ip firewall service-port set h323 disabled=yes
@@ -183,7 +183,7 @@
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-lan comment="Drop remaining packets"
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop INVALID packets" connection-state=invalid
-/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources
+/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources src-port=547
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Router Advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-sources
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv6-invalid-wan-sources
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
@@ -215,9 +215,9 @@
 /ipv6 firewall mangle add action=change-mss chain=postrouting new-mss=1432 out-interface-list=wan-interface passthrough=yes protocol=tcp tcp-flags=syn tcp-mss=1433-65535
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=udp
 /ipv6 firewall nat add action=redirect chain=dstnat dst-address-list=!ipv6-dns-address dst-port=53 in-interface-list=lan-interface protocol=tcp
-/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=49152-65535
+/ipv6 firewall nat add action=src-nat chain=srcnat out-interface-list=wan-interface protocol=udp src-port=123 to-ports=8081-65535
 /ipv6 nd set [ find default=yes ] disabled=yes
-/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=medium
+/ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=high
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
 /system identity set name=Home-Router
