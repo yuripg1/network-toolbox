@@ -27,7 +27,7 @@ set service ssh port 36518
 set service ssh protocol-version v2
 
 # Host name configuration
-set system host-name Home-Router
+set system host-name Router
 
 # Loopback interface configuration
 set interfaces loopback lo description 'Loopback (Local)'

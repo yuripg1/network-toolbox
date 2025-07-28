@@ -65,7 +65,7 @@ set service ssh protocol-version v2
 ### Host name configuration
 
 ```
-set system host-name Home-Router
+set system host-name Router
 ```
 
 ### Loopback interface configuration
@@ -1072,7 +1072,7 @@ set system conntrack timeout tcp time-wait 120
 set system conntrack timeout udp other 30
 set system conntrack timeout udp stream 180
 set system crash-handler send-crash-report false
-set system host-name Home-Router
+set system host-name Router
 set system login user username920169077 authentication plaintext-password 'password767865354'
 set system login user username920169077 level admin
 set system ntp server time1.google.com

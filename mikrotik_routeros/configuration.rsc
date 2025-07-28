@@ -220,7 +220,7 @@
 /ipv6 nd add advertise-dns=yes advertise-mac-address=yes dns=fd45:1e52:2abe:4c85::1 hop-limit=64 interface=bridge-vlan-10-lan managed-address-configuration=no mtu=1492 other-configuration=no ra-interval=3m20s-10m ra-lifetime=2h30m ra-preference=high
 /ipv6 nd prefix default set autonomous=yes preferred-lifetime=16h valid-lifetime=1d
 /system clock set time-zone-autodetect=no time-zone-name=America/Sao_Paulo
-/system identity set name=Home-Router
+/system identity set name=Router
 /system ntp client set enabled=yes mode=unicast
 /system ntp client servers add address=time1.google.com iburst=yes
 /system ntp client servers add address=time2.google.com iburst=yes

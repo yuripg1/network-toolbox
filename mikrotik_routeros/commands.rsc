@@ -9,7 +9,7 @@
 /ip ssh set ciphers=aes-gcm host-key-type=ed25519 strong-crypto=yes
 
 # Host name configuration
-/system identity set name=Home-Router
+/system identity set name=Router
 
 # Loopback interface configuration
 /interface set lo comment="Loopback (Local)"
