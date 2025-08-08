@@ -109,7 +109,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 ### DNS configuration
 
 ```
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
 ```
 
 ### IPv4 kernel configuration
@@ -577,7 +577,7 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ip address add address=192.168.237.2/30 interface=eth1-modem network=192.168.237.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
 /ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
 /ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
 /ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A
 /ip dns static add address=fd45:1e52:2abe:4c85::1 name=router.internal ttl=5m type=AAAA
