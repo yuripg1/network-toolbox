@@ -407,7 +407,7 @@ $ sudo ip6tables --match comment --comment IPV6_NAT_1 --table nat --append PRERO
 $ sudo ip6tables --match comment --comment IPV6_NAT_2 --table nat --append PREROUTING --in-interface switch0.10 --match set ! --match-set IPV6_DNS_ADDRESS dst --protocol tcp --match set --match-set DNS_SERVER_PORT_2 dst --jump REDIRECT
 $ sudo ipset create IPV4_WAN_NAT_SOURCES hash:net family inet
 $ sudo ipset add IPV4_WAN_NAT_SOURCES 192.168.103.0/24 -exist
-$ sudo iptables --match comment --comment IPV4_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-65535
+$ sudo iptables --match comment --comment IPV4_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-51004
 $ sudo iptables --match comment --comment IPV4_NAT_4 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol udp --jump MASQUERADE --to-ports 8081-65535
 $ sudo iptables --match comment --comment IPV4_NAT_5 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --jump MASQUERADE
 $ sudo ipset create NTP_CLIENT_PORT bitmap:port range 123-123

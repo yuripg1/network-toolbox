@@ -244,7 +244,7 @@
 
 # IPv4 SNAT of private addresses for internet access
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-wan-nat-sources
-/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=tcp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
+/ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=tcp src-address-list=ipv4-wan-nat-sources to-ports=8081-51004
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface protocol=udp src-address-list=ipv4-wan-nat-sources to-ports=8081-65535
 /ip firewall nat add action=masquerade chain=srcnat out-interface-list=wan-interface src-address-list=ipv4-wan-nat-sources
 

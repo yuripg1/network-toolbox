@@ -86,7 +86,7 @@ add_iptables_rule "ipv6" "IPV6_NAT_2" "nat" "PREROUTING" "--in-interface $LAN_IN
 
 create_ipset "IPV4_WAN_NAT_SOURCES" "hash:net family inet"
 add_ipset_entry "IPV4_WAN_NAT_SOURCES" $IPV4_WAN_NAT_SOURCES
-add_iptables_rule "ipv4" "IPV4_NAT_3" "nat" "POSTROUTING" "--out-interface $WAN_INTERFACE --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-65535"
+add_iptables_rule "ipv4" "IPV4_NAT_3" "nat" "POSTROUTING" "--out-interface $WAN_INTERFACE --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-51004"
 add_iptables_rule "ipv4" "IPV4_NAT_4" "nat" "POSTROUTING" "--out-interface $WAN_INTERFACE --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol udp --jump MASQUERADE --to-ports 8081-65535"
 add_iptables_rule "ipv4" "IPV4_NAT_5" "nat" "POSTROUTING" "--out-interface $WAN_INTERFACE --match set --match-set IPV4_WAN_NAT_SOURCES src --jump MASQUERADE"
 

@@ -472,7 +472,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
 # See scripts/firewall.sh
 # $ sudo ipset create IPV4_WAN_NAT_SOURCES hash:net family inet
 # $ sudo ipset add IPV4_WAN_NAT_SOURCES 192.168.103.0/24 -exist
-# $ sudo iptables --match comment --comment IPV4_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-65535
+# $ sudo iptables --match comment --comment IPV4_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-51004
 # $ sudo iptables --match comment --comment IPV4_NAT_4 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol udp --jump MASQUERADE --to-ports 8081-65535
 # $ sudo iptables --match comment --comment IPV4_NAT_5 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --jump MASQUERADE
 
