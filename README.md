@@ -224,6 +224,7 @@ Idle Latency:     2.52 ms   (jitter: 0.10ms, low: 2.48ms, high: 2.67ms)
 
 ### IPv6 & DNSSEC
 
+* https://internet.nl/
 * https://top.nic.br/connection/
 
 ### IPv6
@@ -232,6 +233,10 @@ Idle Latency:     2.52 ms   (jitter: 0.10ms, low: 2.48ms, high: 2.67ms)
 * https://test-ipv6.com/
 * https://ipv6test.google.com/
 * https://ipv6-test.com/
+
+### DNSSEC
+
+* https://wander.science/projects/dns/dnssec-resolver-test/
 
 ### ICMP
 
