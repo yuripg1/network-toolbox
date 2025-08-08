@@ -41,7 +41,7 @@
 /interface bridge port add bridge=bridge broadcast-flood=yes comment="eth8 - Bridge - VLAN 10" frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth8 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 
 # DNS configuration
-/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1444 servers=2001:4860:4860::8888,2001:4860:4860::8844
+/ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
 
 # IPv4 kernel configuration
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
