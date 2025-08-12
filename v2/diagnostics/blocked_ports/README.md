@@ -83,13 +83,13 @@ This test served to show that the ISP (Vivo) blocks inbound packets to the custo
 
 ## Methodology
 
-The testing methodology required a particular combination of environments:
+The testing methodology required the use of two different environments and the definition of how the blocked ports were going to be assessed.
 
 ### Testing agent
 
 The main piece of software involved in this testing was the **[nmap](https://nmap.org/)** tool running on a remote server with highly dependable computing and networking resources in order to be able to produce reliable results. For this, an EC2 instance in the sa-east-1 region of AWS was used. Having that, then it was only a matter of using **[nmap](https://nmap.org/)** to run port scans covering all TCP and UDP ports over both IPv4 and IPv6.
 
-For increased reliability in the results, the rate at which the ports were scanned was carefully controlled. While the rate of the TCP scans were not of much concern (due to them being replied with TCP RST packets), the UDP scans presented some challenged due to the rate limiting of ICMP and ICMPv6 replies (ICMPv6 more so than ICMP). Alongside that, every port that didn't produce a reply was tested a second time maintaining the same configuration as to confirm its behavior.
+For increased reliability in the results, the rate at which the ports were scanned and the timing tolerances for the replies were carefully controlled. While the rate of the TCP scans were not of much concern (due to them being replied with TCP RST packets), the UDP scans presented some challenges due to the rate limiting of ICMP and ICMPv6 replies (ICMPv6 more so than ICMP). Alongside that, every port that didn't produce a reply was tested a second time maintaining the same configuration as to confirm its behavior.
 
 ### Test target
 
