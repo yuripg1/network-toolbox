@@ -83,7 +83,7 @@ This test served to show that the ISP (Vivo) blocks inbound packets to the custo
 
 ## Methodology
 
-The testing methodology required the use of two different environments and the definition of how the blocked ports were going to be assessed.
+The testing methodology involved the use of two different environments and the definition of how the blocked ports were going to be assessed.
 
 ### Testing agent
 
