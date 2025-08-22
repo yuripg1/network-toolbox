@@ -89,7 +89,7 @@ It was possible to discover allowed NTP servers through the scenarios that used 
 
 ## Level of confidence
 
-The essence of the test only required the evaluation of NTP request scenarios using source port 123. But in order to strengthen the confidence in the obtained results, additional tests we done, including tests for reachability (using ping), different NTP versions and source ports other than 123.
+The essence of the test only required the evaluation of NTP request scenarios using source port 123. But in order to strengthen the confidence in the obtained results, additional tests were done, including tests for reachability (using ping), different NTP versions and source ports other than 123.
 
 In the end, considering the tests done by the script and the proper configuration of the infrastructure, the results were deemed representative of the reality without any known oversights that could have introduced imprecisions.
 

@@ -95,7 +95,7 @@ For increased reliability in the results, the rate at which the ports were scann
 
 The test target was a router with a configured internet access provided by the ISP (Vivo). Besides this, some more careful configurations were required.
 
-First of all, to work in tandem with the **[nmap](https://nmap.org/)** tool, some firewall filtering rules were configured for packets coming from the testing agent. TCP packets were rejected replying with TCP RST packets (ver both IPv4 as well as IPv6) and UDP packets were rejected replying with ICMP Type 3 (Destination Unreachable) Code 3 (Port Unreachable) over IPv4 and ICMPv6 Type 1 (Destination Unreachable) Code 4 (Port Unreachable) over IPv6.
+First of all, to work in tandem with the **[nmap](https://nmap.org/)** tool, some firewall filtering rules were configured for packets coming from the testing agent. TCP packets were rejected replying with TCP RST packets (over both IPv4 as well as IPv6) and UDP packets were rejected replying with ICMP Type 3 (Destination Unreachable) Code 3 (Port Unreachable) over IPv4 and ICMPv6 Type 1 (Destination Unreachable) Code 4 (Port Unreachable) over IPv6.
 
 And as to avoid having the regular outbound traffic of the router interfere with the testing in any fashion, firewall NATting rules were configured to steer all outboud traffic from the router to the internet to use a range of ports outside of the range being tested at the moment. That means that while the ports between 0 and 51007 were being scanned, all outbound traffic from the router used the ports between 51008 and 65535. Following the same logic, while the ports between 51008 and 65535 were being scanned, all outbound traffic from the router used the ports between 8082 and 51003.
 
