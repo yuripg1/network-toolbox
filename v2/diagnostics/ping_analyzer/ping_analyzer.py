@@ -1,5 +1,6 @@
 import argparse
 import csv
+import dataclasses
 import datetime
 import glob
 import os
@@ -10,7 +11,31 @@ min_outage_loss_rate_percentage = float(10)
 min_outage_duration_in_seconds = float(2)
 
 
-def print_outages_csv(outages):
+@dataclasses.dataclass
+class Options:
+    input: str
+
+
+@dataclasses.dataclass
+class Event:
+    id: int
+    timestamp: float
+    destination_address: str
+    is_success: bool
+
+
+@dataclasses.dataclass
+class Outage:
+    loss_rate_percentage: float
+    duration_in_seconds: float
+    id_of_first_failure: int
+    id_of_last_failure: int
+    timestamp_of_first_failure: float
+    timestamp_of_last_failure: float
+    number_of_failures: int
+
+
+def print_outages_csv(outages: list[Outage]) -> None:
     csv_writer = csv.writer(
         sys.stdout, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
     )
@@ -18,90 +43,82 @@ def print_outages_csv(outages):
     for outage in outages:
         csv_writer.writerow(
             [
-                outage["loss_rate_percentage"],
+                f"{outage.loss_rate_percentage:.3f}",
                 datetime.datetime.fromtimestamp(
-                    outage["timestamp_of_first_failure"]
+                    outage.timestamp_of_first_failure
                 ).isoformat(),
                 datetime.datetime.fromtimestamp(
-                    outage["timestamp_of_last_failure"]
+                    outage.timestamp_of_last_failure
                 ).isoformat(),
-                outage["duration_in_seconds"],
+                f"{outage.duration_in_seconds:.3f}",
             ]
         )
 
 
-def create_new_outage(event):
-    return {
-        "loss_rate_percentage": "",
-        "duration_in_seconds": "",
-        "id_of_first_failure": event["id"],
-        "id_of_last_failure": event["id"],
-        "timestamp_of_first_failure": event["timestamp"],
-        "timestamp_of_last_failure": event["timestamp"],
-        "number_of_failures": 1,
-    }
-
-
 def process_current_outage(
-    current_outage,
-    outages,
-    min_outage_loss_rate_percentage,
-    min_outage_duration_in_seconds,
-):
-    outage_loss_rate_percentage = (
-        current_outage["number_of_failures"]
-        / (
-            (
-                current_outage["id_of_last_failure"]
-                - current_outage["id_of_first_failure"]
-            )
-            + 1
-        )
+    current_outage: Outage,
+    outages: list[Outage],
+    min_outage_loss_rate_percentage: float,
+    min_outage_duration_in_seconds: float,
+) -> None:
+    current_outage.loss_rate_percentage = (
+        current_outage.number_of_failures
+        / ((current_outage.id_of_last_failure - current_outage.id_of_first_failure) + 1)
     ) * 100
-    outage_duration_in_seconds = (
-        current_outage["timestamp_of_last_failure"]
-        - current_outage["timestamp_of_first_failure"]
+    current_outage.duration_in_seconds = (
+        current_outage.timestamp_of_last_failure
+        - current_outage.timestamp_of_first_failure
     )
-    current_outage["loss_rate_percentage"] = f"{outage_loss_rate_percentage:.3f}"
-    current_outage["duration_in_seconds"] = f"{outage_duration_in_seconds:.3f}"
     if (
-        outage_loss_rate_percentage >= min_outage_loss_rate_percentage
-        and outage_duration_in_seconds >= min_outage_duration_in_seconds
+        current_outage.loss_rate_percentage >= min_outage_loss_rate_percentage
+        and current_outage.duration_in_seconds >= min_outage_duration_in_seconds
     ):
         outages.append(current_outage)
 
 
+def create_new_outage(event: Event) -> Outage:
+    return Outage(
+        loss_rate_percentage=0.0,
+        duration_in_seconds=0.0,
+        id_of_first_failure=event.id,
+        id_of_last_failure=event.id,
+        timestamp_of_first_failure=event.timestamp,
+        timestamp_of_last_failure=event.timestamp,
+        number_of_failures=1,
+    )
+
+
 def get_outages(
-    events,
-    outage_max_success_tolerance_in_seconds,
-    min_outage_loss_rate_percentage,
-    min_outage_duration_in_seconds,
-):
-    outages = []
-    current_outage = None
+    events: list[Event],
+    outage_max_success_tolerance_in_seconds: float,
+    min_outage_loss_rate_percentage: float,
+    min_outage_duration_in_seconds: float,
+) -> list[Outage]:
+    outages: list[Outage] = []
+    current_outage: Outage | None = None
     for event in events:
-        if current_outage is None and event["is_success"] is True:
-            continue
-        elif event["is_success"] is True:
-            if event["timestamp"] > (
-                current_outage["timestamp_of_last_failure"]
-                + outage_max_success_tolerance_in_seconds
-            ):
-                process_current_outage(
-                    current_outage,
-                    outages,
-                    min_outage_loss_rate_percentage,
-                    min_outage_duration_in_seconds,
-                )
-                current_outage = None
-        elif current_outage is None:
-            current_outage = create_new_outage(event)
+        if current_outage is None:
+            if event.is_success is True:
+                continue
+            else:
+                current_outage = create_new_outage(event)
         else:
-            current_outage["id_of_last_failure"] = event["id"]
-            current_outage["timestamp_of_last_failure"] = event["timestamp"]
-            current_outage["number_of_failures"] = (
-                current_outage["number_of_failures"] + 1
-            )
+            if event.is_success is True:
+                if event.timestamp > (
+                    current_outage.timestamp_of_last_failure
+                    + outage_max_success_tolerance_in_seconds
+                ):
+                    process_current_outage(
+                        current_outage,
+                        outages,
+                        min_outage_loss_rate_percentage,
+                        min_outage_duration_in_seconds,
+                    )
+                    current_outage = None
+            else:
+                current_outage.id_of_last_failure = event.id
+                current_outage.timestamp_of_last_failure = event.timestamp
+                current_outage.number_of_failures += 1
     if current_outage is not None:
         process_current_outage(
             current_outage,
@@ -112,51 +129,51 @@ def get_outages(
     return outages
 
 
-def assign_event_ids(events):
+def assign_event_ids(events: list[Event]) -> None:
     current_event_id = 1
     for event in events:
-        event["id"] = current_event_id
+        event.id = current_event_id
         current_event_id = current_event_id + 1
 
 
-def sort_events(events):
-    events.sort(key=lambda x: x["timestamp"])
+def sort_events(events: list[Event]) -> None:
+    events.sort(key=lambda event: event.timestamp)
 
 
-def get_events_from_file(file_path):
+def get_events_from_file(file_path: str) -> list[Event]:
     with open(file_path, "r") as file:
         lines = file.readlines()
-    destination_address = None
-    events = []
+    destination_address: str = ""
+    events: list[Event] = []
     for line in lines:
         if " bytes from " in line:
             timestamp = float(line.split("] ")[0].strip("["))
             events.append(
-                {
-                    "id": 0,
-                    "timestamp": timestamp,
-                    "destination_address": destination_address,
-                    "is_success": True,
-                }
+                Event(
+                    id=0,
+                    timestamp=timestamp,
+                    destination_address=destination_address,
+                    is_success=True,
+                )
             )
         elif " no answer yet for icmp_seq=" in line:
             timestamp = float(line.split("] ")[0].strip("["))
             events.append(
-                {
-                    "id": 0,
-                    "timestamp": timestamp,
-                    "destination_address": destination_address,
-                    "is_success": False,
-                }
+                Event(
+                    id=0,
+                    timestamp=timestamp,
+                    destination_address=destination_address,
+                    is_success=False,
+                )
             )
         elif "PING " in line:
-            if destination_address is None:
-                destination_address = line.split("(")[1].split(") ")[0]
+            if len(destination_address) == 0:
+                destination_address = str(line.split("(")[1].split(") ")[0])
     return events
 
 
-def get_events_from_files(files):
-    events = []
+def get_events_from_files(files: list[str]) -> list[Event]:
+    events: list[Event] = []
     for file_path in files:
         events.extend(get_events_from_file(file_path))
     sort_events(events)
@@ -164,8 +181,8 @@ def get_events_from_files(files):
     return events
 
 
-def get_files_from_input(input):
-    files = []
+def get_files_from_input(input: str) -> list[str]:
+    files: list[str] = []
     if os.path.isdir(input):
         for entry in os.listdir(input):
             entry_path = os.path.join(input, entry)
@@ -182,25 +199,23 @@ def get_files_from_input(input):
     return files
 
 
-def parse_arguments():
+def get_options_from_arguments(arguments: argparse.Namespace) -> Options:
+    options = Options(input=arguments.input)
+    return options
+
+
+def parse_arguments() -> argparse.Namespace:
     argument_parser = argparse.ArgumentParser(description="Analyze ping results")
     argument_parser.add_argument(
         "--input", type=str, required=True, help="Path to the input file(s)"
     )
-    arguments = argument_parser.parse_args()
-    return arguments
+    return argument_parser.parse_args()
 
 
-def get_options_from_arguments(arguments):
-    options = {}
-    options["input"] = arguments.input
-    return options
-
-
-def main():
+def main() -> None:
     arguments = parse_arguments()
     options = get_options_from_arguments(arguments)
-    files = get_files_from_input(options["input"])
+    files = get_files_from_input(options.input)
     events = get_events_from_files(files)
     outages = get_outages(
         events,
