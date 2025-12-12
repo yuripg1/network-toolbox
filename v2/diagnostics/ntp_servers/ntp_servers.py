@@ -53,14 +53,14 @@ test_results_filename = "test_results"
 
 DnsRecordType = typing.Literal["A", "AAAA"]
 TestType = typing.Literal["ping", "ntp"]
-NtpVersion = typing.Literal[3, 4]
+NtpVersionType = typing.Literal[3, 4]
 
 
 @dataclasses.dataclass
 class Options:
     dns_record_types: set[DnsRecordType]
     test_types: set[TestType]
-    ntp_versions: set[NtpVersion]
+    ntp_versions: set[NtpVersionType]
 
 
 @dataclasses.dataclass
@@ -80,7 +80,7 @@ class TestTarget:
 class TestScenario(TestTarget):
     type: TestType
     source_port: int | None
-    ntp_version: NtpVersion | None
+    ntp_version: NtpVersionType | None
 
 
 @dataclasses.dataclass
@@ -166,7 +166,7 @@ def test_ntp_server(
     sleep_after_failure: float,
     sleep_before_request: float,
     max_attempts: int,
-    attempt_number=1,
+    attempt_number: int = 1,
 ) -> TestResult:
     address = ntp_scenario.address
     source_port = ntp_scenario.source_port
@@ -210,10 +210,10 @@ def test_ntp_server(
 
 
 def get_all_ntp_scenarios(
-    test_targets: list[TestTarget], ntp_versions: set[NtpVersion]
+    test_targets: list[TestTarget], ntp_versions: set[NtpVersionType]
 ) -> list[TestScenario]:
     ntp_scenarios: list[TestScenario] = []
-    possible_ntp_versions: list[NtpVersion] = [3, 4]
+    possible_ntp_versions: list[NtpVersionType] = [3, 4]
     for test_target in test_targets:
         for ntp_version in possible_ntp_versions:
             if ntp_version in ntp_versions:
@@ -241,7 +241,7 @@ def get_all_ntp_scenarios(
 
 def test_ntp_servers(
     test_targets: list[TestTarget],
-    ntp_versions: set[NtpVersion],
+    ntp_versions: set[NtpVersionType],
     test_results: list[TestResult],
     timeout: float,
     sleep_after_failure: float,
@@ -275,7 +275,7 @@ def ping_ntp_server(
     sleep_after_failure: float,
     sleep_before_request: float,
     max_attempts: int,
-    attempt_number=1,
+    attempt_number: int = 1,
 ) -> TestResult:
     address = ping_scenario.address
     if ":" in address:
@@ -555,7 +555,7 @@ def get_options_from_arguments(arguments: argparse.Namespace) -> Options:
         test_type_map: dict[str, TestType] = {"ping": "ping", "ntp": "ntp"}
         options.test_types.add(test_type_map[arguments.test_type])
     if arguments.ntp_version:
-        ntp_version_map: dict[str, NtpVersion] = {"3": 3, "4": 4}
+        ntp_version_map: dict[str, NtpVersionType] = {"3": 3, "4": 4}
         options.ntp_versions.add(ntp_version_map[arguments.ntp_version])
     apply_default_options(options)
     return options
