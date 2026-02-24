@@ -4,7 +4,7 @@
 
 This test served to show that the ISP (Vivo), although blocking (for the most part) inbound UDP packets with destination port 123 to the customer, still allows traffic from certain well known NTP servers.
 
-While the full extent of the allowed NTP servers it not publicly known, the test was able to demonstrate that some servers from **[NTP.br](https://ntp.br/)** are in this list, most notably **a.ntp.br**, **b.ntp.br**, **c.ntp.br**, **a.st1.ntp.br**, **c.st1.ntp.br** and **d.st1.ntp.br**. The **gps.ntp.br** endpoint was observed to have only half of its addresses allowed. Lastly, it was not possible to draw any conclusions about the **b.st1.ntp.br** due to it being offline at the time of the testing.
+While the full extent of the allowed NTP servers it not publicly known, the test was able to demonstrate that some servers from **[NTP.br](https://ntp.br/)** are in this list, most notably **a.ntp.br**, **b.ntp.br**, **c.ntp.br**, **a.st1.ntp.br** and **d.st1.ntp.br**. The **gps.ntp.br** endpoint was observed to have only half of its addresses allowed. Lastly, it was not possible to draw any conclusions about the **b.st1.ntp.br** and **c.st1.ntp.br** servers due to them being offline at the time of the testing.
 
 | NTP Server   | Address            | Type | Source Port | Result     |
 |-------------:|:------------------:|:----:|:-----------:|:----------:|
@@ -32,26 +32,24 @@ While the full extent of the allowed NTP servers it not publicly known, the test
 | pool.ntp.br  | 200.160.0.8        | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 200.160.7.186      | Ping |             | ✅ Success |
 | pool.ntp.br  | 200.160.7.186      | NTP  | 123         | ✅ Success |
+| pool.ntp.br  | 200.160.7.193      | Ping |             | ✅ Success |
+| pool.ntp.br  | 200.160.7.193      | NTP  | 123         | ❌ Failure |
 | pool.ntp.br  | 200.160.7.196      | Ping |             | ✅ Success |
 | pool.ntp.br  | 200.160.7.196      | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 200.160.7.197      | Ping |             | ✅ Success |
 | pool.ntp.br  | 200.160.7.197      | NTP  | 123         | ✅ Success |
-| pool.ntp.br  | 200.186.125.195    | Ping |             | ✅ Success |
-| pool.ntp.br  | 200.186.125.195    | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 200.189.40.8       | Ping |             | ✅ Success |
 | pool.ntp.br  | 200.189.40.8       | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 200.192.232.8      | Ping |             | ✅ Success |
 | pool.ntp.br  | 200.192.232.8      | NTP  | 123         | ✅ Success |
-| pool.ntp.br  | 200.20.186.76      | Ping |             | ✅ Success |
-| pool.ntp.br  | 200.20.186.76      | NTP  | 123         | ✅ Success |
-| pool.ntp.br  | 201.49.148.135     | Ping |             | ❌ Failure |
-| pool.ntp.br  | 201.49.148.135     | NTP  | 123         | ❌ Failure |
 | pool.ntp.br  | 2001:12f8:9:1::8   | Ping |             | ✅ Success |
 | pool.ntp.br  | 2001:12f8:9:1::8   | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 2001:12f8:b:1::8   | Ping |             | ✅ Success |
 | pool.ntp.br  | 2001:12f8:b:1::8   | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 2001:12ff:0:7::186 | Ping |             | ✅ Success |
 | pool.ntp.br  | 2001:12ff:0:7::186 | NTP  | 123         | ✅ Success |
+| pool.ntp.br  | 2001:12ff:0:7::193 | Ping |             | ✅ Success |
+| pool.ntp.br  | 2001:12ff:0:7::193 | NTP  | 123         | ❌ Failure |
 | pool.ntp.br  | 2001:12ff:0:7::196 | Ping |             | ✅ Success |
 | pool.ntp.br  | 2001:12ff:0:7::196 | NTP  | 123         | ✅ Success |
 | pool.ntp.br  | 2001:12ff:0:7::197 | Ping |             | ✅ Success |
@@ -64,8 +62,8 @@ While the full extent of the allowed NTP servers it not publicly known, the test
 | a.st1.ntp.br | 2001:12ff:0:7::186 | NTP  | 123         | ✅ Success |
 | b.st1.ntp.br | 201.49.148.135     | Ping |             | ❌ Failure |
 | b.st1.ntp.br | 201.49.148.135     | NTP  | 123         | ❌ Failure |
-| c.st1.ntp.br | 200.186.125.195    | Ping |             | ✅ Success |
-| c.st1.ntp.br | 200.186.125.195    | NTP  | 123         | ✅ Success |
+| c.st1.ntp.br | 200.186.125.195    | Ping |             | ❌ Failure |
+| c.st1.ntp.br | 200.186.125.195    | NTP  | 123         | ❌ Failure |
 | d.st1.ntp.br | 200.20.186.76      | Ping |             | ✅ Success |
 | d.st1.ntp.br | 200.20.186.76      | NTP  | 123         | ✅ Success |
 
@@ -75,11 +73,11 @@ The testing methodology included proper configuration of the infrastructure and 
 
 ### Infrastructure configuration
 
-The IPv4 test scenarios, which were run behind NAT, warranted the reservation in the router of the port 123 as well as the range of ports between 8081 and 65535 for the host running the tests. That way, the chance of unrelated traffic interfering with the tests was mitigated. The IPv6 test scenarios, however, had end-to-end connectivity and didn't need any special configuration.
+The IPv4 test scenarios, which were run behind NAT, warranted the reservation in the router of the port 123 as well as the range of ports between 49152 and 65535 for the host running the tests. That way, the chance of unrelated traffic interfering with the tests was mitigated. The IPv6 test scenarios, however, had end-to-end connectivity and didn't need any special configuration.
 
 ### Python script
 
-The script performed tests for reachability (ping) and for clock synchronization (NTP). To contrast the blocked port with the open ports, the script tested using both the source port 123 and a random port between 8081 and 65535. To make sure the NTP version didn't play a role in any filtering by the ISP, all tests were done using NTP versions 3 and 4. All those scenarios were done using IPv4 and IPv6.
+The script performed tests for reachability (ping) and for clock synchronization (NTP). To contrast the blocked port with the open ports, the script tested using both the source port 123 and a random port between 49152 and 65535. To make sure the NTP version didn't play a role in any filtering by the ISP, all tests were done using NTP versions 3 and 4. All those scenarios were done using IPv4 and IPv6.
 
 In order to not have the results skewed by occasional dropped packets, the script was programmed to try up to three times every test scenario.
 
@@ -99,24 +97,21 @@ The output of the script executions can be seen in the **[test_output.txt](./tes
 
 ## How to run the script
 
+### Important note
+
+Be aware that scapy requires root privileges to send packets. Make sure you are comfortable with this before running the script.
+
 ### Setup
 
 ```
 $ sudo apt update
 $ sudo apt install -y python3-dev python3-pip python3-venv
-$ python3 -m venv .venv
-$ source ./.venv/bin/activate
-$ pip3 install -r requirements.txt
+$ chmod +x ./run.sh
 ```
 
 ### Run
 
 ```
-$ sudo ./.venv/bin/python3 ./ntp_servers.py
+$ run.sh
 ```
 
-### Teardown
-
-```
-$ deactivate
-```

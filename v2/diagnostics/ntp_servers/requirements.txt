@@ -1,2 +1,2 @@
-dnspython
-scapy
+dnspython~=2.8.0
+scapy~=2.7.0

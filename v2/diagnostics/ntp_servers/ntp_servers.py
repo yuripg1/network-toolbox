@@ -9,7 +9,7 @@ import scapy.all
 import time
 import typing
 
-ntp_servers = [
+NTP_SERVERS = [
     "a.ntp.br",
     "b.ntp.br",
     "c.ntp.br",
@@ -40,16 +40,23 @@ ntp_servers = [
     "3.br.pool.ntp.org",
 ]
 
-timeout = 2
-sleep_after_failure = 0.2
-sleep_before_request = 0.1
-max_attempts = 3
-min_random_port = 8081
-max_random_port = 65535
-dns_cache_directory = "./"
-dns_cache_filename = "dns_cache"
-test_results_directory = "./"
-test_results_filename = "test_results"
+DNS_SERVERS = [
+    "8.8.8.8",
+    "8.8.4.4",
+    "2001:4860:4860::8888",
+    "2001:4860:4860::8844",
+]
+
+REQUEST_TIMEOUT = 4
+SLEEP_AFTER_FAILURE_IN_SECONDS = 2
+SLEEP_BEFORE_REQUEST_IN_SECONDS = 1
+MAX_REQUEST_ATTEMPTS = 3
+MIN_RANDOM_PORT = 49152
+MAX_RANDOM_PORT = 65535
+DNS_CACHE_DIRECTORY = "./"
+DNS_CACHE_FILENAME = "dns_cache"
+TEST_RESULTS_DIRECTORY = "./"
+TEST_RESULTS_FILENAME = "test_results"
 
 DnsRecordType = typing.Literal["A", "AAAA"]
 TestType = typing.Literal["ping", "ntp"]
@@ -91,9 +98,7 @@ class TestResult(TestScenario):
 
 
 def export_test_results_to_csv(
-    test_results: list[TestResult],
-    test_results_directory: str,
-    test_results_filename: str,
+    test_results: list[TestResult], test_results_directory: str, test_results_filename: str
 ) -> None:
     timestamp = int(time.time())
     full_file_path = f"{test_results_directory}/{test_results_filename}_{timestamp}.csv"
@@ -149,9 +154,7 @@ def sort_test_results(test_results: list[TestResult]) -> list[TestResult]:
 
 
 def save_updated_test_results(
-    test_results: list[TestResult],
-    test_results_directory: str,
-    test_results_filename: str,
+    test_results: list[TestResult], test_results_directory: str, test_results_filename: str
 ) -> None:
     serializable_test_results = [dataclasses.asdict(result) for result in test_results]
     full_file_path = f"{test_results_directory}/{test_results_filename}.json"
@@ -189,9 +192,7 @@ def test_ntp_server(
         success=False,
         datetime=request_datetime,
     )
-    response = scapy.all.sr1(
-        ip_layer / udp_layer / ntp_packet, timeout=timeout, verbose=0
-    )
+    response = scapy.all.sr1(ip_layer / udp_layer / ntp_packet, timeout=timeout, verbose=0)
     if response is not None and response.haslayer(scapy.all.NTP):
         current_test_result.success = True
     test_results.append(current_test_result)
@@ -210,7 +211,7 @@ def test_ntp_server(
 
 
 def get_all_ntp_scenarios(
-    test_targets: list[TestTarget], ntp_versions: set[NtpVersionType]
+    test_targets: list[TestTarget], ntp_versions: set[NtpVersionType], min_random_port: int, max_random_port: int
 ) -> list[TestScenario]:
     ntp_scenarios: list[TestScenario] = []
     possible_ntp_versions: list[NtpVersionType] = [3, 4]
@@ -247,20 +248,17 @@ def test_ntp_servers(
     sleep_after_failure: float,
     sleep_before_request: float,
     max_attempts: int,
+    min_random_port: int,
+    max_random_port: int,
 ) -> None:
-    ntp_scenarios = get_all_ntp_scenarios(test_targets, ntp_versions)
+    ntp_scenarios = get_all_ntp_scenarios(test_targets, ntp_versions, min_random_port, max_random_port)
     total_ntp_scenarios = len(ntp_scenarios)
     for current_ntp_scenario, ntp_scenario in enumerate(ntp_scenarios, start=1):
         print(
             f"    Testing {ntp_scenario.address} ({ntp_scenario.ntp_server}) | Source port {ntp_scenario.source_port} | NTP version {ntp_scenario.ntp_version}"
         )
         current_test_result = test_ntp_server(
-            ntp_scenario,
-            test_results,
-            timeout,
-            sleep_after_failure,
-            sleep_before_request,
-            max_attempts,
+            ntp_scenario, test_results, timeout, sleep_after_failure, sleep_before_request, max_attempts
         )
         result_string = "Success" if current_test_result.success == True else "Failure"
         print(
@@ -351,12 +349,7 @@ def ping_ntp_servers(
     for current_ping_scenario, ping_scenario in enumerate(ping_scenarios, start=1):
         print(f"    Pinging {ping_scenario.address} ({ping_scenario.ntp_server})")
         current_test_result = ping_ntp_server(
-            ping_scenario,
-            test_results,
-            timeout,
-            sleep_after_failure,
-            sleep_before_request,
-            max_attempts,
+            ping_scenario, test_results, timeout, sleep_after_failure, sleep_before_request, max_attempts
         )
         result_string = "Success" if current_test_result.success == True else "Failure"
         print(
@@ -364,9 +357,7 @@ def ping_ntp_servers(
         )
 
 
-def load_test_results(
-    test_results_directory: str, test_results_filename: str
-) -> list[TestResult]:
+def load_test_results(test_results_directory: str, test_results_filename: str) -> list[TestResult]:
     full_file_path = f"{test_results_directory}/{test_results_filename}.json"
     try:
         with open(full_file_path, mode="r", encoding="utf-8") as jsonfile:
@@ -379,9 +370,7 @@ def load_test_results(
         return []
 
 
-def save_updated_dns_cache(
-    dns_cache: list[DnsCacheEntry], dns_cache_directory: str, dns_cache_filename: str
-) -> None:
+def save_updated_dns_cache(dns_cache: list[DnsCacheEntry], dns_cache_directory: str, dns_cache_filename: str) -> None:
     serializable_dns_cache = [dataclasses.asdict(entry) for entry in dns_cache]
     full_file_path = f"{dns_cache_directory}/{dns_cache_filename}.json"
     with open(full_file_path, mode="w", newline="", encoding="utf-8") as jsonfile:
@@ -389,26 +378,16 @@ def save_updated_dns_cache(
 
 
 def add_addresses_to_dns_cache(
-    ntp_server: str,
-    record_type: DnsRecordType,
-    addresses: list[str],
-    dns_cache: list[DnsCacheEntry],
+    ntp_server: str, record_type: DnsRecordType, addresses: list[str], dns_cache: list[DnsCacheEntry]
 ) -> None:
-    dns_cache.append(
-        DnsCacheEntry(
-            ntp_server=ntp_server, record_type=record_type, addresses=addresses
-        )
-    )
+    dns_cache.append(DnsCacheEntry(ntp_server=ntp_server, record_type=record_type, addresses=addresses))
 
 
 def get_addresses_from_dns_cache(
     ntp_server: str, record_type: DnsRecordType, dns_cache: list[DnsCacheEntry]
 ) -> list[str] | None:
     for dns_cache_entry in dns_cache:
-        if (
-            dns_cache_entry.ntp_server == ntp_server
-            and dns_cache_entry.record_type == record_type
-        ):
+        if dns_cache_entry.ntp_server == ntp_server and dns_cache_entry.record_type == record_type:
             return dns_cache_entry.addresses
     return None
 
@@ -506,21 +485,14 @@ def get_all_test_targets(
     return test_targets
 
 
-def get_dns_resolver(timeout: float) -> dns.resolver.Resolver:
+def get_dns_resolver(dns_servers: list[str], timeout: float) -> dns.resolver.Resolver:
     dns_resolver = dns.resolver.Resolver()
     dns_resolver.timeout = timeout
-    dns_resolver.nameservers = [
-        "8.8.8.8",
-        "8.8.4.4",
-        "2001:4860:4860::8888",
-        "2001:4860:4860::8844",
-    ]
+    dns_resolver.nameservers = dns_servers
     return dns_resolver
 
 
-def load_dns_cache(
-    dns_cache_directory: str, dns_cache_filename: str
-) -> list[DnsCacheEntry]:
+def load_dns_cache(dns_cache_directory: str, dns_cache_filename: str) -> list[DnsCacheEntry]:
     full_file_path = f"{dns_cache_directory}/{dns_cache_filename}.json"
     try:
         with open(full_file_path, mode="r", encoding="utf-8") as jsonfile:
@@ -562,26 +534,15 @@ def get_options_from_arguments(arguments: argparse.Namespace) -> Options:
 
 
 def parse_arguments() -> argparse.Namespace:
-    argument_parser = argparse.ArgumentParser(
-        description="Test NTP servers connectivity"
+    argument_parser = argparse.ArgumentParser(description="Test NTP servers connectivity")
+    argument_parser.add_argument(
+        "--protocol", choices=["ipv4", "ipv6"], default=None, help="Specify the protocol: ipv4 or ipv6"
     )
     argument_parser.add_argument(
-        "--protocol",
-        choices=["ipv4", "ipv6"],
-        default=None,
-        help="Specify the protocol: ipv4 or ipv6",
+        "--test-type", choices=["ping", "ntp"], default=None, help="Specify the test type: ping or ntp"
     )
     argument_parser.add_argument(
-        "--test-type",
-        choices=["ping", "ntp"],
-        default=None,
-        help="Specify the test type: ping or ntp",
-    )
-    argument_parser.add_argument(
-        "--ntp-version",
-        choices=["3", "4"],
-        default=None,
-        help="Specify the NTP version: 3 or 4",
+        "--ntp-version", choices=["3", "4"], default=None, help="Specify the NTP version: 3 or 4"
     )
     return argument_parser.parse_args()
 
@@ -591,31 +552,31 @@ def main() -> None:
     options = get_options_from_arguments(arguments)
     test_results: list[TestResult] = []
     print("Phase 1: Loading DNS cache")
-    dns_cache = load_dns_cache(dns_cache_directory, dns_cache_filename)
+    dns_cache = load_dns_cache(DNS_CACHE_DIRECTORY, DNS_CACHE_FILENAME)
     print("Phase 2: Getting addresses of NTP servers")
-    dns_resolver = get_dns_resolver(timeout)
+    dns_resolver = get_dns_resolver(DNS_SERVERS, REQUEST_TIMEOUT)
     test_targets = get_all_test_targets(
-        ntp_servers,
+        NTP_SERVERS,
         options.dns_record_types,
         dns_cache,
         dns_resolver,
-        sleep_after_failure,
-        sleep_before_request,
-        max_attempts,
+        SLEEP_AFTER_FAILURE_IN_SECONDS,
+        SLEEP_BEFORE_REQUEST_IN_SECONDS,
+        MAX_REQUEST_ATTEMPTS,
     )
     print("Phase 3: Saving updated DNS cache")
-    save_updated_dns_cache(dns_cache, dns_cache_directory, dns_cache_filename)
+    save_updated_dns_cache(dns_cache, DNS_CACHE_DIRECTORY, DNS_CACHE_FILENAME)
     print("Phase 4: Loading test results")
-    test_results = load_test_results(test_results_directory, test_results_filename)
+    test_results = load_test_results(TEST_RESULTS_DIRECTORY, TEST_RESULTS_FILENAME)
     print("Phase 5: Pinging NTP servers")
     if "ping" in options.test_types:
         ping_ntp_servers(
             test_targets,
             test_results,
-            timeout,
-            sleep_after_failure,
-            sleep_before_request,
-            max_attempts,
+            REQUEST_TIMEOUT,
+            SLEEP_AFTER_FAILURE_IN_SECONDS,
+            SLEEP_BEFORE_REQUEST_IN_SECONDS,
+            MAX_REQUEST_ATTEMPTS,
         )
     print("Phase 6: Testing NTP servers")
     if "ntp" in options.test_types:
@@ -623,20 +584,18 @@ def main() -> None:
             test_targets,
             options.ntp_versions,
             test_results,
-            timeout,
-            sleep_after_failure,
-            sleep_before_request,
-            max_attempts,
+            REQUEST_TIMEOUT,
+            SLEEP_AFTER_FAILURE_IN_SECONDS,
+            SLEEP_BEFORE_REQUEST_IN_SECONDS,
+            MAX_REQUEST_ATTEMPTS,
+            MIN_RANDOM_PORT,
+            MAX_RANDOM_PORT,
         )
     print("Phase 7: Saving updated test results")
-    save_updated_test_results(
-        test_results, test_results_directory, test_results_filename
-    )
+    save_updated_test_results(test_results, TEST_RESULTS_DIRECTORY, TEST_RESULTS_FILENAME)
     print("Phase 8: Exporting test results to CSV")
     sorted_test_results = sort_test_results(test_results)
-    export_test_results_to_csv(
-        sorted_test_results, test_results_directory, test_results_filename
-    )
+    export_test_results_to_csv(sorted_test_results, TEST_RESULTS_DIRECTORY, TEST_RESULTS_FILENAME)
 
 
 if __name__ == "__main__":
