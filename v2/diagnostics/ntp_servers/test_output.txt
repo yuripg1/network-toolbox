@@ -6,7 +6,7 @@ Collecting scapy~=2.7.0 (from -r ./requirements.txt (line 2))
 Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 331.1/331.1 kB 4.9 MB/s eta 0:00:00
 Downloading scapy-2.7.0-py3-none-any.whl (2.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 23.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 21.4 MB/s eta 0:00:00
 Installing collected packages: scapy, dnspython
 Successfully installed dnspython-2.8.0 scapy-2.7.0
 ######################## Scapy requires root privileges to send packets. Proceed with caution. #########################
@@ -89,1138 +89,1138 @@ Phase 2: Getting addresses of NTP servers
         40.119.6.228
     Getting addresses for time.nist.gov
         2610:20:6f96:96::6
-        132.163.97.3
+        129.6.15.25
     Getting addresses for pool.ntp.org
-        143.107.229.211
-        168.181.126.28
-        200.160.0.8
-        200.189.40.8
-    Getting addresses for 0.pool.ntp.org
-        143.107.229.210
-        192.36.143.130
-        200.160.7.196
-        200.189.40.8
-    Getting addresses for 1.pool.ntp.org
-        172.233.29.160
-        185.234.20.131
-        194.58.38.95
-        200.160.0.8
-    Getting addresses for 2.pool.ntp.org
-        2001:19f0:b800:1c73:5400:5ff:fe04:48c3
-        2600:3c0d::2000:dcff:fe50:5ea8
-        2605:e440:24::1:334
-        2606:4700:f1::123
         162.159.200.123
-        168.181.126.28
-        200.160.7.186
-        216.238.112.29
-    Getting addresses for 3.pool.ntp.org
-        168.181.126.108
-        200.160.7.193
         200.160.7.197
-        200.192.232.8
-    Getting addresses for br.pool.ntp.org
-        172.233.29.160
-        200.160.7.197
-        200.192.232.8
-        216.238.112.29
-    Getting addresses for 0.br.pool.ntp.org
-        143.107.229.210
-        192.36.143.130
-        200.160.7.196
         200.189.40.8
-    Getting addresses for 1.br.pool.ntp.org
-        172.233.29.160
-        185.234.20.131
-        194.58.38.95
+        200.192.232.8
+    Getting addresses for 0.pool.ntp.org
+        162.159.200.123
         200.160.0.8
-    Getting addresses for 2.br.pool.ntp.org
-        2001:12ff:0:7::197
-        2001:19f0:b800:1c73:5400:5ff:fe04:48c3
+        200.192.232.8
+        216.238.102.201
+    Getting addresses for 1.pool.ntp.org
+        143.107.229.210
+        168.181.126.108
+        172.233.29.160
+        216.238.112.29
+    Getting addresses for 2.pool.ntp.org
+        2001:12ff:0:7::193
+        2606:4700:f1::1
         2804:2ea0::aaaa
         2804:2ea0::bbbb
-        162.159.200.123
-        168.181.126.28
+        119.8.229.131
+        192.36.143.130
         200.160.7.186
-        216.238.112.29
-    Getting addresses for 3.br.pool.ntp.org
-        168.181.126.108
+        200.160.7.196
+    Getting addresses for 3.pool.ntp.org
+        143.107.229.211
+        162.159.200.1
         200.160.7.193
+        200.189.40.8
+    Getting addresses for br.pool.ntp.org
+        168.181.126.108
+        168.181.126.28
         200.160.7.197
         200.192.232.8
+    Getting addresses for 0.br.pool.ntp.org
+        143.107.229.211
+        162.159.200.123
+        168.181.126.28
+        200.160.7.197
+    Getting addresses for 1.br.pool.ntp.org
+        143.107.229.210
+        168.181.126.108
+        172.233.29.160
+        194.58.38.95
+    Getting addresses for 2.br.pool.ntp.org
+        2001:12ff:0:7::193
+        2001:12ff:0:7::196
+        2001:12ff:0:7::197
+        2001:12ff::8
+        194.58.38.95
+        200.160.0.8
+        200.160.7.196
+        200.192.232.8
+    Getting addresses for 3.br.pool.ntp.org
+        143.107.229.211
+        162.159.200.1
+        200.160.7.193
+        200.189.40.8
 Phase 3: Saving updated DNS cache
 Phase 4: Loading test results
 Phase 5: Pinging NTP servers
-    Pinging 200.160.0.8 (a.ntp.br)
-        Success | 2026-02-24T03:59:46.108819+00:00 | 1/107 completed
-    Pinging 185.125.190.58 (ntp.ubuntu.com)
-        Success | 2026-02-24T03:59:47.181257+00:00 | 2/107 completed
-    Pinging 2001:12f8:b:1::8 (pool.ntp.br)
-        Success | 2026-02-24T03:59:48.428522+00:00 | 3/107 completed
-    Pinging 2804:2ea0::bbbb (2.br.pool.ntp.org)
-        Success | 2026-02-24T03:59:49.729433+00:00 | 4/107 completed
-    Pinging 200.160.7.186 (a.st1.ntp.br)
-        Success | 2026-02-24T03:59:50.789400+00:00 | 5/107 completed
     Pinging 200.160.7.193 (3.br.pool.ntp.org)
-        Success | 2026-02-24T03:59:51.842071+00:00 | 6/107 completed
-    Pinging 200.192.232.8 (br.pool.ntp.org)
-        Success | 2026-02-24T03:59:52.888449+00:00 | 7/107 completed
-    Pinging 200.189.40.8 (b.ntp.br)
-        Success | 2026-02-24T03:59:53.944801+00:00 | 8/107 completed
-    Pinging 200.160.7.193 (3.pool.ntp.org)
-        Success | 2026-02-24T03:59:55.043958+00:00 | 9/107 completed
-    Pinging 216.239.35.4 (time.google.com)
-        Success | 2026-02-24T03:59:56.093865+00:00 | 10/107 completed
-    Pinging 216.238.112.29 (2.pool.ntp.org)
-        Failure | 2026-02-24T04:00:11.189028+00:00 | 11/107 completed
-    Pinging 168.181.126.28 (2.br.pool.ntp.org)
-        Success | 2026-02-24T04:00:16.217667+00:00 | 12/107 completed
-    Pinging 200.189.40.8 (pool.ntp.org)
-        Success | 2026-02-24T04:00:17.284612+00:00 | 13/107 completed
-    Pinging 2001:4860:4806:: (time.google.com)
-        Success | 2026-02-24T04:00:18.382503+00:00 | 14/107 completed
-    Pinging 2001:4860:4806:c:: (time.google.com)
-        Success | 2026-02-24T04:00:19.426111+00:00 | 15/107 completed
-    Pinging 2001:4860:4806:4:: (time2.google.com)
-        Success | 2026-02-24T04:00:20.476291+00:00 | 16/107 completed
-    Pinging 162.159.200.123 (2.br.pool.ntp.org)
-        Success | 2026-02-24T04:00:21.531118+00:00 | 17/107 completed
-    Pinging 2606:4700:f1::123 (time.cloudflare.com)
-        Success | 2026-02-24T04:00:22.585448+00:00 | 18/107 completed
-    Pinging 2001:12ff::8 (a.ntp.br)
-        Success | 2026-02-24T04:00:23.649291+00:00 | 19/107 completed
-    Pinging 162.159.200.1 (time.cloudflare.com)
-        Success | 2026-02-24T04:00:24.696326+00:00 | 20/107 completed
-    Pinging 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.pool.ntp.org)
-        Success | 2026-02-24T04:00:25.741813+00:00 | 21/107 completed
-    Pinging 216.239.35.4 (time2.google.com)
-        Success | 2026-02-24T04:00:26.789916+00:00 | 22/107 completed
-    Pinging 2610:20:6f96:96::6 (time.nist.gov)
-        Success | 2026-02-24T04:00:27.840567+00:00 | 23/107 completed
-    Pinging 2600:3c0d::2000:dcff:fe50:5ea8 (2.pool.ntp.org)
-        Success | 2026-02-24T04:00:29.053922+00:00 | 24/107 completed
-    Pinging 200.186.125.195 (c.st1.ntp.br)
-        Failure | 2026-02-24T04:00:44.160094+00:00 | 25/107 completed
-    Pinging 2001:4860:4806:8:: (time.google.com)
-        Success | 2026-02-24T04:00:49.184265+00:00 | 26/107 completed
-    Pinging 162.159.200.123 (time.cloudflare.com)
-        Success | 2026-02-24T04:00:50.227521+00:00 | 27/107 completed
-    Pinging 192.36.143.130 (0.br.pool.ntp.org)
-        Success | 2026-02-24T04:00:51.278550+00:00 | 28/107 completed
-    Pinging 172.233.29.160 (1.pool.ntp.org)
-        Success | 2026-02-24T04:00:52.544271+00:00 | 29/107 completed
-    Pinging 200.189.40.8 (0.br.pool.ntp.org)
-        Success | 2026-02-24T04:00:53.592861+00:00 | 30/107 completed
-    Pinging 2001:12ff::8 (pool.ntp.br)
-        Success | 2026-02-24T04:00:54.682672+00:00 | 31/107 completed
-    Pinging 168.181.126.28 (pool.ntp.org)
-        Success | 2026-02-24T04:00:55.741800+00:00 | 32/107 completed
-    Pinging 200.160.0.8 (1.pool.ntp.org)
-        Success | 2026-02-24T04:00:56.800459+00:00 | 33/107 completed
-    Pinging 216.239.35.12 (time4.google.com)
-        Success | 2026-02-24T04:00:57.851950+00:00 | 34/107 completed
-    Pinging 200.160.7.196 (0.pool.ntp.org)
-        Success | 2026-02-24T04:00:58.899533+00:00 | 35/107 completed
-    Pinging 2001:12f8:b:1::8 (c.ntp.br)
-        Success | 2026-02-24T04:00:59.949302+00:00 | 36/107 completed
-    Pinging 2620:2d:4000:1::41 (ntp.ubuntu.com)
-        Success | 2026-02-24T04:01:01.219112+00:00 | 37/107 completed
-    Pinging 216.239.35.8 (time3.google.com)
-        Success | 2026-02-24T04:01:02.474394+00:00 | 38/107 completed
-    Pinging 185.125.190.57 (ntp.ubuntu.com)
-        Success | 2026-02-24T04:01:03.521541+00:00 | 39/107 completed
-    Pinging 2001:4860:4806:c:: (time4.google.com)
-        Success | 2026-02-24T04:01:04.753640+00:00 | 40/107 completed
-    Pinging 200.160.7.197 (gps.ntp.br)
-        Success | 2026-02-24T04:01:05.803693+00:00 | 41/107 completed
-    Pinging 216.239.35.0 (time1.google.com)
-        Success | 2026-02-24T04:01:06.850394+00:00 | 42/107 completed
-    Pinging 200.160.0.8 (pool.ntp.br)
-        Success | 2026-02-24T04:01:07.902081+00:00 | 43/107 completed
-    Pinging 200.189.40.8 (0.pool.ntp.org)
-        Success | 2026-02-24T04:01:08.940256+00:00 | 44/107 completed
-    Pinging 172.233.29.160 (br.pool.ntp.org)
-        Success | 2026-02-24T04:01:10.031271+00:00 | 45/107 completed
-    Pinging 2001:12ff:0:7::197 (pool.ntp.br)
-        Success | 2026-02-24T04:01:11.081438+00:00 | 46/107 completed
-    Pinging 185.125.190.56 (ntp.ubuntu.com)
-        Success | 2026-02-24T04:01:12.135530+00:00 | 47/107 completed
-    Pinging 200.160.0.8 (1.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:13.386446+00:00 | 48/107 completed
-    Pinging 200.160.7.193 (pool.ntp.br)
-        Success | 2026-02-24T04:01:14.441714+00:00 | 49/107 completed
-    Pinging 2001:12ff:0:7::186 (pool.ntp.br)
-        Success | 2026-02-24T04:01:15.481938+00:00 | 50/107 completed
-    Pinging 216.239.35.0 (time.google.com)
-        Success | 2026-02-24T04:01:16.535781+00:00 | 51/107 completed
-    Pinging 143.107.229.210 (0.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:17.587563+00:00 | 52/107 completed
-    Pinging 200.192.232.8 (pool.ntp.br)
-        Success | 2026-02-24T04:01:18.637916+00:00 | 53/107 completed
-    Pinging 40.119.6.228 (time.windows.com)
-        Success | 2026-02-24T04:01:19.702540+00:00 | 54/107 completed
-    Pinging 2001:4860:4806:8:: (time3.google.com)
-        Success | 2026-02-24T04:01:20.883956+00:00 | 55/107 completed
-    Pinging 194.58.38.95 (1.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:21.929640+00:00 | 56/107 completed
-    Pinging 2804:2ea0::aaaa (2.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:23.191826+00:00 | 57/107 completed
-    Pinging 143.107.229.211 (pool.ntp.org)
-        Success | 2026-02-24T04:01:24.253639+00:00 | 58/107 completed
-    Pinging 2620:2d:4000:1::3f (ntp.ubuntu.com)
-        Success | 2026-02-24T04:01:25.309422+00:00 | 59/107 completed
-    Pinging 132.163.97.3 (time.nist.gov)
-        Failure | 2026-02-24T04:01:40.603492+00:00 | 60/107 completed
-    Pinging 2001:12ff:0:7::197 (2.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:45.630872+00:00 | 61/107 completed
-    Pinging 2606:4700:f1::1 (time.cloudflare.com)
-        Success | 2026-02-24T04:01:46.690307+00:00 | 62/107 completed
-    Pinging 200.160.7.193 (gps.ntp.br)
-        Success | 2026-02-24T04:01:47.742545+00:00 | 63/107 completed
+        Success | 2026-02-24T17:02:26.442459+00:00 | 1/107 completed
     Pinging 200.160.7.196 (pool.ntp.br)
-        Success | 2026-02-24T04:01:48.816631+00:00 | 64/107 completed
-    Pinging 216.239.35.12 (time.google.com)
-        Success | 2026-02-24T04:01:49.871850+00:00 | 65/107 completed
-    Pinging 168.181.126.28 (2.pool.ntp.org)
-        Success | 2026-02-24T04:01:50.919818+00:00 | 66/107 completed
-    Pinging 168.181.126.108 (3.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:51.979571+00:00 | 67/107 completed
-    Pinging 200.160.7.197 (3.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:53.049683+00:00 | 68/107 completed
-    Pinging 2001:12f8:9:1::8 (b.ntp.br)
-        Success | 2026-02-24T04:01:54.102921+00:00 | 69/107 completed
-    Pinging 200.160.7.197 (br.pool.ntp.org)
-        Success | 2026-02-24T04:01:55.227689+00:00 | 70/107 completed
-    Pinging 2001:12ff:0:7::193 (gps.ntp.br)
-        Success | 2026-02-24T04:01:56.272899+00:00 | 71/107 completed
-    Pinging 200.192.232.8 (3.br.pool.ntp.org)
-        Success | 2026-02-24T04:01:57.318387+00:00 | 72/107 completed
-    Pinging 200.192.232.8 (3.pool.ntp.org)
-        Success | 2026-02-24T04:01:58.380821+00:00 | 73/107 completed
-    Pinging 200.192.232.8 (c.ntp.br)
-        Success | 2026-02-24T04:01:59.441906+00:00 | 74/107 completed
-    Pinging 201.49.148.135 (b.st1.ntp.br)
-        Failure | 2026-02-24T04:02:14.543828+00:00 | 75/107 completed
-    Pinging 172.233.29.160 (1.br.pool.ntp.org)
-        Success | 2026-02-24T04:02:19.563978+00:00 | 76/107 completed
-    Pinging 200.160.7.197 (pool.ntp.br)
-        Success | 2026-02-24T04:02:20.604500+00:00 | 77/107 completed
-    Pinging 200.160.7.186 (pool.ntp.br)
-        Success | 2026-02-24T04:02:21.659946+00:00 | 78/107 completed
-    Pinging 2001:12ff:0:7::186 (a.st1.ntp.br)
-        Success | 2026-02-24T04:02:22.714094+00:00 | 79/107 completed
-    Pinging 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.br.pool.ntp.org)
-        Success | 2026-02-24T04:02:23.764174+00:00 | 80/107 completed
-    Pinging 216.238.112.29 (2.br.pool.ntp.org)
-        Failure | 2026-02-24T04:02:38.860662+00:00 | 81/107 completed
-    Pinging 2001:12ff:0:7::196 (pool.ntp.br)
-        Success | 2026-02-24T04:02:43.878982+00:00 | 82/107 completed
-    Pinging 2001:12f8:9:1::8 (pool.ntp.br)
-        Success | 2026-02-24T04:02:44.935110+00:00 | 83/107 completed
-    Pinging 200.160.7.197 (3.pool.ntp.org)
-        Success | 2026-02-24T04:02:46.022820+00:00 | 84/107 completed
-    Pinging 143.107.229.210 (0.pool.ntp.org)
-        Success | 2026-02-24T04:02:47.067307+00:00 | 85/107 completed
-    Pinging 194.58.38.95 (1.pool.ntp.org)
-        Success | 2026-02-24T04:02:48.113309+00:00 | 86/107 completed
-    Pinging 200.20.186.76 (d.st1.ntp.br)
-        Success | 2026-02-24T04:02:49.382893+00:00 | 87/107 completed
-    Pinging 168.181.126.108 (3.pool.ntp.org)
-        Success | 2026-02-24T04:02:50.447369+00:00 | 88/107 completed
-    Pinging 200.160.0.8 (pool.ntp.org)
-        Success | 2026-02-24T04:02:51.518639+00:00 | 89/107 completed
-    Pinging 2620:2d:4000:1::40 (ntp.ubuntu.com)
-        Success | 2026-02-24T04:02:52.568177+00:00 | 90/107 completed
-    Pinging 91.189.91.157 (ntp.ubuntu.com)
-        Success | 2026-02-24T04:02:53.815224+00:00 | 91/107 completed
-    Pinging 200.189.40.8 (pool.ntp.br)
-        Success | 2026-02-24T04:02:54.999919+00:00 | 92/107 completed
-    Pinging 192.36.143.130 (0.pool.ntp.org)
-        Success | 2026-02-24T04:02:56.094341+00:00 | 93/107 completed
-    Pinging 200.160.7.186 (2.pool.ntp.org)
-        Success | 2026-02-24T04:02:57.366630+00:00 | 94/107 completed
-    Pinging 216.238.112.29 (br.pool.ntp.org)
-        Failure | 2026-02-24T04:03:12.469013+00:00 | 95/107 completed
-    Pinging 2606:4700:f1::123 (2.pool.ntp.org)
-        Success | 2026-02-24T04:03:17.500547+00:00 | 96/107 completed
-    Pinging 2001:12ff:0:7::193 (pool.ntp.br)
-        Success | 2026-02-24T04:03:18.545817+00:00 | 97/107 completed
-    Pinging 200.160.7.186 (2.br.pool.ntp.org)
-        Success | 2026-02-24T04:03:19.586767+00:00 | 98/107 completed
-    Pinging 216.239.35.8 (time.google.com)
-        Success | 2026-02-24T04:03:20.627938+00:00 | 99/107 completed
-    Pinging 185.234.20.131 (1.br.pool.ntp.org)
-        Success | 2026-02-24T04:03:21.666018+00:00 | 100/107 completed
-    Pinging 2001:4860:4806:4:: (time.google.com)
-        Success | 2026-02-24T04:03:23.093179+00:00 | 101/107 completed
-    Pinging 2605:e440:24::1:334 (2.pool.ntp.org)
-        Success | 2026-02-24T04:03:24.146252+00:00 | 102/107 completed
-    Pinging 200.160.7.196 (0.br.pool.ntp.org)
-        Success | 2026-02-24T04:03:25.412021+00:00 | 103/107 completed
-    Pinging 2001:4860:4806:: (time1.google.com)
-        Success | 2026-02-24T04:03:26.466113+00:00 | 104/107 completed
-    Pinging 162.159.200.123 (2.pool.ntp.org)
-        Success | 2026-02-24T04:03:27.513521+00:00 | 105/107 completed
-    Pinging 185.234.20.131 (1.pool.ntp.org)
-        Success | 2026-02-24T04:03:28.567659+00:00 | 106/107 completed
+        Success | 2026-02-24T17:02:26.600821+00:00 | 2/107 completed
+    Pinging 192.36.143.130 (2.pool.ntp.org)
+        Success | 2026-02-24T17:02:26.737954+00:00 | 3/107 completed
+    Pinging 143.107.229.210 (1.pool.ntp.org)
+        Success | 2026-02-24T17:02:27.120139+00:00 | 4/107 completed
+    Pinging 200.160.7.197 (pool.ntp.org)
+        Success | 2026-02-24T17:02:27.257955+00:00 | 5/107 completed
     Pinging 2001:12ff:0:7::197 (gps.ntp.br)
-        Success | 2026-02-24T04:03:29.996559+00:00 | 107/107 completed
+        Success | 2026-02-24T17:02:27.398926+00:00 | 6/107 completed
+    Pinging 200.192.232.8 (br.pool.ntp.org)
+        Success | 2026-02-24T17:02:27.560147+00:00 | 7/107 completed
+    Pinging 2001:4860:4806:8:: (time.google.com)
+        Success | 2026-02-24T17:02:27.708765+00:00 | 8/107 completed
+    Pinging 91.189.91.157 (ntp.ubuntu.com)
+        Success | 2026-02-24T17:02:27.848902+00:00 | 9/107 completed
+    Pinging 200.192.232.8 (0.pool.ntp.org)
+        Success | 2026-02-24T17:02:28.126898+00:00 | 10/107 completed
+    Pinging 216.239.35.8 (time3.google.com)
+        Success | 2026-02-24T17:02:28.280795+00:00 | 11/107 completed
+    Pinging 216.239.35.4 (time2.google.com)
+        Success | 2026-02-24T17:02:28.423139+00:00 | 12/107 completed
+    Pinging 216.238.102.201 (0.pool.ntp.org)
+        Success | 2026-02-24T17:02:28.566824+00:00 | 13/107 completed
+    Pinging 216.239.35.4 (time.google.com)
+        Success | 2026-02-24T17:02:28.701788+00:00 | 14/107 completed
+    Pinging 194.58.38.95 (1.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:28.847700+00:00 | 15/107 completed
+    Pinging 200.160.7.186 (2.pool.ntp.org)
+        Success | 2026-02-24T17:02:29.202876+00:00 | 16/107 completed
+    Pinging 2001:12f8:b:1::8 (c.ntp.br)
+        Success | 2026-02-24T17:02:29.340650+00:00 | 17/107 completed
+    Pinging 40.119.6.228 (time.windows.com)
+        Success | 2026-02-24T17:02:29.707235+00:00 | 18/107 completed
+    Pinging 200.189.40.8 (3.pool.ntp.org)
+        Success | 2026-02-24T17:02:29.978180+00:00 | 19/107 completed
+    Pinging 168.181.126.28 (br.pool.ntp.org)
+        Success | 2026-02-24T17:02:30.172971+00:00 | 20/107 completed
+    Pinging 2001:12ff:0:7::197 (pool.ntp.br)
+        Success | 2026-02-24T17:02:30.336767+00:00 | 21/107 completed
+    Pinging 200.160.7.193 (3.pool.ntp.org)
+        Success | 2026-02-24T17:02:30.485854+00:00 | 22/107 completed
+    Pinging 162.159.200.1 (3.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:30.630923+00:00 | 23/107 completed
+    Pinging 200.160.7.196 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:30.781894+00:00 | 24/107 completed
+    Pinging 2804:2ea0::bbbb (2.pool.ntp.org)
+        Success | 2026-02-24T17:02:30.921777+00:00 | 25/107 completed
+    Pinging 200.192.232.8 (c.ntp.br)
+        Success | 2026-02-24T17:02:31.071841+00:00 | 26/107 completed
+    Pinging 168.181.126.108 (1.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:31.228797+00:00 | 27/107 completed
+    Pinging 200.192.232.8 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:31.400896+00:00 | 28/107 completed
+    Pinging 200.160.0.8 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:31.557826+00:00 | 29/107 completed
+    Pinging 2001:12ff:0:7::193 (2.pool.ntp.org)
+        Success | 2026-02-24T17:02:31.697110+00:00 | 30/107 completed
+    Pinging 216.239.35.0 (time.google.com)
+        Success | 2026-02-24T17:02:31.834872+00:00 | 31/107 completed
+    Pinging 200.160.7.186 (pool.ntp.br)
+        Success | 2026-02-24T17:02:31.977264+00:00 | 32/107 completed
+    Pinging 200.160.7.197 (gps.ntp.br)
+        Success | 2026-02-24T17:02:32.113820+00:00 | 33/107 completed
+    Pinging 2001:4860:4806:c:: (time4.google.com)
+        Success | 2026-02-24T17:02:32.258858+00:00 | 34/107 completed
+    Pinging 200.189.40.8 (pool.ntp.br)
+        Success | 2026-02-24T17:02:32.396826+00:00 | 35/107 completed
+    Pinging 2001:12ff::8 (pool.ntp.br)
+        Success | 2026-02-24T17:02:32.582109+00:00 | 36/107 completed
+    Pinging 2001:12ff:0:7::193 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:32.732872+00:00 | 37/107 completed
+    Pinging 2001:4860:4806:4:: (time2.google.com)
+        Success | 2026-02-24T17:02:32.869726+00:00 | 38/107 completed
+    Pinging 2001:4860:4806:8:: (time3.google.com)
+        Success | 2026-02-24T17:02:33.005763+00:00 | 39/107 completed
+    Pinging 2001:12ff::8 (a.ntp.br)
+        Success | 2026-02-24T17:02:33.150758+00:00 | 40/107 completed
+    Pinging 143.107.229.211 (3.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:33.298387+00:00 | 41/107 completed
+    Pinging 2001:12f8:b:1::8 (pool.ntp.br)
+        Success | 2026-02-24T17:02:33.438980+00:00 | 42/107 completed
+    Pinging 172.233.29.160 (1.pool.ntp.org)
+        Success | 2026-02-24T17:02:33.803983+00:00 | 43/107 completed
+    Pinging 200.160.7.196 (2.pool.ntp.org)
+        Success | 2026-02-24T17:02:33.940838+00:00 | 44/107 completed
+    Pinging 185.125.190.58 (ntp.ubuntu.com)
+        Success | 2026-02-24T17:02:34.083880+00:00 | 45/107 completed
+    Pinging 2001:12ff:0:7::193 (gps.ntp.br)
+        Success | 2026-02-24T17:02:34.431904+00:00 | 46/107 completed
+    Pinging 216.239.35.12 (time.google.com)
+        Success | 2026-02-24T17:02:34.570138+00:00 | 47/107 completed
+    Pinging 200.160.7.193 (pool.ntp.br)
+        Success | 2026-02-24T17:02:34.717147+00:00 | 48/107 completed
+    Pinging 216.238.112.29 (1.pool.ntp.org)
+        Failure | 2026-02-24T17:02:45.503980+00:00 | 49/107 completed
+    Pinging 2804:2ea0::aaaa (2.pool.ntp.org)
+        Success | 2026-02-24T17:02:50.622694+00:00 | 50/107 completed
+    Pinging 162.159.200.123 (pool.ntp.org)
+        Success | 2026-02-24T17:02:50.777858+00:00 | 51/107 completed
+    Pinging 200.160.7.197 (pool.ntp.br)
+        Success | 2026-02-24T17:02:50.928828+00:00 | 52/107 completed
+    Pinging 200.160.7.197 (0.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:51.060728+00:00 | 53/107 completed
+    Pinging 194.58.38.95 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:51.199176+00:00 | 54/107 completed
+    Pinging 200.160.0.8 (pool.ntp.br)
+        Success | 2026-02-24T17:02:51.548755+00:00 | 55/107 completed
+    Pinging 200.20.186.76 (d.st1.ntp.br)
+        Success | 2026-02-24T17:02:51.690378+00:00 | 56/107 completed
+    Pinging 2001:12ff:0:7::186 (pool.ntp.br)
+        Success | 2026-02-24T17:02:51.843841+00:00 | 57/107 completed
+    Pinging 200.160.0.8 (0.pool.ntp.org)
+        Success | 2026-02-24T17:02:51.977026+00:00 | 58/107 completed
+    Pinging 162.159.200.123 (time.cloudflare.com)
+        Success | 2026-02-24T17:02:52.115252+00:00 | 59/107 completed
+    Pinging 200.192.232.8 (pool.ntp.org)
+        Success | 2026-02-24T17:02:52.265953+00:00 | 60/107 completed
+    Pinging 200.189.40.8 (3.br.pool.ntp.org)
+        Success | 2026-02-24T17:02:52.418895+00:00 | 61/107 completed
+    Pinging 201.49.148.135 (b.st1.ntp.br)
+        Failure | 2026-02-24T17:03:03.262315+00:00 | 62/107 completed
+    Pinging 129.6.15.25 (time.nist.gov)
+        Failure | 2026-02-24T17:03:19.043201+00:00 | 63/107 completed
+    Pinging 200.192.232.8 (pool.ntp.br)
+        Success | 2026-02-24T17:03:24.165863+00:00 | 64/107 completed
+    Pinging 200.160.7.186 (a.st1.ntp.br)
+        Success | 2026-02-24T17:03:24.323831+00:00 | 65/107 completed
+    Pinging 216.239.35.12 (time4.google.com)
+        Success | 2026-02-24T17:03:24.461148+00:00 | 66/107 completed
+    Pinging 2001:4860:4806:c:: (time.google.com)
+        Success | 2026-02-24T17:03:24.615859+00:00 | 67/107 completed
+    Pinging 162.159.200.1 (3.pool.ntp.org)
+        Success | 2026-02-24T17:03:24.753769+00:00 | 68/107 completed
+    Pinging 2001:12ff:0:7::186 (a.st1.ntp.br)
+        Success | 2026-02-24T17:03:24.896727+00:00 | 69/107 completed
+    Pinging 143.107.229.211 (0.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:25.032156+00:00 | 70/107 completed
+    Pinging 200.160.7.197 (br.pool.ntp.org)
+        Success | 2026-02-24T17:03:25.178924+00:00 | 71/107 completed
+    Pinging 168.181.126.108 (1.pool.ntp.org)
+        Success | 2026-02-24T17:03:25.314794+00:00 | 72/107 completed
+    Pinging 172.233.29.160 (1.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:25.483930+00:00 | 73/107 completed
+    Pinging 162.159.200.123 (0.pool.ntp.org)
+        Success | 2026-02-24T17:03:25.620294+00:00 | 74/107 completed
+    Pinging 200.160.0.8 (a.ntp.br)
+        Success | 2026-02-24T17:03:25.771381+00:00 | 75/107 completed
+    Pinging 216.239.35.8 (time.google.com)
+        Success | 2026-02-24T17:03:25.904900+00:00 | 76/107 completed
+    Pinging 2001:4860:4806:: (time.google.com)
+        Success | 2026-02-24T17:03:26.042774+00:00 | 77/107 completed
+    Pinging 168.181.126.108 (br.pool.ntp.org)
+        Success | 2026-02-24T17:03:26.191271+00:00 | 78/107 completed
+    Pinging 2001:12ff:0:7::196 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:26.357223+00:00 | 79/107 completed
+    Pinging 2620:2d:4000:1::3f (ntp.ubuntu.com)
+        Success | 2026-02-24T17:03:26.501291+00:00 | 80/107 completed
+    Pinging 143.107.229.210 (1.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:26.846145+00:00 | 81/107 completed
+    Pinging 2001:12ff:0:7::196 (pool.ntp.br)
+        Success | 2026-02-24T17:03:26.990159+00:00 | 82/107 completed
+    Pinging 168.181.126.28 (0.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:27.124807+00:00 | 83/107 completed
+    Pinging 2610:20:6f96:96::6 (time.nist.gov)
+        Success | 2026-02-24T17:03:27.288782+00:00 | 84/107 completed
+    Pinging 2001:4860:4806:: (time1.google.com)
+        Success | 2026-02-24T17:03:27.588787+00:00 | 85/107 completed
+    Pinging 2001:12f8:9:1::8 (pool.ntp.br)
+        Success | 2026-02-24T17:03:27.723762+00:00 | 86/107 completed
+    Pinging 119.8.229.131 (2.pool.ntp.org)
+        Success | 2026-02-24T17:03:27.909909+00:00 | 87/107 completed
+    Pinging 2606:4700:f1::1 (2.pool.ntp.org)
+        Success | 2026-02-24T17:03:28.043765+00:00 | 88/107 completed
+    Pinging 200.189.40.8 (b.ntp.br)
+        Success | 2026-02-24T17:03:28.191865+00:00 | 89/107 completed
+    Pinging 2620:2d:4000:1::41 (ntp.ubuntu.com)
+        Success | 2026-02-24T17:03:28.375927+00:00 | 90/107 completed
+    Pinging 162.159.200.123 (0.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:28.714198+00:00 | 91/107 completed
+    Pinging 2620:2d:4000:1::40 (ntp.ubuntu.com)
+        Success | 2026-02-24T17:03:28.861745+00:00 | 92/107 completed
+    Pinging 2606:4700:f1::1 (time.cloudflare.com)
+        Success | 2026-02-24T17:03:29.201741+00:00 | 93/107 completed
+    Pinging 200.160.7.193 (gps.ntp.br)
+        Success | 2026-02-24T17:03:29.348810+00:00 | 94/107 completed
+    Pinging 2001:12f8:9:1::8 (b.ntp.br)
+        Success | 2026-02-24T17:03:29.490699+00:00 | 95/107 completed
+    Pinging 2001:12ff:0:7::193 (pool.ntp.br)
+        Success | 2026-02-24T17:03:29.672800+00:00 | 96/107 completed
+    Pinging 200.189.40.8 (pool.ntp.org)
+        Success | 2026-02-24T17:03:29.807744+00:00 | 97/107 completed
+    Pinging 200.186.125.195 (c.st1.ntp.br)
+        Failure | 2026-02-24T17:03:40.625418+00:00 | 98/107 completed
+    Pinging 2001:4860:4806:4:: (time.google.com)
+        Success | 2026-02-24T17:03:45.747837+00:00 | 99/107 completed
+    Pinging 216.239.35.0 (time1.google.com)
+        Success | 2026-02-24T17:03:45.886874+00:00 | 100/107 completed
+    Pinging 185.125.190.56 (ntp.ubuntu.com)
+        Success | 2026-02-24T17:03:46.024818+00:00 | 101/107 completed
+    Pinging 2001:12ff::8 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:46.374610+00:00 | 102/107 completed
+    Pinging 162.159.200.1 (time.cloudflare.com)
+        Success | 2026-02-24T17:03:46.512879+00:00 | 103/107 completed
+    Pinging 185.125.190.57 (ntp.ubuntu.com)
+        Success | 2026-02-24T17:03:46.657127+00:00 | 104/107 completed
+    Pinging 2606:4700:f1::123 (time.cloudflare.com)
+        Success | 2026-02-24T17:03:47.000767+00:00 | 105/107 completed
+    Pinging 143.107.229.211 (3.pool.ntp.org)
+        Success | 2026-02-24T17:03:47.139891+00:00 | 106/107 completed
+    Pinging 2001:12ff:0:7::197 (2.br.pool.ntp.org)
+        Success | 2026-02-24T17:03:47.282782+00:00 | 107/107 completed
 Phase 6: Testing NTP servers
-    Testing 200.160.7.186 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:03:31.053484+00:00 | 1/428 completed
-    Testing 200.160.7.197 (3.pool.ntp.org) | Source port 54389 | NTP version 3
-        Success | 2026-02-24T04:03:32.094402+00:00 | 2/428 completed
-    Testing 2001:4860:4806:c:: (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:03:47.192341+00:00 | 3/428 completed
-    Testing 2600:3c0d::2000:dcff:fe50:5ea8 (2.pool.ntp.org) | Source port 53628 | NTP version 3
-        Success | 2026-02-24T04:03:52.215062+00:00 | 4/428 completed
-    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:03:53.262230+00:00 | 5/428 completed
-    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port 63987 | NTP version 3
-        Success | 2026-02-24T04:03:54.537190+00:00 | 6/428 completed
-    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:04:09.687721+00:00 | 7/428 completed
-    Testing 168.181.126.108 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:04:28.781877+00:00 | 8/428 completed
-    Testing 2605:e440:24::1:334 (2.pool.ntp.org) | Source port 53353 | NTP version 3
-        Success | 2026-02-24T04:04:33.814472+00:00 | 9/428 completed
-    Testing 200.160.7.186 (2.pool.ntp.org) | Source port 52709 | NTP version 4
-        Success | 2026-02-24T04:04:35.087605+00:00 | 10/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:04:50.182213+00:00 | 11/428 completed
-    Testing 162.159.200.1 (time.cloudflare.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:05:09.267807+00:00 | 12/428 completed
-    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port 51818 | NTP version 4
-        Success | 2026-02-24T04:05:14.300272+00:00 | 13/428 completed
-    Testing 200.160.7.186 (a.st1.ntp.br) | Source port 64659 | NTP version 4
-        Success | 2026-02-24T04:05:15.567211+00:00 | 14/428 completed
-    Testing 168.181.126.28 (pool.ntp.org) | Source port 54730 | NTP version 4
-        Success | 2026-02-24T04:05:16.608614+00:00 | 15/428 completed
-    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port 58643 | NTP version 3
-        Success | 2026-02-24T04:05:17.668348+00:00 | 16/428 completed
-    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:05:18.853057+00:00 | 17/428 completed
-    Testing 200.189.40.8 (0.br.pool.ntp.org) | Source port 60543 | NTP version 3
-        Success | 2026-02-24T04:05:19.911954+00:00 | 18/428 completed
-    Testing 200.20.186.76 (d.st1.ntp.br) | Source port 61020 | NTP version 4
-        Success | 2026-02-24T04:05:21.003191+00:00 | 19/428 completed
-    Testing 194.58.38.95 (1.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:05:36.128392+00:00 | 20/428 completed
-    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:05:41.152338+00:00 | 21/428 completed
-    Testing 200.160.7.193 (pool.ntp.br) | Source port 55230 | NTP version 3
-        Success | 2026-02-24T04:05:42.418258+00:00 | 22/428 completed
-    Testing 2001:12ff::8 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:05:43.470950+00:00 | 23/428 completed
-    Testing 216.238.112.29 (br.pool.ntp.org) | Source port 65195 | NTP version 3
-        Success | 2026-02-24T04:05:44.521381+00:00 | 24/428 completed
-    Testing 200.160.7.197 (br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:05:45.563664+00:00 | 25/428 completed
-    Testing 216.239.35.0 (time1.google.com) | Source port 56010 | NTP version 4
-        Success | 2026-02-24T04:05:46.616922+00:00 | 26/428 completed
-    Testing 168.181.126.28 (2.pool.ntp.org) | Source port 58214 | NTP version 4
-        Success | 2026-02-24T04:05:47.719965+00:00 | 27/428 completed
-    Testing 2001:4860:4806:4:: (time.google.com) | Source port 56072 | NTP version 4
-        Success | 2026-02-24T04:05:48.790943+00:00 | 28/428 completed
-    Testing 2001:12ff::8 (pool.ntp.br) | Source port 60336 | NTP version 4
-        Success | 2026-02-24T04:05:49.902883+00:00 | 29/428 completed
-    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:06:05.027199+00:00 | 30/428 completed
-    Testing 200.189.40.8 (0.br.pool.ntp.org) | Source port 60794 | NTP version 4
-        Success | 2026-02-24T04:06:10.052153+00:00 | 31/428 completed
-    Testing 200.160.7.197 (pool.ntp.br) | Source port 57207 | NTP version 4
-        Success | 2026-02-24T04:06:11.171847+00:00 | 32/428 completed
-    Testing 40.119.6.228 (time.windows.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:06:26.276922+00:00 | 33/428 completed
-    Testing 200.160.7.186 (2.pool.ntp.org) | Source port 63306 | NTP version 3
-        Success | 2026-02-24T04:06:31.309603+00:00 | 34/428 completed
-    Testing 2001:4860:4806:c:: (time4.google.com) | Source port 61962 | NTP version 3
-        Success | 2026-02-24T04:06:32.350842+00:00 | 35/428 completed
-    Testing 200.160.0.8 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:06:33.508947+00:00 | 36/428 completed
-    Testing 2001:12ff::8 (a.ntp.br) | Source port 62157 | NTP version 3
-        Success | 2026-02-24T04:06:34.548963+00:00 | 37/428 completed
-    Testing 200.192.232.8 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:06:35.587094+00:00 | 38/428 completed
-    Testing 200.160.0.8 (1.pool.ntp.org) | Source port 51804 | NTP version 4
-        Success | 2026-02-24T04:06:36.657330+00:00 | 39/428 completed
-    Testing 168.181.126.108 (3.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:06:51.759352+00:00 | 40/428 completed
-    Testing 200.186.125.195 (c.st1.ntp.br) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:07:10.825231+00:00 | 41/428 completed
-    Testing 2804:2ea0::bbbb (2.br.pool.ntp.org) | Source port 54341 | NTP version 4
-        Success | 2026-02-24T04:07:15.843890+00:00 | 42/428 completed
-    Testing 200.192.232.8 (c.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:07:16.909394+00:00 | 43/428 completed
-    Testing 200.160.7.193 (pool.ntp.br) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:07:32.030200+00:00 | 44/428 completed
-    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:07:37.054836+00:00 | 45/428 completed
-    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:07:52.199901+00:00 | 46/428 completed
-    Testing 2001:4860:4806:: (time.google.com) | Source port 62921 | NTP version 3
-        Success | 2026-02-24T04:07:57.231464+00:00 | 47/428 completed
-    Testing 216.239.35.0 (time1.google.com) | Source port 56439 | NTP version 3
-        Success | 2026-02-24T04:07:58.325444+00:00 | 48/428 completed
-    Testing 200.160.0.8 (pool.ntp.org) | Source port 63211 | NTP version 4
-        Success | 2026-02-24T04:07:59.423997+00:00 | 49/428 completed
-    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port 64414 | NTP version 4
-        Success | 2026-02-24T04:08:00.469829+00:00 | 50/428 completed
-    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port 65496 | NTP version 3
-        Success | 2026-02-24T04:08:01.716146+00:00 | 51/428 completed
-    Testing 2001:12ff::8 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:08:02.957041+00:00 | 52/428 completed
-    Testing 192.36.143.130 (0.br.pool.ntp.org) | Source port 60406 | NTP version 3
-        Success | 2026-02-24T04:08:04.028015+00:00 | 53/428 completed
+    Testing 162.159.200.1 (3.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:03:47.426928+00:00 | 1/428 completed
     Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:08:05.302998+00:00 | 54/428 completed
-    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port 65294 | NTP version 3
-        Success | 2026-02-24T04:08:06.340638+00:00 | 55/428 completed
-    Testing 143.107.229.210 (0.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:08:21.478342+00:00 | 56/428 completed
-    Testing 200.160.7.197 (br.pool.ntp.org) | Source port 51020 | NTP version 3
-        Success | 2026-02-24T04:08:26.506508+00:00 | 57/428 completed
-    Testing 192.36.143.130 (0.pool.ntp.org) | Source port 54133 | NTP version 4
-        Success | 2026-02-24T04:08:27.559988+00:00 | 58/428 completed
-    Testing 200.160.7.197 (gps.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:08:28.834941+00:00 | 59/428 completed
-    Testing 200.160.0.8 (a.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:08:29.884229+00:00 | 60/428 completed
-    Testing 200.160.7.196 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:08:30.935428+00:00 | 61/428 completed
-    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port 55690 | NTP version 3
-        Success | 2026-02-24T04:08:31.989829+00:00 | 62/428 completed
-    Testing 172.233.29.160 (1.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:08:47.101067+00:00 | 63/428 completed
-    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port 64467 | NTP version 3
-        Success | 2026-02-24T04:08:52.121292+00:00 | 64/428 completed
-    Testing 200.189.40.8 (0.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:08:53.378966+00:00 | 65/428 completed
-    Testing 2605:e440:24::1:334 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:09:08.524623+00:00 | 66/428 completed
-    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:09:13.546985+00:00 | 67/428 completed
-    Testing 216.239.35.8 (time.google.com) | Source port 56653 | NTP version 4
-        Success | 2026-02-24T04:09:14.595883+00:00 | 68/428 completed
-    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:09:29.746379+00:00 | 69/428 completed
-    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:09:34.765199+00:00 | 70/428 completed
-    Testing 168.181.126.28 (pool.ntp.org) | Source port 60883 | NTP version 3
-        Success | 2026-02-24T04:09:36.040956+00:00 | 71/428 completed
-    Testing 200.160.0.8 (1.pool.ntp.org) | Source port 50518 | NTP version 3
-        Success | 2026-02-24T04:09:37.107826+00:00 | 72/428 completed
-    Testing 143.107.229.211 (pool.ntp.org) | Source port 62825 | NTP version 4
-        Success | 2026-02-24T04:09:38.158360+00:00 | 73/428 completed
-    Testing 200.160.7.196 (0.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:09:39.204001+00:00 | 74/428 completed
-    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:09:54.304442+00:00 | 75/428 completed
-    Testing 216.239.35.0 (time1.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:10:13.375168+00:00 | 76/428 completed
-    Testing 200.192.232.8 (3.pool.ntp.org) | Source port 63152 | NTP version 4
-        Success | 2026-02-24T04:10:18.394845+00:00 | 77/428 completed
-    Testing 2804:2ea0::bbbb (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:10:33.576665+00:00 | 78/428 completed
-    Testing 162.159.200.123 (time.cloudflare.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:10:52.657315+00:00 | 79/428 completed
-    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port 59853 | NTP version 4
-        Success | 2026-02-24T04:10:57.680337+00:00 | 80/428 completed
-    Testing 2001:4860:4806:: (time1.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:11:12.769151+00:00 | 81/428 completed
-    Testing 200.192.232.8 (3.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:11:17.801214+00:00 | 82/428 completed
-    Testing 200.160.7.197 (3.br.pool.ntp.org) | Source port 53992 | NTP version 3
-        Success | 2026-02-24T04:11:18.872681+00:00 | 83/428 completed
-    Testing 194.58.38.95 (1.pool.ntp.org) | Source port 50305 | NTP version 3
-        Success | 2026-02-24T04:11:19.926901+00:00 | 84/428 completed
-    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:11:35.249556+00:00 | 85/428 completed
-    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port 62175 | NTP version 4
-        Success | 2026-02-24T04:11:40.272379+00:00 | 86/428 completed
-    Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:11:41.317354+00:00 | 87/428 completed
-    Testing 162.159.200.123 (time.cloudflare.com) | Source port 63037 | NTP version 3
-        Success | 2026-02-24T04:11:42.359299+00:00 | 88/428 completed
-    Testing 200.160.7.197 (3.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:11:43.416333+00:00 | 89/428 completed
-    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port 50761 | NTP version 3
-        Success | 2026-02-24T04:11:44.473362+00:00 | 90/428 completed
-    Testing 2804:2ea0::aaaa (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:11:59.782381+00:00 | 91/428 completed
-    Testing 200.192.232.8 (pool.ntp.br) | Source port 61598 | NTP version 4
-        Success | 2026-02-24T04:12:04.805878+00:00 | 92/428 completed
-    Testing 192.36.143.130 (0.br.pool.ntp.org) | Source port 52700 | NTP version 4
-        Success | 2026-02-24T04:12:05.873819+00:00 | 93/428 completed
-    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:12:21.206303+00:00 | 94/428 completed
-    Testing 200.160.7.186 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:12:26.266383+00:00 | 95/428 completed
-    Testing 143.107.229.210 (0.pool.ntp.org) | Source port 60864 | NTP version 4
-        Success | 2026-02-24T04:12:27.321808+00:00 | 96/428 completed
-    Testing 216.239.35.12 (time4.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:12:42.431387+00:00 | 97/428 completed
-    Testing 216.238.112.29 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:13:01.501273+00:00 | 98/428 completed
-    Testing 200.160.7.186 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:13:06.525385+00:00 | 99/428 completed
-    Testing 132.163.97.3 (time.nist.gov) | Source port 59058 | NTP version 4
-        Success | 2026-02-24T04:13:07.571099+00:00 | 100/428 completed
-    Testing 200.160.7.186 (2.br.pool.ntp.org) | Source port 58340 | NTP version 3
-        Success | 2026-02-24T04:13:08.774020+00:00 | 101/428 completed
-    Testing 168.181.126.28 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:13:23.864305+00:00 | 102/428 completed
-    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:13:28.888821+00:00 | 103/428 completed
-    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:13:44.215402+00:00 | 104/428 completed
-    Testing 162.159.200.123 (2.pool.ntp.org) | Source port 57373 | NTP version 3
-        Success | 2026-02-24T04:13:49.238386+00:00 | 105/428 completed
-    Testing 143.107.229.210 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:14:04.339352+00:00 | 106/428 completed
-    Testing 2600:3c0d::2000:dcff:fe50:5ea8 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:14:23.409301+00:00 | 107/428 completed
-    Testing 200.160.0.8 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:14:28.464059+00:00 | 108/428 completed
-    Testing 192.36.143.130 (0.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:14:43.604799+00:00 | 109/428 completed
-    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:15:02.695401+00:00 | 110/428 completed
-    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port 55718 | NTP version 4
-        Success | 2026-02-24T04:15:07.717864+00:00 | 111/428 completed
-    Testing 216.238.112.29 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:15:22.979834+00:00 | 112/428 completed
-    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:15:42.064202+00:00 | 113/428 completed
-    Testing 185.234.20.131 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:16:01.126293+00:00 | 114/428 completed
-    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port 56303 | NTP version 4
-        Success | 2026-02-24T04:16:06.149377+00:00 | 115/428 completed
-    Testing 216.239.35.0 (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:16:21.451006+00:00 | 116/428 completed
-    Testing 2001:4860:4806:4:: (time2.google.com) | Source port 49630 | NTP version 3
-        Success | 2026-02-24T04:16:26.475204+00:00 | 117/428 completed
-    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port 60057 | NTP version 4
-        Success | 2026-02-24T04:16:27.596481+00:00 | 118/428 completed
-    Testing 200.160.7.186 (a.st1.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:16:28.836694+00:00 | 119/428 completed
-    Testing 200.160.0.8 (pool.ntp.br) | Source port 65183 | NTP version 4
-        Success | 2026-02-24T04:16:29.908683+00:00 | 120/428 completed
-    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port 60677 | NTP version 3
-        Success | 2026-02-24T04:16:30.961448+00:00 | 121/428 completed
-    Testing 216.239.35.0 (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:16:46.066370+00:00 | 122/428 completed
-    Testing 200.192.232.8 (br.pool.ntp.org) | Source port 52631 | NTP version 3
-        Success | 2026-02-24T04:16:51.095235+00:00 | 123/428 completed
-    Testing 192.36.143.130 (0.pool.ntp.org) | Source port 63485 | NTP version 3
-        Success | 2026-02-24T04:16:52.159876+00:00 | 124/428 completed
-    Testing 216.239.35.12 (time.google.com) | Source port 50358 | NTP version 4
-        Success | 2026-02-24T04:16:53.440515+00:00 | 125/428 completed
-    Testing 200.160.7.196 (0.br.pool.ntp.org) | Source port 54264 | NTP version 3
-        Success | 2026-02-24T04:16:54.602074+00:00 | 126/428 completed
-    Testing 216.238.112.29 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:17:09.683439+00:00 | 127/428 completed
-    Testing 200.192.232.8 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:17:14.705981+00:00 | 128/428 completed
-    Testing 2606:4700:f1::123 (2.pool.ntp.org) | Source port 64309 | NTP version 3
-        Success | 2026-02-24T04:17:15.776444+00:00 | 129/428 completed
-    Testing 143.107.229.211 (pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:17:30.883368+00:00 | 130/428 completed
-    Testing 2001:4860:4806:c:: (time4.google.com) | Source port 62835 | NTP version 4
-        Success | 2026-02-24T04:17:35.897812+00:00 | 131/428 completed
-    Testing 162.159.200.123 (2.pool.ntp.org) | Source port 52617 | NTP version 4
-        Success | 2026-02-24T04:17:37.073672+00:00 | 132/428 completed
-    Testing 2001:4860:4806:c:: (time.google.com) | Source port 52536 | NTP version 4
-        Success | 2026-02-24T04:17:38.136110+00:00 | 133/428 completed
-    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port 61586 | NTP version 4
-        Success | 2026-02-24T04:17:39.297944+00:00 | 134/428 completed
-    Testing 143.107.229.210 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:17:54.608398+00:00 | 135/428 completed
-    Testing 200.192.232.8 (br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:17:59.628281+00:00 | 136/428 completed
-    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port 54326 | NTP version 3
-        Success | 2026-02-24T04:18:00.701299+00:00 | 137/428 completed
-    Testing 200.192.232.8 (pool.ntp.br) | Source port 54037 | NTP version 3
-        Success | 2026-02-24T04:18:01.943543+00:00 | 138/428 completed
-    Testing 200.160.0.8 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:18:03.017508+00:00 | 139/428 completed
-    Testing 200.160.7.197 (gps.ntp.br) | Source port 58707 | NTP version 4
-        Success | 2026-02-24T04:18:04.071853+00:00 | 140/428 completed
-    Testing 185.234.20.131 (1.pool.ntp.org) | Source port 57337 | NTP version 4
-        Failure | 2026-02-24T04:18:19.164168+00:00 | 141/428 completed
-    Testing 200.189.40.8 (pool.ntp.org) | Source port 56290 | NTP version 3
-        Success | 2026-02-24T04:18:31.221604+00:00 | 142/428 completed
-    Testing 200.192.232.8 (br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:18:32.333667+00:00 | 143/428 completed
-    Testing 200.160.7.193 (gps.ntp.br) | Source port 50231 | NTP version 3
-        Success | 2026-02-24T04:18:33.402458+00:00 | 144/428 completed
-    Testing 200.160.0.8 (a.ntp.br) | Source port 60928 | NTP version 4
-        Success | 2026-02-24T04:18:34.447157+00:00 | 145/428 completed
-    Testing 200.160.0.8 (pool.ntp.br) | Source port 64307 | NTP version 3
-        Success | 2026-02-24T04:18:35.501109+00:00 | 146/428 completed
-    Testing 216.239.35.0 (time.google.com) | Source port 56604 | NTP version 4
-        Success | 2026-02-24T04:18:36.547112+00:00 | 147/428 completed
-    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port 63733 | NTP version 3
-        Success | 2026-02-24T04:18:37.649070+00:00 | 148/428 completed
-    Testing 2001:4860:4806:8:: (time.google.com) | Source port 55063 | NTP version 4
-        Success | 2026-02-24T04:18:38.758887+00:00 | 149/428 completed
-    Testing 200.186.125.195 (c.st1.ntp.br) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:18:53.928925+00:00 | 150/428 completed
-    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port 50317 | NTP version 4
-        Success | 2026-02-24T04:18:58.962003+00:00 | 151/428 completed
-    Testing 200.192.232.8 (3.br.pool.ntp.org) | Source port 50153 | NTP version 3
-        Success | 2026-02-24T04:19:00.018781+00:00 | 152/428 completed
-    Testing 200.160.7.186 (2.br.pool.ntp.org) | Source port 54888 | NTP version 4
-        Success | 2026-02-24T04:19:01.094897+00:00 | 153/428 completed
-    Testing 201.49.148.135 (b.st1.ntp.br) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:19:16.187300+00:00 | 154/428 completed
-    Testing 2001:12ff::8 (a.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:19:21.209942+00:00 | 155/428 completed
-    Testing 172.233.29.160 (1.pool.ntp.org) | Source port 57719 | NTP version 3
-        Success | 2026-02-24T04:19:22.255820+00:00 | 156/428 completed
-    Testing 2001:4860:4806:4:: (time.google.com) | Source port 52212 | NTP version 3
-        Success | 2026-02-24T04:19:23.296105+00:00 | 157/428 completed
-    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:19:38.459614+00:00 | 158/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.pool.ntp.org) | Source port 62968 | NTP version 3
-        Success | 2026-02-24T04:19:43.479042+00:00 | 159/428 completed
-    Testing 216.239.35.12 (time.google.com) | Source port 59421 | NTP version 3
-        Success | 2026-02-24T04:19:44.529291+00:00 | 160/428 completed
-    Testing 172.233.29.160 (1.pool.ntp.org) | Source port 54397 | NTP version 4
-        Success | 2026-02-24T04:19:45.698926+00:00 | 161/428 completed
-    Testing 200.160.7.197 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:19:46.746344+00:00 | 162/428 completed
-    Testing 2804:2ea0::aaaa (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:20:01.847813+00:00 | 163/428 completed
-    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:20:20.930034+00:00 | 164/428 completed
-    Testing 168.181.126.108 (3.pool.ntp.org) | Source port 50867 | NTP version 4
-        Success | 2026-02-24T04:20:25.961971+00:00 | 165/428 completed
-    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port 58078 | NTP version 3
-        Success | 2026-02-24T04:20:27.023982+00:00 | 166/428 completed
-    Testing 192.36.143.130 (0.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:20:42.147833+00:00 | 167/428 completed
-    Testing 162.159.200.1 (time.cloudflare.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:21:01.225297+00:00 | 168/428 completed
-    Testing 200.160.7.197 (pool.ntp.br) | Source port 61715 | NTP version 3
-        Success | 2026-02-24T04:21:06.245018+00:00 | 169/428 completed
-    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:21:07.293971+00:00 | 170/428 completed
-    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port 49749 | NTP version 4
-        Success | 2026-02-24T04:21:08.374362+00:00 | 171/428 completed
-    Testing 2804:2ea0::aaaa (2.br.pool.ntp.org) | Source port 62731 | NTP version 4
-        Success | 2026-02-24T04:21:09.650945+00:00 | 172/428 completed
-    Testing 200.160.0.8 (1.br.pool.ntp.org) | Source port 51612 | NTP version 3
-        Success | 2026-02-24T04:21:10.715260+00:00 | 173/428 completed
-    Testing 143.107.229.210 (0.br.pool.ntp.org) | Source port 49554 | NTP version 3
-        Success | 2026-02-24T04:21:11.768984+00:00 | 174/428 completed
-    Testing 216.239.35.8 (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:21:26.869214+00:00 | 175/428 completed
-    Testing 201.49.148.135 (b.st1.ntp.br) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:21:45.942948+00:00 | 176/428 completed
-    Testing 200.186.125.195 (c.st1.ntp.br) | Source port 62466 | NTP version 4
-        Failure | 2026-02-24T04:22:05.019148+00:00 | 177/428 completed
-    Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port 50125 | NTP version 4
-        Success | 2026-02-24T04:22:10.042652+00:00 | 178/428 completed
-    Testing 200.160.7.193 (gps.ntp.br) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:22:25.142607+00:00 | 179/428 completed
-    Testing 200.160.0.8 (1.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:22:30.175423+00:00 | 180/428 completed
-    Testing 2804:2ea0::bbbb (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:22:45.280037+00:00 | 181/428 completed
-    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:22:50.306032+00:00 | 182/428 completed
-    Testing 216.239.35.4 (time2.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:23:05.472225+00:00 | 183/428 completed
-    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:23:24.583965+00:00 | 184/428 completed
-    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:23:43.669923+00:00 | 185/428 completed
-    Testing 200.160.0.8 (pool.ntp.org) | Source port 57358 | NTP version 3
-        Success | 2026-02-24T04:23:48.689783+00:00 | 186/428 completed
-    Testing 2001:4860:4806:: (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:24:03.778289+00:00 | 187/428 completed
-    Testing 200.160.7.197 (gps.ntp.br) | Source port 59301 | NTP version 3
-        Success | 2026-02-24T04:24:08.800942+00:00 | 188/428 completed
-    Testing 2001:4860:4806:c:: (time4.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:24:23.903571+00:00 | 189/428 completed
-    Testing 200.189.40.8 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:24:28.923273+00:00 | 190/428 completed
-    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:24:44.071383+00:00 | 191/428 completed
-    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:25:03.180814+00:00 | 192/428 completed
-    Testing 200.160.0.8 (1.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:25:08.207885+00:00 | 193/428 completed
-    Testing 200.189.40.8 (b.ntp.br) | Source port 51450 | NTP version 4
-        Success | 2026-02-24T04:25:09.260923+00:00 | 194/428 completed
-    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port 50019 | NTP version 3
-        Success | 2026-02-24T04:25:10.351333+00:00 | 195/428 completed
-    Testing 200.160.7.196 (0.pool.ntp.org) | Source port 57137 | NTP version 4
-        Success | 2026-02-24T04:25:11.546878+00:00 | 196/428 completed
-    Testing 216.239.35.4 (time.google.com) | Source port 56988 | NTP version 3
-        Success | 2026-02-24T04:25:12.590231+00:00 | 197/428 completed
-    Testing 216.239.35.12 (time4.google.com) | Source port 63458 | NTP version 3
-        Success | 2026-02-24T04:25:13.690851+00:00 | 198/428 completed
-    Testing 200.160.0.8 (pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:25:14.846777+00:00 | 199/428 completed
-    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port 59058 | NTP version 3
-        Success | 2026-02-24T04:25:15.887835+00:00 | 200/428 completed
-    Testing 200.160.7.197 (br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:25:16.971394+00:00 | 201/428 completed
-    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:25:18.016914+00:00 | 202/428 completed
-    Testing 2001:4860:4806:c:: (time.google.com) | Source port 50834 | NTP version 3
-        Success | 2026-02-24T04:25:19.108725+00:00 | 203/428 completed
-    Testing 200.160.7.196 (pool.ntp.br) | Source port 50706 | NTP version 3
-        Success | 2026-02-24T04:25:20.269399+00:00 | 204/428 completed
-    Testing 200.160.7.186 (pool.ntp.br) | Source port 50198 | NTP version 4
-        Success | 2026-02-24T04:25:21.325185+00:00 | 205/428 completed
-    Testing 200.189.40.8 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:25:22.375805+00:00 | 206/428 completed
-    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port 54574 | NTP version 3
-        Success | 2026-02-24T04:25:23.476443+00:00 | 207/428 completed
-    Testing 172.233.29.160 (1.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:25:38.619724+00:00 | 208/428 completed
-    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port 56004 | NTP version 4
-        Success | 2026-02-24T04:25:43.644578+00:00 | 209/428 completed
-    Testing 216.239.35.12 (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:25:58.746252+00:00 | 210/428 completed
-    Testing 216.239.35.0 (time.google.com) | Source port 60210 | NTP version 3
-        Success | 2026-02-24T04:26:03.766195+00:00 | 211/428 completed
-    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:26:18.916250+00:00 | 212/428 completed
-    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port 61793 | NTP version 3
-        Success | 2026-02-24T04:26:23.934885+00:00 | 213/428 completed
-    Testing 200.160.0.8 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:26:25.205887+00:00 | 214/428 completed
-    Testing 200.189.40.8 (pool.ntp.br) | Source port 57716 | NTP version 3
-        Success | 2026-02-24T04:26:26.251256+00:00 | 215/428 completed
-    Testing 185.234.20.131 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:26:41.392306+00:00 | 216/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:27:00.458989+00:00 | 217/428 completed
-    Testing 216.239.35.4 (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:27:19.586968+00:00 | 218/428 completed
-    Testing 192.36.143.130 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:27:38.650942+00:00 | 219/428 completed
-    Testing 2001:4860:4806:: (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:27:57.761361+00:00 | 220/428 completed
-    Testing 200.160.0.8 (a.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:28:02.779869+00:00 | 221/428 completed
-    Testing 2001:4860:4806:c:: (time4.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:28:17.872504+00:00 | 222/428 completed
-    Testing 200.160.7.197 (br.pool.ntp.org) | Source port 52519 | NTP version 4
-        Success | 2026-02-24T04:28:22.896164+00:00 | 223/428 completed
-    Testing 168.181.126.28 (2.pool.ntp.org) | Source port 58685 | NTP version 3
-        Success | 2026-02-24T04:28:23.946826+00:00 | 224/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:28:39.050417+00:00 | 225/428 completed
-    Testing 2001:4860:4806:4:: (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:28:58.132883+00:00 | 226/428 completed
-    Testing 200.160.7.186 (a.st1.ntp.br) | Source port 50202 | NTP version 3
-        Success | 2026-02-24T04:29:03.158216+00:00 | 227/428 completed
-    Testing 2001:4860:4806:8:: (time3.google.com) | Source port 57461 | NTP version 4
-        Success | 2026-02-24T04:29:04.198898+00:00 | 228/428 completed
-    Testing 200.160.7.193 (pool.ntp.br) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:29:19.371227+00:00 | 229/428 completed
-    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:29:24.398001+00:00 | 230/428 completed
-    Testing 216.239.35.4 (time2.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:29:39.510314+00:00 | 231/428 completed
-    Testing 200.189.40.8 (b.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:29:44.532939+00:00 | 232/428 completed
-    Testing 216.239.35.8 (time3.google.com) | Source port 56918 | NTP version 4
-        Success | 2026-02-24T04:29:45.633328+00:00 | 233/428 completed
-    Testing 172.233.29.160 (br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:30:00.782801+00:00 | 234/428 completed
-    Testing 200.160.7.186 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:30:05.806888+00:00 | 235/428 completed
-    Testing 168.181.126.28 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:30:20.896817+00:00 | 236/428 completed
-    Testing 2600:3c0d::2000:dcff:fe50:5ea8 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:30:39.995822+00:00 | 237/428 completed
-    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port 52607 | NTP version 4
-        Success | 2026-02-24T04:30:45.016880+00:00 | 238/428 completed
-    Testing 40.119.6.228 (time.windows.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:31:00.124811+00:00 | 239/428 completed
-    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port 63126 | NTP version 4
-        Success | 2026-02-24T04:31:05.151958+00:00 | 240/428 completed
-    Testing 200.160.7.197 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:31:06.246993+00:00 | 241/428 completed
-    Testing 216.238.112.29 (2.br.pool.ntp.org) | Source port 63077 | NTP version 3
-        Success | 2026-02-24T04:31:07.300963+00:00 | 242/428 completed
-    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port 53418 | NTP version 3
-        Success | 2026-02-24T04:31:08.346914+00:00 | 243/428 completed
-    Testing 200.160.7.193 (gps.ntp.br) | Source port 54413 | NTP version 4
-        Success | 2026-02-24T04:31:09.612962+00:00 | 244/428 completed
-    Testing 200.189.40.8 (b.ntp.br) | Source port 57864 | NTP version 3
-        Success | 2026-02-24T04:31:10.666862+00:00 | 245/428 completed
-    Testing 2001:4860:4806:8:: (time.google.com) | Source port 50194 | NTP version 3
-        Success | 2026-02-24T04:31:11.759347+00:00 | 246/428 completed
+        Success | 2026-02-24T17:03:47.569710+00:00 | 2/428 completed
     Testing 200.160.7.197 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:31:12.860998+00:00 | 247/428 completed
-    Testing 2600:3c0d::2000:dcff:fe50:5ea8 (2.pool.ntp.org) | Source port 60911 | NTP version 4
-        Success | 2026-02-24T04:31:13.931929+00:00 | 248/428 completed
-    Testing 2001:4860:4806:8:: (time3.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:31:29.023109+00:00 | 249/428 completed
-    Testing 201.49.148.135 (b.st1.ntp.br) | Source port 59406 | NTP version 3
-        Failure | 2026-02-24T04:31:48.110338+00:00 | 250/428 completed
-    Testing 216.239.35.4 (time2.google.com) | Source port 50111 | NTP version 4
-        Success | 2026-02-24T04:31:53.133242+00:00 | 251/428 completed
-    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:32:08.282832+00:00 | 252/428 completed
-    Testing 162.159.200.1 (time.cloudflare.com) | Source port 52992 | NTP version 3
-        Success | 2026-02-24T04:32:13.315145+00:00 | 253/428 completed
-    Testing 216.239.35.8 (time.google.com) | Source port 64454 | NTP version 3
-        Success | 2026-02-24T04:32:14.367913+00:00 | 254/428 completed
-    Testing 168.181.126.108 (3.pool.ntp.org) | Source port 61626 | NTP version 3
-        Success | 2026-02-24T04:32:15.471897+00:00 | 255/428 completed
-    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:32:16.532917+00:00 | 256/428 completed
-    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:32:17.626364+00:00 | 257/428 completed
-    Testing 172.233.29.160 (br.pool.ntp.org) | Source port 53843 | NTP version 3
-        Success | 2026-02-24T04:32:18.683965+00:00 | 258/428 completed
-    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port 57654 | NTP version 3
-        Success | 2026-02-24T04:32:19.732018+00:00 | 259/428 completed
-    Testing 201.49.148.135 (b.st1.ntp.br) | Source port 60862 | NTP version 4
-        Failure | 2026-02-24T04:32:35.049200+00:00 | 260/428 completed
-    Testing 216.239.35.12 (time4.google.com) | Source port 51280 | NTP version 4
-        Success | 2026-02-24T04:32:40.076111+00:00 | 261/428 completed
-    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:32:41.235057+00:00 | 262/428 completed
-    Testing 200.160.7.193 (3.pool.ntp.org) | Source port 59968 | NTP version 3
-        Success | 2026-02-24T04:32:42.300629+00:00 | 263/428 completed
-    Testing 216.239.35.4 (time2.google.com) | Source port 57113 | NTP version 3
-        Success | 2026-02-24T04:32:43.349670+00:00 | 264/428 completed
-    Testing 200.160.7.186 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:32:44.444849+00:00 | 265/428 completed
-    Testing 132.163.97.3 (time.nist.gov) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:32:59.535315+00:00 | 266/428 completed
-    Testing 200.189.40.8 (pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:33:04.550848+00:00 | 267/428 completed
-    Testing 2001:4860:4806:8:: (time3.google.com) | Source port 58930 | NTP version 3
-        Success | 2026-02-24T04:33:05.642927+00:00 | 268/428 completed
-    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port 62602 | NTP version 4
-        Success | 2026-02-24T04:33:06.745395+00:00 | 269/428 completed
-    Testing 2001:4860:4806:4:: (time2.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:33:22.048233+00:00 | 270/428 completed
-    Testing 216.239.35.12 (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:33:41.136803+00:00 | 271/428 completed
-    Testing 168.181.126.28 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:34:00.213810+00:00 | 272/428 completed
-    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port 57740 | NTP version 4
-        Success | 2026-02-24T04:34:05.232811+00:00 | 273/428 completed
-    Testing 168.181.126.28 (pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:34:20.354333+00:00 | 274/428 completed
-    Testing 168.181.126.28 (2.br.pool.ntp.org) | Source port 60619 | NTP version 4
-        Success | 2026-02-24T04:34:25.373893+00:00 | 275/428 completed
-    Testing 200.160.0.8 (pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:34:26.438252+00:00 | 276/428 completed
-    Testing 143.107.229.211 (pool.ntp.org) | Source port 49996 | NTP version 3
-        Success | 2026-02-24T04:34:27.487993+00:00 | 277/428 completed
-    Testing 2605:e440:24::1:334 (2.pool.ntp.org) | Source port 54687 | NTP version 4
-        Success | 2026-02-24T04:34:28.541173+00:00 | 278/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:34:43.846971+00:00 | 279/428 completed
-    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port 53815 | NTP version 3
-        Success | 2026-02-24T04:34:48.903829+00:00 | 280/428 completed
-    Testing 143.107.229.210 (0.pool.ntp.org) | Source port 50307 | NTP version 3
-        Success | 2026-02-24T04:34:49.953921+00:00 | 281/428 completed
-    Testing 162.159.200.123 (time.cloudflare.com) | Source port 58283 | NTP version 4
-        Success | 2026-02-24T04:34:51.011381+00:00 | 282/428 completed
-    Testing 216.239.35.12 (time4.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:35:06.108350+00:00 | 283/428 completed
-    Testing 132.163.97.3 (time.nist.gov) | Source port 63498 | NTP version 3
-        Success | 2026-02-24T04:35:11.135815+00:00 | 284/428 completed
-    Testing 2606:4700:f1::123 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:35:26.384692+00:00 | 285/428 completed
-    Testing 40.119.6.228 (time.windows.com) | Source port 62195 | NTP version 4
-        Success | 2026-02-24T04:35:31.408956+00:00 | 286/428 completed
-    Testing 2001:4860:4806:4:: (time2.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:35:46.691414+00:00 | 287/428 completed
-    Testing 200.189.40.8 (pool.ntp.org) | Source port 62388 | NTP version 4
-        Success | 2026-02-24T04:35:51.714017+00:00 | 288/428 completed
-    Testing 162.159.200.123 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:36:06.859631+00:00 | 289/428 completed
-    Testing 216.238.112.29 (br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:36:25.935082+00:00 | 290/428 completed
-    Testing 200.160.7.197 (3.br.pool.ntp.org) | Source port 49796 | NTP version 4
-        Success | 2026-02-24T04:36:30.968279+00:00 | 291/428 completed
-    Testing 2001:12ff::8 (pool.ntp.br) | Source port 62371 | NTP version 3
-        Success | 2026-02-24T04:36:32.016816+00:00 | 292/428 completed
-    Testing 2606:4700:f1::123 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:36:47.139085+00:00 | 293/428 completed
-    Testing 200.160.7.186 (pool.ntp.br) | Source port 57562 | NTP version 3
-        Success | 2026-02-24T04:36:52.181691+00:00 | 294/428 completed
-    Testing 162.159.200.123 (time.cloudflare.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:37:07.293891+00:00 | 295/428 completed
-    Testing 216.238.112.29 (br.pool.ntp.org) | Source port 59985 | NTP version 4
-        Success | 2026-02-24T04:37:12.325297+00:00 | 296/428 completed
-    Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port 55264 | NTP version 3
-        Success | 2026-02-24T04:37:13.369829+00:00 | 297/428 completed
-    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:37:14.411861+00:00 | 298/428 completed
-    Testing 162.159.200.123 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:37:29.523399+00:00 | 299/428 completed
-    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:37:48.589297+00:00 | 300/428 completed
-    Testing 200.189.40.8 (pool.ntp.br) | Source port 56696 | NTP version 4
-        Success | 2026-02-24T04:37:53.614965+00:00 | 301/428 completed
-    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:38:08.792287+00:00 | 302/428 completed
-    Testing 162.159.200.123 (2.br.pool.ntp.org) | Source port 59943 | NTP version 3
-        Success | 2026-02-24T04:38:13.810861+00:00 | 303/428 completed
-    Testing 143.107.229.210 (0.br.pool.ntp.org) | Source port 64933 | NTP version 4
-        Success | 2026-02-24T04:38:14.857360+00:00 | 304/428 completed
-    Testing 194.58.38.95 (1.pool.ntp.org) | Source port 62823 | NTP version 4
-        Success | 2026-02-24T04:38:15.913496+00:00 | 305/428 completed
-    Testing 216.238.112.29 (2.pool.ntp.org) | Source port 58371 | NTP version 3
-        Success | 2026-02-24T04:38:17.203591+00:00 | 306/428 completed
-    Testing 216.238.112.29 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:38:32.300430+00:00 | 307/428 completed
-    Testing 200.160.7.196 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:38:37.332220+00:00 | 308/428 completed
-    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port 58639 | NTP version 4
-        Success | 2026-02-24T04:38:38.374810+00:00 | 309/428 completed
-    Testing 132.163.97.3 (time.nist.gov) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:38:53.526583+00:00 | 310/428 completed
-    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:39:12.596988+00:00 | 311/428 completed
-    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:39:31.691290+00:00 | 312/428 completed
-    Testing 2606:4700:f1::123 (2.pool.ntp.org) | Source port 60770 | NTP version 4
-        Success | 2026-02-24T04:39:36.716027+00:00 | 313/428 completed
-    Testing 200.160.7.197 (3.pool.ntp.org) | Source port 64802 | NTP version 4
-        Success | 2026-02-24T04:39:37.798655+00:00 | 314/428 completed
-    Testing 2001:12ff::8 (a.ntp.br) | Source port 53987 | NTP version 4
-        Success | 2026-02-24T04:39:38.846831+00:00 | 315/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.br.pool.ntp.org) | Source port 63540 | NTP version 4
-        Success | 2026-02-24T04:39:39.888314+00:00 | 316/428 completed
-    Testing 200.192.232.8 (c.ntp.br) | Source port 50648 | NTP version 3
-        Success | 2026-02-24T04:39:40.931994+00:00 | 317/428 completed
-    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:39:56.046562+00:00 | 318/428 completed
-    Testing 200.189.40.8 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:40:01.084811+00:00 | 319/428 completed
-    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:40:02.175931+00:00 | 320/428 completed
-    Testing 216.239.35.4 (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:40:17.276356+00:00 | 321/428 completed
-    Testing 200.189.40.8 (0.pool.ntp.org) | Source port 57570 | NTP version 4
-        Success | 2026-02-24T04:40:22.298950+00:00 | 322/428 completed
-    Testing 200.192.232.8 (3.pool.ntp.org) | Source port 61420 | NTP version 3
-        Success | 2026-02-24T04:40:23.397389+00:00 | 323/428 completed
-    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:40:24.462975+00:00 | 324/428 completed
-    Testing 200.192.232.8 (3.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:40:25.516774+00:00 | 325/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.pool.ntp.org) | Source port 63051 | NTP version 4
-        Success | 2026-02-24T04:40:26.578263+00:00 | 326/428 completed
-    Testing 200.160.7.197 (gps.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:40:27.624320+00:00 | 327/428 completed
-    Testing 2001:4860:4806:4:: (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:40:42.730984+00:00 | 328/428 completed
-    Testing 185.234.20.131 (1.pool.ntp.org) | Source port 57964 | NTP version 3
-        Success | 2026-02-24T04:41:01.819829+00:00 | 329/428 completed
-    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:41:17.305497+00:00 | 330/428 completed
-    Testing 143.107.229.211 (pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:41:36.384411+00:00 | 331/428 completed
-    Testing 143.107.229.210 (0.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:41:55.454399+00:00 | 332/428 completed
-    Testing 200.186.125.195 (c.st1.ntp.br) | Source port 61865 | NTP version 3
-        Failure | 2026-02-24T04:42:14.562695+00:00 | 333/428 completed
-    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port 58616 | NTP version 4
-        Success | 2026-02-24T04:42:19.587880+00:00 | 334/428 completed
-    Testing 2001:4860:4806:4:: (time2.google.com) | Source port 62082 | NTP version 4
-        Success | 2026-02-24T04:42:20.662369+00:00 | 335/428 completed
-    Testing 168.181.126.28 (2.br.pool.ntp.org) | Source port 61003 | NTP version 3
-        Success | 2026-02-24T04:42:21.766948+00:00 | 336/428 completed
-    Testing 200.192.232.8 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:42:22.819678+00:00 | 337/428 completed
-    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:42:23.889165+00:00 | 338/428 completed
-    Testing 168.181.126.28 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:42:38.977715+00:00 | 339/428 completed
-    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port 64224 | NTP version 3
-        Success | 2026-02-24T04:42:44.014521+00:00 | 340/428 completed
-    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port 60802 | NTP version 4
-        Success | 2026-02-24T04:42:45.257355+00:00 | 341/428 completed
-    Testing 216.239.35.4 (time.google.com) | Source port 64303 | NTP version 4
-        Success | 2026-02-24T04:42:46.520645+00:00 | 342/428 completed
-    Testing 200.160.7.193 (3.pool.ntp.org) | Source port 53647 | NTP version 4
-        Success | 2026-02-24T04:42:47.628179+00:00 | 343/428 completed
-    Testing 200.189.40.8 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:42:48.680938+00:00 | 344/428 completed
-    Testing 200.160.7.196 (0.pool.ntp.org) | Source port 58004 | NTP version 3
-        Success | 2026-02-24T04:42:49.778921+00:00 | 345/428 completed
-    Testing 2001:19f0:b800:1c73:5400:5ff:fe04:48c3 (2.br.pool.ntp.org) | Source port 54010 | NTP version 3
-        Success | 2026-02-24T04:42:50.833878+00:00 | 346/428 completed
-    Testing 200.160.7.196 (0.br.pool.ntp.org) | Source port 52053 | NTP version 4
-        Success | 2026-02-24T04:42:51.882085+00:00 | 347/428 completed
-    Testing 172.233.29.160 (br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:43:06.993876+00:00 | 348/428 completed
-    Testing 2001:4860:4806:8:: (time3.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:43:26.068885+00:00 | 349/428 completed
-    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port 56716 | NTP version 3
-        Success | 2026-02-24T04:43:31.092710+00:00 | 350/428 completed
-    Testing 185.234.20.131 (1.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:43:46.189721+00:00 | 351/428 completed
-    Testing 216.238.112.29 (2.pool.ntp.org) | Source port 60826 | NTP version 4
-        Success | 2026-02-24T04:43:51.222381+00:00 | 352/428 completed
-    Testing 200.160.0.8 (a.ntp.br) | Source port 62340 | NTP version 3
-        Success | 2026-02-24T04:43:52.255709+00:00 | 353/428 completed
-    Testing 2804:2ea0::bbbb (2.br.pool.ntp.org) | Source port 62277 | NTP version 3
-        Success | 2026-02-24T04:43:53.297851+00:00 | 354/428 completed
-    Testing 2001:12ff::8 (a.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:43:54.359709+00:00 | 355/428 completed
-    Testing 200.160.7.196 (pool.ntp.br) | Source port 50667 | NTP version 4
-        Success | 2026-02-24T04:43:55.398688+00:00 | 356/428 completed
-    Testing 216.239.35.8 (time3.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:44:10.542187+00:00 | 357/428 completed
-    Testing 200.189.40.8 (pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:44:15.560781+00:00 | 358/428 completed
+        Success | 2026-02-24T17:03:47.711739+00:00 | 3/428 completed
+    Testing 200.186.125.195 (c.st1.ntp.br) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:03:58.487075+00:00 | 4/428 completed
+    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:04:03.605762+00:00 | 5/428 completed
+    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:04:03.970924+00:00 | 6/428 completed
+    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:04:04.341804+00:00 | 7/428 completed
+    Testing 168.181.126.108 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:04:15.130712+00:00 | 8/428 completed
+    Testing 192.36.143.130 (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:04:30.901995+00:00 | 9/428 completed
+    Testing 162.159.200.123 (pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:04:46.686206+00:00 | 10/428 completed
+    Testing 2001:4860:4806:c:: (time4.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:05:02.476142+00:00 | 11/428 completed
+    Testing 168.181.126.28 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:05:18.250195+00:00 | 12/428 completed
+    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:05:23.372857+00:00 | 13/428 completed
+    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:05:34.151201+00:00 | 14/428 completed
+    Testing 200.160.7.197 (0.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:05:39.270042+00:00 | 15/428 completed
+    Testing 2001:12ff::8 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:05:39.403788+00:00 | 16/428 completed
+    Testing 143.107.229.211 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:05:50.196958+00:00 | 17/428 completed
+    Testing 216.239.35.4 (time2.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:05:55.323914+00:00 | 18/428 completed
+    Testing 2001:12ff:0:7::196 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:05:55.514824+00:00 | 19/428 completed
+    Testing 200.160.0.8 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:05:55.646798+00:00 | 20/428 completed
+    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:06:01.103944+00:00 | 21/428 completed
+    Testing 200.160.7.197 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:06:01.436722+00:00 | 22/428 completed
+    Testing 216.239.35.8 (time3.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:06:01.579412+00:00 | 23/428 completed
     Testing 200.160.7.193 (gps.ntp.br) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:44:30.704695+00:00 | 359/428 completed
-    Testing 200.192.232.8 (c.ntp.br) | Source port 57415 | NTP version 4
-        Success | 2026-02-24T04:44:35.725126+00:00 | 360/428 completed
-    Testing 200.192.232.8 (br.pool.ntp.org) | Source port 57316 | NTP version 4
-        Success | 2026-02-24T04:44:36.800204+00:00 | 361/428 completed
-    Testing 200.160.7.196 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:44:37.868002+00:00 | 362/428 completed
-    Testing 168.181.126.108 (3.br.pool.ntp.org) | Source port 53373 | NTP version 3
-        Success | 2026-02-24T04:44:38.914136+00:00 | 363/428 completed
-    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:44:54.086242+00:00 | 364/428 completed
-    Testing 200.189.40.8 (b.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:44:59.109202+00:00 | 365/428 completed
-    Testing 200.192.232.8 (3.br.pool.ntp.org) | Source port 55761 | NTP version 4
-        Success | 2026-02-24T04:45:00.205991+00:00 | 366/428 completed
-    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port 64020 | NTP version 4
-        Success | 2026-02-24T04:45:01.262876+00:00 | 367/428 completed
-    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port 59665 | NTP version 3
-        Success | 2026-02-24T04:45:02.516092+00:00 | 368/428 completed
-    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:45:17.616395+00:00 | 369/428 completed
-    Testing 162.159.200.123 (2.br.pool.ntp.org) | Source port 64637 | NTP version 4
-        Success | 2026-02-24T04:45:22.636367+00:00 | 370/428 completed
+        Failure | 2026-02-24T17:06:12.424097+00:00 | 24/428 completed
+    Testing 200.160.7.197 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:06:17.547773+00:00 | 25/428 completed
+    Testing 168.181.126.108 (br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:06:17.689152+00:00 | 26/428 completed
+    Testing 162.159.200.1 (time.cloudflare.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:06:28.491111+00:00 | 27/428 completed
+    Testing 200.189.40.8 (3.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:06:33.609842+00:00 | 28/428 completed
+    Testing 2001:4860:4806:8:: (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:06:33.820927+00:00 | 29/428 completed
+    Testing 200.192.232.8 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:06:34.017015+00:00 | 30/428 completed
+    Testing 200.160.0.8 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:06:34.175143+00:00 | 31/428 completed
+    Testing 168.181.126.108 (br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:06:44.952158+00:00 | 32/428 completed
+    Testing 2001:4860:4806:4:: (time2.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:06:50.078995+00:00 | 33/428 completed
+    Testing 172.233.29.160 (1.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:06:50.276765+00:00 | 34/428 completed
+    Testing 200.192.232.8 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:06:50.419741+00:00 | 35/428 completed
+    Testing 192.36.143.130 (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:06:50.577850+00:00 | 36/428 completed
+    Testing 216.238.102.201 (0.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:07:01.608140+00:00 | 37/428 completed
+    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:07:17.390266+00:00 | 38/428 completed
+    Testing 200.160.7.193 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:07:22.516872+00:00 | 39/428 completed
+    Testing 2001:4860:4806:: (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:07:33.297355+00:00 | 40/428 completed
+    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:07:38.411693+00:00 | 41/428 completed
     Testing 200.160.7.193 (3.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:45:37.742890+00:00 | 371/428 completed
-    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port 59133 | NTP version 4
-        Success | 2026-02-24T04:45:42.768274+00:00 | 372/428 completed
-    Testing 162.159.200.123 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:45:57.868290+00:00 | 373/428 completed
-    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port 61916 | NTP version 4
-        Success | 2026-02-24T04:46:02.896527+00:00 | 374/428 completed
-    Testing 200.160.7.196 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:46:03.934943+00:00 | 375/428 completed
-    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port 49890 | NTP version 3
-        Success | 2026-02-24T04:46:05.020087+00:00 | 376/428 completed
-    Testing 200.160.0.8 (1.br.pool.ntp.org) | Source port 54533 | NTP version 4
-        Success | 2026-02-24T04:46:06.313181+00:00 | 377/428 completed
-    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port 60479 | NTP version 4
-        Success | 2026-02-24T04:46:07.355727+00:00 | 378/428 completed
-    Testing 2001:4860:4806:8:: (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:46:22.455843+00:00 | 379/428 completed
-    Testing 185.234.20.131 (1.br.pool.ntp.org) | Source port 51771 | NTP version 3
-        Success | 2026-02-24T04:46:27.481405+00:00 | 380/428 completed
-    Testing 200.160.7.193 (pool.ntp.br) | Source port 63605 | NTP version 4
-        Success | 2026-02-24T04:46:28.902278+00:00 | 381/428 completed
-    Testing 168.181.126.28 (pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:46:44.007182+00:00 | 382/428 completed
-    Testing 200.20.186.76 (d.st1.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:46:49.031820+00:00 | 383/428 completed
-    Testing 216.238.112.29 (2.br.pool.ntp.org) | Source port 64252 | NTP version 4
-        Success | 2026-02-24T04:46:50.093901+00:00 | 384/428 completed
-    Testing 200.160.7.193 (3.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:47:05.207874+00:00 | 385/428 completed
-    Testing 200.192.232.8 (c.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:47:10.231019+00:00 | 386/428 completed
-    Testing 200.189.40.8 (0.pool.ntp.org) | Source port 49836 | NTP version 3
-        Success | 2026-02-24T04:47:11.291884+00:00 | 387/428 completed
-    Testing 200.160.7.186 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:47:12.380466+00:00 | 388/428 completed
-    Testing 162.159.200.1 (time.cloudflare.com) | Source port 49743 | NTP version 4
-        Success | 2026-02-24T04:47:13.417834+00:00 | 389/428 completed
-    Testing 200.160.7.197 (3.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:47:14.466848+00:00 | 390/428 completed
-    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:47:29.594339+00:00 | 391/428 completed
-    Testing 200.160.7.186 (a.st1.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:47:34.621955+00:00 | 392/428 completed
-    Testing 2001:4860:4806:: (time1.google.com) | Source port 59950 | NTP version 4
-        Success | 2026-02-24T04:47:35.676475+00:00 | 393/428 completed
-    Testing 216.239.35.8 (time3.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:47:50.823836+00:00 | 394/428 completed
-    Testing 185.234.20.131 (1.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:48:09.904859+00:00 | 395/428 completed
-    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port 65160 | NTP version 4
-        Success | 2026-02-24T04:48:14.962979+00:00 | 396/428 completed
-    Testing 192.36.143.130 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:48:30.063793+00:00 | 397/428 completed
-    Testing 168.181.126.108 (3.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:48:49.130366+00:00 | 398/428 completed
-    Testing 200.189.40.8 (0.pool.ntp.org) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:48:54.149230+00:00 | 399/428 completed
+        Failure | 2026-02-24T17:07:49.199050+00:00 | 42/428 completed
+    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:08:04.973511+00:00 | 43/428 completed
+    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:08:20.736977+00:00 | 44/428 completed
+    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:08:25.847730+00:00 | 45/428 completed
+    Testing 192.36.143.130 (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:08:26.029911+00:00 | 46/428 completed
+    Testing 162.159.200.123 (time.cloudflare.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:08:37.039086+00:00 | 47/428 completed
+    Testing 143.107.229.211 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:08:52.824008+00:00 | 48/428 completed
+    Testing 162.159.200.123 (0.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:08:57.943081+00:00 | 49/428 completed
+    Testing 2001:4860:4806:: (time1.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:09:08.726650+00:00 | 50/428 completed
+    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:09:13.878799+00:00 | 51/428 completed
+    Testing 162.159.200.1 (time.cloudflare.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:09:14.010717+00:00 | 52/428 completed
+    Testing 2001:12ff::8 (a.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:09:14.158767+00:00 | 53/428 completed
+    Testing 200.160.7.197 (br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:09:14.301717+00:00 | 54/428 completed
+    Testing 200.192.232.8 (c.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:09:14.439760+00:00 | 55/428 completed
+    Testing 200.192.232.8 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:09:14.609850+00:00 | 56/428 completed
+    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:09:14.768765+00:00 | 57/428 completed
+    Testing 200.189.40.8 (3.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:09:14.910729+00:00 | 58/428 completed
+    Testing 200.186.125.195 (c.st1.ntp.br) | Source port random | NTP version 4
+        Failure | 2026-02-24T17:09:25.730041+00:00 | 59/428 completed
+    Testing 200.189.40.8 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:09:30.848811+00:00 | 60/428 completed
+    Testing 2804:2ea0::bbbb (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:09:41.686051+00:00 | 61/428 completed
+    Testing 200.189.40.8 (3.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:09:46.812949+00:00 | 62/428 completed
+    Testing 200.160.0.8 (a.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:09:47.003915+00:00 | 63/428 completed
+    Testing 143.107.229.211 (3.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:09:47.146848+00:00 | 64/428 completed
+    Testing 200.186.125.195 (c.st1.ntp.br) | Source port random | NTP version 3
+        Failure | 2026-02-24T17:09:57.942153+00:00 | 65/428 completed
+    Testing 200.20.186.76 (d.st1.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:10:03.068957+00:00 | 66/428 completed
+    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:10:13.870794+00:00 | 67/428 completed
+    Testing 162.159.200.123 (pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:10:29.648154+00:00 | 68/428 completed
+    Testing 143.107.229.210 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:10:45.445612+00:00 | 69/428 completed
+    Testing 40.119.6.228 (time.windows.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:10:50.565082+00:00 | 70/428 completed
+    Testing 40.119.6.228 (time.windows.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:11:01.480128+00:00 | 71/428 completed
+    Testing 200.192.232.8 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:11:06.607041+00:00 | 72/428 completed
+    Testing 2804:2ea0::aaaa (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:11:17.420365+00:00 | 73/428 completed
+    Testing 200.160.7.196 (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:11:22.540825+00:00 | 74/428 completed
+    Testing 200.160.7.186 (a.st1.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:11:22.682803+00:00 | 75/428 completed
+    Testing 200.189.40.8 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:11:22.819769+00:00 | 76/428 completed
+    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:11:33.658135+00:00 | 77/428 completed
+    Testing 168.181.126.28 (br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:11:49.414044+00:00 | 78/428 completed
+    Testing 216.239.35.0 (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:12:05.176619+00:00 | 79/428 completed
+    Testing 162.159.200.1 (time.cloudflare.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:12:20.939293+00:00 | 80/428 completed
+    Testing 2001:4860:4806:8:: (time3.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:12:26.065527+00:00 | 81/428 completed
+    Testing 162.159.200.123 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:12:36.893139+00:00 | 82/428 completed
+    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:42.019800+00:00 | 83/428 completed
+    Testing 200.189.40.8 (b.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:12:42.382970+00:00 | 84/428 completed
+    Testing 2001:4860:4806:8:: (time3.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:42.561860+00:00 | 85/428 completed
+    Testing 216.239.35.12 (time4.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:12:53.407141+00:00 | 86/428 completed
+    Testing 200.192.232.8 (c.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:58.534034+00:00 | 87/428 completed
+    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:12:58.700229+00:00 | 88/428 completed
+    Testing 2001:12ff::8 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:58.889235+00:00 | 89/428 completed
+    Testing 200.160.7.196 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:12:59.028086+00:00 | 90/428 completed
+    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:59.166055+00:00 | 91/428 completed
+    Testing 200.160.7.186 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:59.495111+00:00 | 92/428 completed
+    Testing 216.239.35.4 (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:12:59.632978+00:00 | 93/428 completed
+    Testing 216.238.102.201 (0.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:13:10.483057+00:00 | 94/428 completed
+    Testing 2001:4860:4806:8:: (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:13:15.605900+00:00 | 95/428 completed
+    Testing 2001:12ff:0:7::193 (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:13:15.819937+00:00 | 96/428 completed
+    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:13:26.600113+00:00 | 97/428 completed
+    Testing 168.181.126.108 (1.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:13:31.714848+00:00 | 98/428 completed
+    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:13:42.517141+00:00 | 99/428 completed
+    Testing 200.160.7.197 (pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:13:47.640104+00:00 | 100/428 completed
+    Testing 2606:4700:f1::1 (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:13:58.436115+00:00 | 101/428 completed
+    Testing 168.181.126.108 (br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:14:14.201116+00:00 | 102/428 completed
     Testing 200.192.232.8 (pool.ntp.br) | Source port 123 | NTP version 3
-        Success | 2026-02-24T04:48:55.248321+00:00 | 400/428 completed
-    Testing 40.119.6.228 (time.windows.com) | Source port 63235 | NTP version 3
-        Success | 2026-02-24T04:48:56.317526+00:00 | 401/428 completed
-    Testing 200.20.186.76 (d.st1.ntp.br) | Source port 55463 | NTP version 3
-        Success | 2026-02-24T04:48:57.504282+00:00 | 402/428 completed
-    Testing 200.160.7.196 (0.pool.ntp.org) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:48:58.559898+00:00 | 403/428 completed
-    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port 56939 | NTP version 3
-        Success | 2026-02-24T04:48:59.606345+00:00 | 404/428 completed
-    Testing 2001:4860:4806:c:: (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:49:14.693364+00:00 | 405/428 completed
-    Testing 162.159.200.123 (2.pool.ntp.org) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:49:33.764105+00:00 | 406/428 completed
-    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:49:52.862714+00:00 | 407/428 completed
-    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port 50588 | NTP version 3
-        Success | 2026-02-24T04:49:57.887270+00:00 | 408/428 completed
-    Testing 2001:4860:4806:: (time.google.com) | Source port 62582 | NTP version 4
-        Success | 2026-02-24T04:49:58.942369+00:00 | 409/428 completed
-    Testing 2605:e440:24::1:334 (2.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:50:14.078859+00:00 | 410/428 completed
-    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port 50370 | NTP version 4
-        Success | 2026-02-24T04:50:19.107195+00:00 | 411/428 completed
-    Testing 168.181.126.108 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:50:34.383911+00:00 | 412/428 completed
-    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:50:53.478932+00:00 | 413/428 completed
-    Testing 2001:4860:4806:: (time1.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:51:12.551377+00:00 | 414/428 completed
-    Testing 168.181.126.108 (3.br.pool.ntp.org) | Source port 59738 | NTP version 4
-        Success | 2026-02-24T04:51:17.574209+00:00 | 415/428 completed
-    Testing 216.238.112.29 (br.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:51:32.700159+00:00 | 416/428 completed
-    Testing 2001:4860:4806:8:: (time.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:51:51.792254+00:00 | 417/428 completed
-    Testing 2804:2ea0::aaaa (2.br.pool.ntp.org) | Source port 62189 | NTP version 3
-        Success | 2026-02-24T04:51:56.820092+00:00 | 418/428 completed
-    Testing 200.20.186.76 (d.st1.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:51:57.875894+00:00 | 419/428 completed
-    Testing 216.239.35.8 (time3.google.com) | Source port 53340 | NTP version 3
-        Success | 2026-02-24T04:51:58.915662+00:00 | 420/428 completed
-    Testing 2001:4860:4806:: (time1.google.com) | Source port 54441 | NTP version 3
-        Success | 2026-02-24T04:52:00.011988+00:00 | 421/428 completed
-    Testing 216.239.35.0 (time1.google.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:52:15.165795+00:00 | 422/428 completed
-    Testing 185.234.20.131 (1.br.pool.ntp.org) | Source port 50822 | NTP version 4
-        Success | 2026-02-24T04:52:34.260362+00:00 | 423/428 completed
+        Success | 2026-02-24T17:14:19.327946+00:00 | 103/428 completed
+    Testing 200.160.7.186 (a.st1.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:14:19.490860+00:00 | 104/428 completed
+    Testing 162.159.200.1 (time.cloudflare.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:19.624201+00:00 | 105/428 completed
+    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:19.766854+00:00 | 106/428 completed
+    Testing 2804:2ea0::aaaa (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:19.912796+00:00 | 107/428 completed
+    Testing 200.192.232.8 (0.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:20.061607+00:00 | 108/428 completed
+    Testing 201.49.148.135 (b.st1.ntp.br) | Source port random | NTP version 4
+        Failure | 2026-02-24T17:14:30.854461+00:00 | 109/428 completed
+    Testing 2001:12ff:0:7::196 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:14:35.980898+00:00 | 110/428 completed
+    Testing 2001:4860:4806:4:: (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:36.117901+00:00 | 111/428 completed
+    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:14:36.324949+00:00 | 112/428 completed
+    Testing 162.159.200.123 (time.cloudflare.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:14:47.319960+00:00 | 113/428 completed
+    Testing 162.159.200.123 (pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:52.475876+00:00 | 114/428 completed
+    Testing 2001:4860:4806:c:: (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:14:52.618729+00:00 | 115/428 completed
+    Testing 200.160.7.193 (pool.ntp.br) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:15:03.537952+00:00 | 116/428 completed
+    Testing 200.189.40.8 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:15:08.664937+00:00 | 117/428 completed
+    Testing 200.160.7.186 (a.st1.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:15:08.847679+00:00 | 118/428 completed
+    Testing 216.239.35.8 (time3.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:15:19.633179+00:00 | 119/428 completed
+    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:24.759872+00:00 | 120/428 completed
+    Testing 216.238.102.201 (0.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:24.922820+00:00 | 121/428 completed
+    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:25.059862+00:00 | 122/428 completed
+    Testing 200.160.0.8 (0.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:25.243013+00:00 | 123/428 completed
+    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:15:36.043123+00:00 | 124/428 completed
+    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:41.169943+00:00 | 125/428 completed
+    Testing 168.181.126.28 (br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:41.517924+00:00 | 126/428 completed
+    Testing 200.192.232.8 (br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:41.677709+00:00 | 127/428 completed
+    Testing 2001:4860:4806:c:: (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:41.843915+00:00 | 128/428 completed
+    Testing 201.49.148.135 (b.st1.ntp.br) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:15:52.742329+00:00 | 129/428 completed
+    Testing 200.160.7.193 (3.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:57.858688+00:00 | 130/428 completed
+    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:57.995947+00:00 | 131/428 completed
+    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:15:58.133958+00:00 | 132/428 completed
+    Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:58.270794+00:00 | 133/428 completed
+    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:58.408817+00:00 | 134/428 completed
+    Testing 200.160.7.196 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:15:58.546820+00:00 | 135/428 completed
+    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:58.682886+00:00 | 136/428 completed
+    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:15:58.866873+00:00 | 137/428 completed
+    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:15:59.230963+00:00 | 138/428 completed
+    Testing 2001:12ff:0:7::193 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:16:10.018148+00:00 | 139/428 completed
+    Testing 168.181.126.28 (0.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:16:25.791036+00:00 | 140/428 completed
+    Testing 200.160.0.8 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:16:30.905770+00:00 | 141/428 completed
+    Testing 200.192.232.8 (0.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:16:31.037739+00:00 | 142/428 completed
+    Testing 200.160.0.8 (0.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:16:31.190700+00:00 | 143/428 completed
+    Testing 168.181.126.108 (1.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:16:31.328736+00:00 | 144/428 completed
+    Testing 2001:4860:4806:: (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:16:42.126991+00:00 | 145/428 completed
     Testing 216.239.35.8 (time.google.com) | Source port 123 | NTP version 3
-        Failure | 2026-02-24T04:52:49.737705+00:00 | 424/428 completed
-    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:53:08.802584+00:00 | 425/428 completed
-    Testing 194.58.38.95 (1.pool.ntp.org) | Source port 123 | NTP version 4
-        Failure | 2026-02-24T04:53:27.882210+00:00 | 426/428 completed
+        Failure | 2026-02-24T17:16:57.920222+00:00 | 146/428 completed
+    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:17:13.699260+00:00 | 147/428 completed
+    Testing 143.107.229.211 (3.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:17:29.474183+00:00 | 148/428 completed
+    Testing 194.58.38.95 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:17:45.255116+00:00 | 149/428 completed
+    Testing 216.238.112.29 (1.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:17:50.373835+00:00 | 150/428 completed
+    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:18:01.162135+00:00 | 151/428 completed
+    Testing 200.189.40.8 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:18:06.288855+00:00 | 152/428 completed
+    Testing 168.181.126.108 (1.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:06.473870+00:00 | 153/428 completed
+    Testing 2001:12ff::8 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:18:06.634930+00:00 | 154/428 completed
+    Testing 216.239.35.12 (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:06.797872+00:00 | 155/428 completed
+    Testing 200.160.0.8 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:18:07.055873+00:00 | 156/428 completed
+    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:07.189727+00:00 | 157/428 completed
+    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:18:18.216106+00:00 | 158/428 completed
+    Testing 200.160.0.8 (a.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:23.342796+00:00 | 159/428 completed
+    Testing 143.107.229.210 (1.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:18:34.123463+00:00 | 160/428 completed
+    Testing 200.160.7.186 (a.st1.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:39.241806+00:00 | 161/428 completed
+    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:18:50.030118+00:00 | 162/428 completed
+    Testing 200.160.7.193 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:55.146765+00:00 | 163/428 completed
+    Testing 200.160.0.8 (a.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:18:55.299700+00:00 | 164/428 completed
+    Testing 143.107.229.210 (1.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:18:55.432737+00:00 | 165/428 completed
+    Testing 200.20.186.76 (d.st1.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:55.578767+00:00 | 166/428 completed
+    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:18:55.726707+00:00 | 167/428 completed
+    Testing 200.160.0.8 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:18:56.061748+00:00 | 168/428 completed
+    Testing 200.192.232.8 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:18:56.204764+00:00 | 169/428 completed
+    Testing 216.239.35.12 (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:19:07.007014+00:00 | 170/428 completed
+    Testing 200.160.0.8 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:19:12.121823+00:00 | 171/428 completed
+    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:19:22.914851+00:00 | 172/428 completed
+    Testing 200.192.232.8 (pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:19:28.041904+00:00 | 173/428 completed
+    Testing 200.160.7.186 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:19:28.202839+00:00 | 174/428 completed
+    Testing 200.160.7.197 (pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:19:28.335756+00:00 | 175/428 completed
+    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:19:39.120267+00:00 | 176/428 completed
+    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:19:44.238980+00:00 | 177/428 completed
+    Testing 2804:2ea0::bbbb (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:19:55.037325+00:00 | 178/428 completed
+    Testing 200.160.7.186 (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:00.164036+00:00 | 179/428 completed
+    Testing 2001:4860:4806:4:: (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:20:00.305720+00:00 | 180/428 completed
+    Testing 2001:12ff:0:7::193 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:20:00.498800+00:00 | 181/428 completed
+    Testing 129.6.15.25 (time.nist.gov) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:20:11.280129+00:00 | 182/428 completed
+    Testing 200.160.7.186 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:20:16.398850+00:00 | 183/428 completed
+    Testing 143.107.229.211 (3.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:16.532865+00:00 | 184/428 completed
+    Testing 200.192.232.8 (br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:20:16.675837+00:00 | 185/428 completed
+    Testing 216.238.112.29 (1.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:20:27.484128+00:00 | 186/428 completed
+    Testing 2001:12f8:9:1::8 (b.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:20:32.610695+00:00 | 187/428 completed
+    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:20:32.817772+00:00 | 188/428 completed
+    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:32.956799+00:00 | 189/428 completed
+    Testing 200.189.40.8 (3.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:20:33.098738+00:00 | 190/428 completed
+    Testing 143.107.229.211 (0.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:20:33.281048+00:00 | 191/428 completed
+    Testing 200.160.0.8 (0.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:33.421737+00:00 | 192/428 completed
+    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:33.555751+00:00 | 193/428 completed
+    Testing 2001:4860:4806:c:: (time4.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:33.695728+00:00 | 194/428 completed
+    Testing 200.160.7.197 (br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:20:33.951785+00:00 | 195/428 completed
+    Testing 40.119.6.228 (time.windows.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:20:34.094967+00:00 | 196/428 completed
+    Testing 143.107.229.210 (1.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:34.371857+00:00 | 197/428 completed
+    Testing 200.160.7.196 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:34.515693+00:00 | 198/428 completed
+    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:20:45.286239+00:00 | 199/428 completed
+    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:20:50.405007+00:00 | 200/428 completed
+    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:21:01.324282+00:00 | 201/428 completed
+    Testing 168.181.126.108 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:21:17.115127+00:00 | 202/428 completed
+    Testing 200.160.7.197 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:21:22.241614+00:00 | 203/428 completed
+    Testing 200.160.7.196 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:21:22.380858+00:00 | 204/428 completed
+    Testing 129.6.15.25 (time.nist.gov) | Source port random | NTP version 3
+        Success | 2026-02-24T17:21:22.513753+00:00 | 205/428 completed
+    Testing 200.160.7.197 (gps.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:21:22.783996+00:00 | 206/428 completed
+    Testing 200.160.7.193 (gps.ntp.br) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:21:33.570032+00:00 | 207/428 completed
+    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:21:38.696913+00:00 | 208/428 completed
+    Testing 162.159.200.1 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:21:49.481202+00:00 | 209/428 completed
+    Testing 200.160.7.197 (br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:21:54.607797+00:00 | 210/428 completed
+    Testing 216.239.35.12 (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:21:54.750886+00:00 | 211/428 completed
+    Testing 216.239.35.0 (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:22:05.639977+00:00 | 212/428 completed
+    Testing 200.160.7.196 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:22:10.758751+00:00 | 213/428 completed
+    Testing 216.239.35.4 (time2.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:22:21.521118+00:00 | 214/428 completed
+    Testing 216.239.35.0 (time1.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:22:26.646254+00:00 | 215/428 completed
+    Testing 200.20.186.76 (d.st1.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:22:26.835850+00:00 | 216/428 completed
+    Testing 200.192.232.8 (pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:22:26.979990+00:00 | 217/428 completed
+    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:22:37.799169+00:00 | 218/428 completed
+    Testing 2001:12ff::8 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:22:42.917757+00:00 | 219/428 completed
+    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:22:43.084950+00:00 | 220/428 completed
+    Testing 216.238.102.201 (0.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:22:43.234774+00:00 | 221/428 completed
+    Testing 2001:12ff:0:7::193 (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:22:43.378945+00:00 | 222/428 completed
+    Testing 216.239.35.0 (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:22:43.511883+00:00 | 223/428 completed
+    Testing 216.239.35.8 (time3.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:22:54.354243+00:00 | 224/428 completed
+    Testing 162.159.200.123 (time.cloudflare.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:22:59.472946+00:00 | 225/428 completed
+    Testing 200.160.7.193 (3.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:23:10.265072+00:00 | 226/428 completed
+    Testing 2001:4860:4806:c:: (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:23:26.075258+00:00 | 227/428 completed
+    Testing 2606:4700:f1::1 (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:23:31.198850+00:00 | 228/428 completed
+    Testing 168.181.126.108 (1.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:23:31.344638+00:00 | 229/428 completed
+    Testing 200.160.7.196 (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:23:31.499703+00:00 | 230/428 completed
+    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:23:42.283987+00:00 | 231/428 completed
+    Testing 143.107.229.211 (0.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:23:47.401727+00:00 | 232/428 completed
+    Testing 168.181.126.108 (1.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:23:58.197108+00:00 | 233/428 completed
+    Testing 200.160.7.193 (3.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:24:03.314702+00:00 | 234/428 completed
+    Testing 162.159.200.1 (3.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:24:03.452690+00:00 | 235/428 completed
+    Testing 162.159.200.1 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:24:14.245076+00:00 | 236/428 completed
+    Testing 129.6.15.25 (time.nist.gov) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:24:30.027088+00:00 | 237/428 completed
+    Testing 40.119.6.228 (time.windows.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:24:45.816162+00:00 | 238/428 completed
+    Testing 2001:4860:4806:: (time1.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:24:50.942928+00:00 | 239/428 completed
+    Testing 200.160.7.197 (0.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:24:51.161866+00:00 | 240/428 completed
+    Testing 200.189.40.8 (pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:24:51.293862+00:00 | 241/428 completed
+    Testing 200.189.40.8 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:24:51.476854+00:00 | 242/428 completed
+    Testing 172.233.29.160 (1.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:25:02.302200+00:00 | 243/428 completed
+    Testing 2606:4700:f1::1 (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:25:18.067315+00:00 | 244/428 completed
+    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:25:23.183267+00:00 | 245/428 completed
+    Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:25:23.547985+00:00 | 246/428 completed
+    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:25:23.690702+00:00 | 247/428 completed
+    Testing 194.58.38.95 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:25:24.060753+00:00 | 248/428 completed
+    Testing 200.160.7.193 (pool.ntp.br) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:25:35.085253+00:00 | 249/428 completed
+    Testing 216.239.35.4 (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:25:40.211949+00:00 | 250/428 completed
+    Testing 2001:4860:4806:4:: (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:25:51.044840+00:00 | 251/428 completed
+    Testing 143.107.229.211 (3.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:26:06.812003+00:00 | 252/428 completed
+    Testing 216.239.35.8 (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:26:22.587932+00:00 | 253/428 completed
+    Testing 200.192.232.8 (c.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:26:27.706937+00:00 | 254/428 completed
+    Testing 162.159.200.123 (time.cloudflare.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:26:27.868807+00:00 | 255/428 completed
+    Testing 200.160.7.186 (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:26:28.010748+00:00 | 256/428 completed
+    Testing 129.6.15.25 (time.nist.gov) | Source port random | NTP version 4
+        Success | 2026-02-24T17:26:28.149100+00:00 | 257/428 completed
+    Testing 216.239.35.8 (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:26:28.422828+00:00 | 258/428 completed
+    Testing 2001:4860:4806:8:: (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:26:39.263032+00:00 | 259/428 completed
+    Testing 143.107.229.211 (3.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:26:44.386842+00:00 | 260/428 completed
+    Testing 2001:12ff:0:7::197 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:26:44.533008+00:00 | 261/428 completed
+    Testing 2001:4860:4806:4:: (time2.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:26:55.322199+00:00 | 262/428 completed
+    Testing 2001:4860:4806:4:: (time2.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:27:00.466006+00:00 | 263/428 completed
+    Testing 200.160.7.196 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:27:00.661176+00:00 | 264/428 completed
+    Testing 200.189.40.8 (b.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:27:00.792870+00:00 | 265/428 completed
+    Testing 2001:4860:4806:c:: (time4.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:27:11.623066+00:00 | 266/428 completed
+    Testing 185.125.190.57 (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:27:16.749765+00:00 | 267/428 completed
+    Testing 216.239.35.4 (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:27:27.736002+00:00 | 268/428 completed
+    Testing 200.160.7.197 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:27:32.891949+00:00 | 269/428 completed
+    Testing 162.159.200.1 (3.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:27:43.675618+00:00 | 270/428 completed
+    Testing 200.160.0.8 (a.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:27:48.791904+00:00 | 271/428 completed
+    Testing 2001:12f8:b:1::8 (c.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:27:48.933821+00:00 | 272/428 completed
+    Testing 2001:4860:4806:c:: (time4.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:27:49.302756+00:00 | 273/428 completed
+    Testing 2001:12ff::8 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:27:49.566815+00:00 | 274/428 completed
+    Testing 200.160.7.186 (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:27:49.716853+00:00 | 275/428 completed
+    Testing 200.160.7.197 (pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:27:49.854890+00:00 | 276/428 completed
+    Testing 2620:2d:4000:1::40 (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:27:49.992859+00:00 | 277/428 completed
+    Testing 216.239.35.8 (time3.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:27:50.330807+00:00 | 278/428 completed
+    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:27:50.517794+00:00 | 279/428 completed
+    Testing 216.239.35.4 (time2.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:28:01.302250+00:00 | 280/428 completed
+    Testing 200.160.7.196 (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:28:06.428951+00:00 | 281/428 completed
+    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:28:06.567805+00:00 | 282/428 completed
+    Testing 172.233.29.160 (1.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:28:06.844940+00:00 | 283/428 completed
+    Testing 200.160.0.8 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:28:06.978769+00:00 | 284/428 completed
+    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:28:17.775220+00:00 | 285/428 completed
+    Testing 2001:12ff:0:7::193 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:28:33.536369+00:00 | 286/428 completed
+    Testing 2001:12ff:0:7::193 (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:28:49.309086+00:00 | 287/428 completed
+    Testing 200.160.7.186 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:28:54.427791+00:00 | 288/428 completed
+    Testing 162.159.200.123 (0.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:29:05.212153+00:00 | 289/428 completed
+    Testing 216.239.35.0 (time1.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:29:10.334763+00:00 | 290/428 completed
+    Testing 200.192.232.8 (br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:29:10.520737+00:00 | 291/428 completed
+    Testing 200.160.0.8 (0.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:29:10.676152+00:00 | 292/428 completed
+    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:29:10.816782+00:00 | 293/428 completed
+    Testing 192.36.143.130 (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:29:22.017998+00:00 | 294/428 completed
+    Testing 168.181.126.108 (1.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:29:37.819991+00:00 | 295/428 completed
+    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:29:42.953891+00:00 | 296/428 completed
+    Testing 162.159.200.123 (0.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:29:53.960250+00:00 | 297/428 completed
+    Testing 168.181.126.28 (br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:29:59.079015+00:00 | 298/428 completed
+    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:29:59.231915+00:00 | 299/428 completed
+    Testing 216.239.35.0 (time1.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:30:10.056125+00:00 | 300/428 completed
+    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:30:15.182795+00:00 | 301/428 completed
+    Testing 162.159.200.123 (0.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:30:15.331868+00:00 | 302/428 completed
+    Testing 200.160.7.193 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:30:26.129018+00:00 | 303/428 completed
+    Testing 2606:4700:f1::1 (time.cloudflare.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:30:31.255822+00:00 | 304/428 completed
+    Testing 194.58.38.95 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:30:42.058041+00:00 | 305/428 completed
+    Testing 216.238.112.29 (1.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:30:47.176939+00:00 | 306/428 completed
+    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:30:57.951507+00:00 | 307/428 completed
+    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:03.068964+00:00 | 308/428 completed
+    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port random | NTP version 3
+        Success | 2026-02-24T17:31:03.360763+00:00 | 309/428 completed
+    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:03.662006+00:00 | 310/428 completed
+    Testing 2001:12ff::8 (2.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:31:03.998845+00:00 | 311/428 completed
+    Testing 2804:2ea0::aaaa (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:04.155949+00:00 | 312/428 completed
+    Testing 2001:12f8:b:1::8 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:31:04.317990+00:00 | 313/428 completed
+    Testing 200.192.232.8 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:04.690885+00:00 | 314/428 completed
+    Testing 2606:4700:f1::123 (time.cloudflare.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:04.850167+00:00 | 315/428 completed
+    Testing 2001:4860:4806:8:: (time3.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:31:15.648135+00:00 | 316/428 completed
+    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:31:20.796045+00:00 | 317/428 completed
+    Testing 143.107.229.210 (1.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:20.932928+00:00 | 318/428 completed
+    Testing 119.8.229.131 (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:31:31.720998+00:00 | 319/428 completed
+    Testing 200.189.40.8 (pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:31:36.847835+00:00 | 320/428 completed
+    Testing 200.160.7.196 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:31:37.055953+00:00 | 321/428 completed
+    Testing 200.160.7.193 (gps.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:31:37.189763+00:00 | 322/428 completed
+    Testing 216.239.35.12 (time4.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:37.335982+00:00 | 323/428 completed
+    Testing 216.239.35.0 (time1.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:31:48.257280+00:00 | 324/428 completed
+    Testing 162.159.200.123 (0.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:31:53.376875+00:00 | 325/428 completed
+    Testing 2001:12ff::8 (a.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:31:53.526038+00:00 | 326/428 completed
+    Testing 162.159.200.123 (0.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:53.663689+00:00 | 327/428 completed
+    Testing 2001:12ff:0:7::196 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:53.815832+00:00 | 328/428 completed
+    Testing 2001:12ff:0:7::193 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:31:53.957753+00:00 | 329/428 completed
+    Testing 2606:4700:f1::1 (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:54.095830+00:00 | 330/428 completed
+    Testing 200.189.40.8 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:31:54.255919+00:00 | 331/428 completed
+    Testing 200.160.7.197 (br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:31:54.442870+00:00 | 332/428 completed
+    Testing 143.107.229.211 (3.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:32:05.218975+00:00 | 333/428 completed
+    Testing 216.239.35.4 (time2.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:32:10.341783+00:00 | 334/428 completed
+    Testing 2620:2d:4000:1::3f (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:32:21.170840+00:00 | 335/428 completed
+    Testing 194.58.38.95 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:32:26.297920+00:00 | 336/428 completed
+    Testing 2001:12ff::8 (a.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:32:26.647819+00:00 | 337/428 completed
+    Testing 200.189.40.8 (b.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:32:26.788720+00:00 | 338/428 completed
+    Testing 168.181.126.28 (0.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:32:26.980958+00:00 | 339/428 completed
+    Testing 119.8.229.131 (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:32:37.789728+00:00 | 340/428 completed
     Testing 200.160.7.197 (pool.ntp.br) | Source port 123 | NTP version 4
-        Success | 2026-02-24T04:53:32.910323+00:00 | 427/428 completed
-    Testing 172.233.29.160 (br.pool.ntp.org) | Source port 61263 | NTP version 4
-        Success | 2026-02-24T04:53:33.969281+00:00 | 428/428 completed
+        Success | 2026-02-24T17:32:42.916903+00:00 | 341/428 completed
+    Testing 2001:4860:4806:: (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:32:43.057844+00:00 | 342/428 completed
+    Testing 200.192.232.8 (0.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:32:43.270012+00:00 | 343/428 completed
+    Testing 200.189.40.8 (b.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:32:43.432890+00:00 | 344/428 completed
+    Testing 2804:2ea0::aaaa (2.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:32:54.279973+00:00 | 345/428 completed
+    Testing 2001:4860:4806:4:: (time2.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:33:10.044159+00:00 | 346/428 completed
+    Testing 91.189.91.157 (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:33:25.819180+00:00 | 347/428 completed
+    Testing 168.181.126.28 (br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:33:41.592096+00:00 | 348/428 completed
+    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:33:46.738889+00:00 | 349/428 completed
+    Testing 185.125.190.58 (ntp.ubuntu.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:33:57.720318+00:00 | 350/428 completed
+    Testing 2001:12ff:0:7::186 (a.st1.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:34:02.846935+00:00 | 351/428 completed
+    Testing 200.189.40.8 (3.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:34:03.002805+00:00 | 352/428 completed
+    Testing 200.192.232.8 (br.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:34:03.189866+00:00 | 353/428 completed
+    Testing 2001:4860:4806:: (time1.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:34:13.996180+00:00 | 354/428 completed
+    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:34:19.118688+00:00 | 355/428 completed
+    Testing 143.107.229.210 (1.br.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:34:29.941093+00:00 | 356/428 completed
+    Testing 2001:12f8:9:1::8 (pool.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:34:35.059810+00:00 | 357/428 completed
+    Testing 2804:2ea0::bbbb (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:34:35.240726+00:00 | 358/428 completed
+    Testing 2001:4860:4806:4:: (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:34:46.043122+00:00 | 359/428 completed
+    Testing 200.160.7.197 (gps.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:34:51.169853+00:00 | 360/428 completed
+    Testing 2001:12ff::8 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:34:51.306719+00:00 | 361/428 completed
+    Testing 200.192.232.8 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:34:51.444753+00:00 | 362/428 completed
+    Testing 2001:4860:4806:: (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:34:51.594756+00:00 | 363/428 completed
+    Testing 200.160.7.197 (pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:34:51.789682+00:00 | 364/428 completed
+    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:35:02.586051+00:00 | 365/428 completed
+    Testing 200.189.40.8 (pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:35:07.709884+00:00 | 366/428 completed
+    Testing 200.160.7.197 (gps.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:35:07.892716+00:00 | 367/428 completed
+    Testing 200.160.7.196 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:35:08.024711+00:00 | 368/428 completed
+    Testing 201.49.148.135 (b.st1.ntp.br) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:35:18.796025+00:00 | 369/428 completed
+    Testing 200.160.7.186 (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:35:23.924703+00:00 | 370/428 completed
+    Testing 2001:12ff:0:7::196 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:35:24.057114+00:00 | 371/428 completed
+    Testing 2804:2ea0::bbbb (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:24.191056+00:00 | 372/428 completed
+    Testing 2001:4860:4806:c:: (time.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:35:34.967136+00:00 | 373/428 completed
+    Testing 119.8.229.131 (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:35:40.085916+00:00 | 374/428 completed
+    Testing 143.107.229.210 (1.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:40.229115+00:00 | 375/428 completed
+    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:35:51.047111+00:00 | 376/428 completed
+    Testing 200.160.7.193 (gps.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:56.173895+00:00 | 377/428 completed
+    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:35:56.315903+00:00 | 378/428 completed
+    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:35:56.459043+00:00 | 379/428 completed
+    Testing 2001:4860:4806:: (time1.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:56.594001+00:00 | 380/428 completed
+    Testing 200.192.232.8 (c.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:35:56.780736+00:00 | 381/428 completed
+    Testing 143.107.229.211 (3.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:56.943634+00:00 | 382/428 completed
+    Testing 200.20.186.76 (d.st1.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:35:57.088035+00:00 | 383/428 completed
+    Testing 216.239.35.8 (time.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:35:57.231701+00:00 | 384/428 completed
+    Testing 200.192.232.8 (pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:57.416728+00:00 | 385/428 completed
+    Testing 200.189.40.8 (3.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:35:57.578080+00:00 | 386/428 completed
+    Testing 172.233.29.160 (1.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:57.755691+00:00 | 387/428 completed
+    Testing 119.8.229.131 (2.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:35:57.888680+00:00 | 388/428 completed
+    Testing 162.159.200.1 (3.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:36:08.683261+00:00 | 389/428 completed
+    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:36:24.470896+00:00 | 390/428 completed
+    Testing 200.160.7.197 (gps.ntp.br) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:36:29.597863+00:00 | 391/428 completed
+    Testing 2001:12ff:0:7::193 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:36:29.738857+00:00 | 392/428 completed
+    Testing 201.49.148.135 (b.st1.ntp.br) | Source port random | NTP version 3
+        Failure | 2026-02-24T17:36:40.523850+00:00 | 393/428 completed
+    Testing 194.58.38.95 (1.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:36:56.294293+00:00 | 394/428 completed
+    Testing 2001:12ff:0:7::197 (2.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:37:01.417999+00:00 | 395/428 completed
+    Testing 200.192.232.8 (0.pool.ntp.org) | Source port 123 | NTP version 4
+        Success | 2026-02-24T17:37:01.561305+00:00 | 396/428 completed
+    Testing 200.189.40.8 (pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:37:01.720083+00:00 | 397/428 completed
+    Testing 168.181.126.28 (0.br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:37:01.897802+00:00 | 398/428 completed
+    Testing 143.107.229.210 (1.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:37:12.711025+00:00 | 399/428 completed
+    Testing 200.160.0.8 (pool.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:37:17.829744+00:00 | 400/428 completed
+    Testing 216.238.112.29 (1.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:37:28.612049+00:00 | 401/428 completed
+    Testing 200.186.125.195 (c.st1.ntp.br) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:37:44.372019+00:00 | 402/428 completed
+    Testing 185.125.190.56 (ntp.ubuntu.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:37:49.490871+00:00 | 403/428 completed
+    Testing 172.233.29.160 (1.pool.ntp.org) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:38:00.489070+00:00 | 404/428 completed
+    Testing 143.107.229.211 (3.br.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:38:16.248168+00:00 | 405/428 completed
+    Testing 162.159.200.123 (0.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:38:32.023123+00:00 | 406/428 completed
+    Testing 200.192.232.8 (pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:38:37.150020+00:00 | 407/428 completed
+    Testing 216.239.35.12 (time4.google.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:38:37.302724+00:00 | 408/428 completed
+    Testing 2001:12ff:0:7::197 (gps.ntp.br) | Source port 123 | NTP version 3
+        Success | 2026-02-24T17:38:37.552887+00:00 | 409/428 completed
+    Testing 2001:4860:4806:8:: (time3.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:38:48.347742+00:00 | 410/428 completed
+    Testing 216.239.35.4 (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:39:04.119222+00:00 | 411/428 completed
+    Testing 216.239.35.12 (time4.google.com) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:39:19.893180+00:00 | 412/428 completed
+    Testing 2001:12ff:0:7::193 (gps.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:39:25.019794+00:00 | 413/428 completed
+    Testing 168.181.126.108 (br.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:39:25.157811+00:00 | 414/428 completed
+    Testing 2001:12ff::8 (a.ntp.br) | Source port random | NTP version 3
+        Success | 2026-02-24T17:39:25.315871+00:00 | 415/428 completed
+    Testing 2001:4860:4806:8:: (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:39:36.088227+00:00 | 416/428 completed
+    Testing 216.239.35.12 (time.google.com) | Source port 123 | NTP version 4
+        Failure | 2026-02-24T17:39:51.854147+00:00 | 417/428 completed
+    Testing 2001:12ff::8 (2.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:39:56.997795+00:00 | 418/428 completed
+    Testing 2001:12ff:0:7::193 (2.pool.ntp.org) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:40:07.776066+00:00 | 419/428 completed
+    Testing 2001:12ff:0:7::186 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:40:12.902835+00:00 | 420/428 completed
+    Testing 162.159.200.123 (pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:40:13.044849+00:00 | 421/428 completed
+    Testing 216.239.35.0 (time.google.com) | Source port random | NTP version 4
+        Success | 2026-02-24T17:40:13.191793+00:00 | 422/428 completed
+    Testing 2001:12ff:0:7::196 (pool.ntp.br) | Source port random | NTP version 4
+        Success | 2026-02-24T17:40:13.384876+00:00 | 423/428 completed
+    Testing 2610:20:6f96:96::6 (time.nist.gov) | Source port 123 | NTP version 3
+        Failure | 2026-02-24T17:40:24.161844+00:00 | 424/428 completed
+    Testing 2620:2d:4000:1::41 (ntp.ubuntu.com) | Source port random | NTP version 3
+        Success | 2026-02-24T17:40:29.277842+00:00 | 425/428 completed
+    Testing 162.159.200.1 (3.br.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:40:29.622838+00:00 | 426/428 completed
+    Testing 162.159.200.1 (3.pool.ntp.org) | Source port random | NTP version 4
+        Success | 2026-02-24T17:40:29.778868+00:00 | 427/428 completed
+    Testing 200.160.7.196 (2.pool.ntp.org) | Source port random | NTP version 3
+        Success | 2026-02-24T17:40:29.929843+00:00 | 428/428 completed
 Phase 7: Saving updated test results
 Phase 8: Exporting test results to CSV
