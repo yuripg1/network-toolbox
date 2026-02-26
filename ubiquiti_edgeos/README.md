@@ -38,7 +38,7 @@ Password: **password767865354**
 * management_https.crt
 * management_https.key
 
-Follow the steps at **[Keys and certificates](../keys_and_certificates)** to create the keys and certificates
+Follow the steps at **[Keys and certificates creation](../procedures/keys_and_certificates_creation)** to create the required keys and certificates
 
 ## Configuration commands
 
@@ -695,7 +695,7 @@ set system traffic-analysis dpi disable
 ### Upload of additional files
 
 ```
-$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@192.168.103.254:/home/username920169077
+$ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key ./scripts/firewall.sh username920169077@192.168.103.254:/home/username920169077
 ```
 
 ### File location, permission and ownership changes, and firewall rules application

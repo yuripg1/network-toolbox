@@ -1,36 +1,40 @@
-#STARTAUTOMATION:
-#PROMPT:Configure IP address 192.168.1.2/24
-#PROMPT:Connect to eth0
-#HOSTNAME:192.168.1.1
-#PORT:22
-#USERNAME:ubnt
-#PASSWORD:ubnt
-#CONNECT:
-#CONFIGURE:
+#ROUTER_SETUP:START:
+#ROUTER_SETUP:CONFIRM:{"message":"Configure IP address 192.168.1.2/24"}
+#ROUTER_SETUP:CONFIRM:{"message":"Connect to eth0"}
+#ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.1.1","port":22,"username":"ubnt","password":"ubnt"}
+#ROUTER_SETUP:CONNECT:
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
 # New credential configuration
 set system login user username920169077 authentication plaintext-password 'password767865354'
 set system login user username920169077 level admin
 
-#EXIT:
-#DISCONNECT:
-#USERNAME:username920169077
-#PASSWORD:password767865354
-#CONNECT:
-#CONFIGURE:
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","exit"]}
+#ROUTER_SETUP:DISCONNECT:
+#ROUTER_SETUP:SET_ENVIRONMENT:{"username":"username920169077","password":"password767865354"}
+#ROUTER_SETUP:CONNECT:
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
 # Default credential removal
 delete system login user ubnt
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # Configuration of management via SSH
 set service ssh port 36518
 set service ssh protocol-version v2
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Host name configuration
 set system host-name Router
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Loopback interface configuration
 set interfaces loopback lo description 'Loopback (Local)'
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # Ethernet interfaces configuration
 delete interfaces ethernet eth1 address
@@ -60,6 +64,8 @@ set interfaces ethernet eth4 mac 'D0:21:F9:76:B7:33'
 set interfaces ethernet eth4 mtu 1500
 set interfaces ethernet eth4 speed auto
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Switch interfaces configuration
 set interfaces switch switch0 description Switch
 set interfaces switch switch0 mtu 1500
@@ -72,6 +78,8 @@ set interfaces switch switch0 switch-port vlan-aware enable
 set interfaces switch switch0 vif 1 description 'Switch - VLAN 1'
 set interfaces switch switch0 vif 10 description 'Switch - VLAN 10 (LAN)'
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # DNS configuration
 set service dns forwarding cache-size 10000
 set service dns forwarding listen-on switch0.10
@@ -79,6 +87,8 @@ set service dns forwarding name-server '2001:4860:4860::8844'
 set service dns forwarding name-server '2001:4860:4860::8888'
 set service dns forwarding options bogus-priv
 set service dns forwarding options domain-needed
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv4 kernel configuration
 set firewall all-ping enable
@@ -89,18 +99,28 @@ set firewall send-redirects enable
 set firewall source-validation disable
 set firewall syn-cookies enable
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv6 kernel configuration
 set firewall ipv6-receive-redirects disable
 set firewall ipv6-src-route disable
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv4 loopback address configuration
 set interfaces loopback lo address 192.168.167.1/32
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv6 loopback address configuration
 set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv4 LAN address configuration
 set interfaces switch switch0 vif 10 address 192.168.103.254/24
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv4 LAN DHCP server configuration
 set service dhcp-server shared-network-name VLAN_10 authoritative enable
@@ -112,6 +132,8 @@ set service dhcp-server shared-network-name VLAN_10 subnet 192.168.103.0/24 subn
 set service dhcp-server shared-network-name VLAN_10 subnet 192.168.103.0/24 subnet-parameters 'option interface-mtu 1492;'
 set service dhcp-server shared-network-name VLAN_10 subnet 192.168.103.0/24 subnet-parameters 'option broadcast-address 192.168.103.255;'
 set service dhcp-server static-arp enable
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv6 LAN SLAAC configuration
 set interfaces switch switch0 vif 10 ipv6 dup-addr-detect-transmits 1
@@ -130,13 +152,19 @@ set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' preferred
 set interfaces switch switch0 vif 10 ipv6 router-advert prefix '::/64' valid-lifetime 86400
 set interfaces switch switch0 vif 10 ipv6 router-advert send-advert true
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv4 static DNS configuration
 set system static-host-mapping host-name router.internal inet 192.168.167.1
 set system static-host-mapping host-name ipv4.router.internal inet 192.168.167.1
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv6 static DNS configuration
 set system static-host-mapping host-name router.internal inet 'fd45:1e52:2abe:4c85::1'
 set system static-host-mapping host-name ipv6.router.internal inet 'fd45:1e52:2abe:4c85::1'
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv4 firewall rule sets
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 127.0.0.0/8
@@ -249,6 +277,8 @@ set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept ICMP Echo Reques
 set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp code 0
 set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp type 8
 set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol icmp
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv6 firewall rule sets
 set firewall group ipv6-address-group IPV6_INVALID_LAN_SOURCES ipv6-address '::1'
@@ -367,15 +397,14 @@ set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 description 'Accept ICMPv6 Neig
 set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 icmpv6 type 136/0
 set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 protocol icmpv6
 
-#EXIT:
-#DISCONNECT:
-#PROMPT:Disconnect from eth0
-#PROMPT:Configure DHCP client
-#PROMPT:Connect to eth2
-#HOSTNAME:192.168.103.254
-#PORT:36518
-#CONNECT:
-#CONFIGURE:
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","exit"]}
+#ROUTER_SETUP:DISCONNECT:
+#ROUTER_SETUP:CONFIRM:{"message":"Disconnect from eth0"}
+#ROUTER_SETUP:CONFIRM:{"message":"Configure DHCP client"}
+#ROUTER_SETUP:CONFIRM:{"message":"Connect to eth2"}
+#ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.103.254","port":36518}
+#ROUTER_SETUP:CONNECT:
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
 # IPv4 firewall zone policies for LAN, Local and Modem
 set zone-policy zone LAN default-action drop
@@ -394,15 +423,20 @@ set zone-policy zone MODEM from LAN firewall name IPV4_LAN_TO_MODEM
 set zone-policy zone MODEM from LOCAL firewall name IPV4_ALLOW_ALL_TRAFFIC
 set zone-policy zone MODEM interface eth0
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv6 firewall zone policies for LAN, Local and Modem
 set zone-policy zone LAN from LOCAL firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC
 set zone-policy zone LOCAL from LAN firewall ipv6-name IPV6_LAN_TO_LOCAL
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv4 address configuration for modem access
 delete interfaces ethernet eth0 address
 set interfaces ethernet eth0 address 192.168.237.2/30
 
-#PROMPT:Connect the modem to eth0
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+#ROUTER_SETUP:CONFIRM:{"message":"Connect the modem to eth0"}
 
 # IPv4 WAN PPPoE client configuration
 set interfaces ethernet eth0 vif 600 description 'eth0 - VLAN 600'
@@ -413,7 +447,8 @@ set interfaces ethernet eth0 vif 600 pppoe 0 name-server none
 set interfaces ethernet eth0 vif 600 pppoe 0 password cliente
 set interfaces ethernet eth0 vif 600 pppoe 0 user-id cliente@cliente
 
-#WAIT:15
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+#ROUTER_SETUP:WAIT:{"time_in_seconds":15}
 
 # IPv4 firewall zone policies for WAN
 set zone-policy zone LAN from WAN firewall name IPV4_WAN_TO_LAN
@@ -424,16 +459,22 @@ set zone-policy zone WAN from LAN firewall name IPV4_ALLOW_ALL_TRAFFIC
 set zone-policy zone WAN from LOCAL firewall name IPV4_ALLOW_ALL_TRAFFIC
 set zone-policy zone WAN interface pppoe0
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv6 firewall zone policies for WAN
 set zone-policy zone LAN from WAN firewall ipv6-name IPV6_WAN_TO_LAN
 set zone-policy zone LOCAL from WAN firewall ipv6-name IPV6_WAN_TO_LOCAL
 set zone-policy zone WAN from LAN firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC
 set zone-policy zone WAN from LOCAL firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # IPv6 WAN SLAAC configuration
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 address autoconf
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 dup-addr-detect-transmits 1
 set interfaces ethernet eth0 vif 600 pppoe 0 ipv6 enable
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv6 WAN DHCPv6 client configuration
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd no-dns
@@ -441,6 +482,8 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 interface switch0.10
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd pd 0 prefix-length /64
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd prefix-only
 set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # IPv4 TCP MSS clamping
 # See scripts/firewall.sh
@@ -502,6 +545,8 @@ set system ntp server time3.google.com
 set system ntp server time4.google.com
 set system time-zone America/Sao_Paulo
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Connection tracking configuration
 set system conntrack tcp loose disable
 set system conntrack timeout icmp 30
@@ -517,6 +562,8 @@ set system conntrack timeout tcp time-wait 120
 set system conntrack timeout udp other 30
 set system conntrack timeout udp stream 180
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Disabling of unneeded NAT helpers
 set system conntrack modules ftp disable
 set system conntrack modules gre disable
@@ -525,38 +572,48 @@ set system conntrack modules pptp disable
 set system conntrack modules sip disable
 set system conntrack modules tftp disable
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Disabling of unused services
 set service unms disable
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Disabling of discovery
 set service ubnt-discover disable
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
 
 # Disabling of telemetry
 set system analytics-handler send-analytics-report false
 set system crash-handler send-crash-report false
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Disabling of hardware offloading
 set system offload hwnat disable
 set system offload ipsec disable
 
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit"]}
+
 # Disabling of traffic analysis
 set system traffic-analysis dpi disable
 
-#EXIT:
-#DISCONNECT:
-#ENDAUTOMATION:
-
-# Upload of additional files
-$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key ./scripts/firewall.sh username920169077@192.168.103.254:/home/username920169077
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","exit"]}
+#ROUTER_SETUP:DISCONNECT:
+#ROUTER_SETUP:UPLOAD_FILES:{"local_files":["../procedures/keys_and_certificates_creation/certificate_authority.crt","../procedures/keys_and_certificates_creation/management_https.crt","../procedures/keys_and_certificates_creation/management_https.key","./scripts/firewall.sh"],"remote_directory":"/home/username920169077"}
+#ROUTER_SETUP:CONNECT:
 
 # File location, permission and ownership changes, and firewall rules application
-$ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
-$ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
-$ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
-$ sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem /config/scripts/post-config.d/firewall.sh
-$ sudo chmod 0600 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
-$ sudo chmod 0700 /config/scripts/post-config.d/firewall.sh
-$ sudo /config/scripts/post-config.d/firewall.sh
+sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
+sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
+sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
+sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem /config/scripts/post-config.d/firewall.sh
+sudo chmod 0600 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
+sudo chmod 0700 /config/scripts/post-config.d/firewall.sh
+sudo /config/scripts/post-config.d/firewall.sh
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
 # Configuration of management via HTTPS
 set service gui ca-file /config/auth/certificate_authority.crt
@@ -564,3 +621,7 @@ set service gui cert-file /config/auth/management_https.pem
 set service gui http-port 45631
 set service gui https-port 18856
 set service gui older-ciphers disable
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","save","exit"]}
+#ROUTER_SETUP:DISCONNECT:
+#ROUTER_SETUP:END
