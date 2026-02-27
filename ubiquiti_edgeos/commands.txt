@@ -629,4 +629,4 @@ sudo rm -rf /home/ubnt
 
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["exit"]}
 #ROUTER_SETUP:DISCONNECT:
-#ROUTER_SETUP:END
+#ROUTER_SETUP:END:
