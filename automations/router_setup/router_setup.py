@@ -9,11 +9,13 @@ import typing
 
 INSTRUCTION_PREFIX = "#ROUTER_SETUP:"
 COMMENT_PREFIX = "#"
+SSH_CONNECT_TIMEOUT = 15
+SSH_CONNECT_WAIT_BEFORE_RETRY = 2
+OUTPUT_FILE_PATH = "./output.txt"
+OUTPUT_WIDTH = 120
+OUTPUT_CHUNK_SIZE = 4096
+OUTPUT_WAIT_TIME_STEP = 0.1
 PROMPT_READY_MARKERS = ("$", "#", ">")
-PROMPT_WAIT_TIME_STEP = 0.1
-PROMPT_OUTPUT_CHUNK_SIZE = 4096
-OUTPUTS_FILE_PATH = "./output.log"
-OUTPUTS_REDACTED_REPLACEMENT = "[*]"
 
 InstructionType = typing.Literal[
     "START:",
@@ -50,11 +52,16 @@ class Instruction:
 @dataclasses.dataclass
 class SSHInfo:
     is_connected: bool
-    outputs_file_path: str
-    outputs_redacted_replacement: str
-    outputs_redacted_values: list[str] = dataclasses.field(default_factory=list)
+    connect_timeout: float
+    connect_wait_before_retry: float
+    output_file_path: str
+    output_width: int
+    output_chunk_size: int
+    output_wait_time_step: float
+    prompt_ready_markers: tuple[str]
     connection_index: int = 0
     connection_outputs: list[str] = dataclasses.field(default_factory=list)
+    redacted_texts: list[str] = dataclasses.field(default_factory=list)
     client: paramiko.SSHClient | None = None
     shell: paramiko.Channel | None = None
 
@@ -70,63 +77,66 @@ class Environment:
 @dataclasses.dataclass
 class SessionInfo:
     instructions_file_path: pathlib.Path
+    dry_run: bool
     is_active: bool
     instruction_prefix: str
     comment_prefix: str
-    prompt_ready_markers: tuple[str]
-    prompt_wait_time_step: float
-    prompt_output_chunk_size: int
     environment: Environment
     ssh_info: SSHInfo
 
 
-def wait_for_ready_prompt(session_info: SessionInfo) -> str:
+def wait_for_ready_prompt(ssh_info: SSHInfo) -> str:
     output = ""
     while True:
-        time.sleep(session_info.prompt_wait_time_step)
-        if session_info.ssh_info.shell.recv_ready():
-            output += session_info.ssh_info.shell.recv(session_info.prompt_output_chunk_size).decode(errors="ignore")
-            if output.rstrip().endswith(session_info.prompt_ready_markers):
+        time.sleep(ssh_info.output_wait_time_step)
+        if ssh_info.shell.recv_ready():
+            output += ssh_info.shell.recv(ssh_info.output_chunk_size).decode(errors="ignore")
+            if output.rstrip().endswith(ssh_info.prompt_ready_markers):
                 return output
 
 
-def get_ssh_client(environment: Environment) -> paramiko.SSHClient:
+def get_ssh_client(session_info: SessionInfo) -> paramiko.SSHClient | None:
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(
-        hostname=environment.hostname,
-        port=environment.port,
-        username=environment.username,
-        password=environment.password,
-        look_for_keys=False,
-        allow_agent=False,
-    )
+    try:
+        ssh_client.connect(
+            hostname=session_info.environment.hostname,
+            port=session_info.environment.port,
+            username=session_info.environment.username,
+            password=session_info.environment.password,
+            look_for_keys=False,
+            allow_agent=False,
+            timeout=session_info.ssh_info.connect_timeout,
+        )
+    except (TimeoutError, OSError):
+        return None
     return ssh_client
 
 
 def connect(session_info: SessionInfo) -> None:
     session_info.ssh_info.connection_index = len(session_info.ssh_info.connection_outputs)
     session_info.ssh_info.connection_outputs.append("")
-    session_info.ssh_info.client = get_ssh_client(session_info.environment)
-    session_info.ssh_info.shell = session_info.ssh_info.client.invoke_shell()
-    session_info.ssh_info.connection_outputs[session_info.ssh_info.connection_index] += wait_for_ready_prompt(
-        session_info
-    )
+    session_info.ssh_info.client = get_ssh_client(session_info)
+    if session_info.ssh_info.client is not None:
+        session_info.ssh_info.shell = session_info.ssh_info.client.invoke_shell(
+            width=session_info.ssh_info.output_width
+        )
+        session_info.ssh_info.connection_outputs[session_info.ssh_info.connection_index] += wait_for_ready_prompt(
+            session_info.ssh_info
+        )
 
 
-def disconnect(session_info: SessionInfo) -> None:
-    session_info.ssh_info.client.close()
-    session_info.ssh_info.client = None
-    session_info.ssh_info.shell = None
+def disconnect(ssh_info: SSHInfo) -> None:
+    ssh_info.client.close()
+    ssh_info.client = None
+    ssh_info.shell = None
 
 
-def run_commands(instruction_arguments: InstructionArguments, session_info: SessionInfo) -> list[str]:
+def run_commands(instruction_arguments: InstructionArguments, ssh_info: SSHInfo) -> list[str]:
     outputs: list[str] = []
     for command in instruction_arguments.commands:
-        session_info.ssh_info.shell.send(command + "\n")
-        session_info.ssh_info.connection_outputs[session_info.ssh_info.connection_index] += wait_for_ready_prompt(
-            session_info
-        )
+        ssh_info.shell.send(command + "\n")
+        ssh_info.connection_outputs[ssh_info.connection_index] += wait_for_ready_prompt(ssh_info)
     return outputs
 
 
@@ -136,11 +146,12 @@ def upload_files(instruction_arguments: InstructionArguments, session_info: Sess
         perspective_file_path = session_info.instructions_file_path.resolve()
         local_file_absolute_path = (perspective_file_path.parent / local_file).resolve()
         local_files_absolute_paths.append(str(local_file_absolute_path))
-    ssh_client = get_ssh_client(session_info.environment)
-    scp_client = scp.SCPClient(ssh_client.get_transport())
-    scp_client.put(local_files_absolute_paths, instruction_arguments.remote_directory)
-    scp_client.close()
-    ssh_client.close()
+    ssh_client = get_ssh_client(session_info)
+    if ssh_client is not None:
+        scp_client = scp.SCPClient(ssh_client.get_transport())
+        scp_client.put(local_files_absolute_paths, instruction_arguments.remote_directory)
+        scp_client.close()
+        ssh_client.close()
 
 
 def set_environment(instruction_arguments: InstructionArguments, session_info: SessionInfo) -> None:
@@ -152,7 +163,16 @@ def set_environment(instruction_arguments: InstructionArguments, session_info: S
         session_info.environment.username = instruction_arguments.username
     if instruction_arguments.password is not None:
         session_info.environment.password = instruction_arguments.password
-        session_info.ssh_info.outputs_redacted_values.append(session_info.environment.password)
+        session_info.ssh_info.redacted_texts.append(session_info.environment.password)
+        session_info.ssh_info.redacted_texts.sort(key=len, reverse=True)
+
+
+def redact_sensitive_information(unredacted_text: str, ssh_info: SSHInfo) -> str:
+    redacted_text = unredacted_text
+    for text_to_redact in ssh_info.redacted_texts:
+        if len(text_to_redact) > 0:
+            redacted_text = redacted_text.replace(text_to_redact, "*" * len(text_to_redact))
+    return redacted_text
 
 
 def get_instruction_arguments(instruction_line: str, prefix: str) -> InstructionArguments:
@@ -234,7 +254,7 @@ def decode_instruction_line(instruction_line: str, session_info: SessionInfo) ->
     return None
 
 
-def process_single_instruction_line(session_info: SessionInfo, instruction_line: str) -> None:
+def process_single_instruction_line(instruction_line: str, session_info: SessionInfo) -> None:
     instruction_data = decode_instruction_line(instruction_line, session_info)
     if instruction_data is None:
         return
@@ -256,8 +276,15 @@ def process_single_instruction_line(session_info: SessionInfo, instruction_line:
             if session_info.ssh_info.is_connected == True:
                 print("Warning: Could not connect | Reason: Automation already connected")
                 return
-            print(f"Connecting to {session_info.environment.username}@{session_info.environment.hostname}")
-            connect(session_info)
+            while True:
+                print(f"Connecting to {session_info.environment.username}@{session_info.environment.hostname}")
+                if session_info.dry_run == True:
+                    break
+                connect(session_info)
+                if session_info.ssh_info.client is not None:
+                    break
+                print("Could not connect")
+                time.sleep(session_info.ssh_info.connect_wait_before_retry)
             print("Connected")
             session_info.ssh_info.is_connected = True
         case "DISCONNECT:":
@@ -267,7 +294,8 @@ def process_single_instruction_line(session_info: SessionInfo, instruction_line:
             if session_info.ssh_info.is_connected == False:
                 print("Warning: Could not disconnect | Reason: Automation not connected")
                 return
-            disconnect(session_info)
+            if session_info.dry_run == False:
+                disconnect(session_info.ssh_info)
             print("Disconnected")
             session_info.ssh_info.is_connected = False
             session_info.ssh_info.connection_index += 1
@@ -278,13 +306,18 @@ def process_single_instruction_line(session_info: SessionInfo, instruction_line:
             if session_info.ssh_info.is_connected == False:
                 print("Warning: Could not run commands | Reason: Automation not connected")
                 return
-            print(f"Running commands: {"; ".join(instruction_data.arguments.commands)}")
-            run_commands(instruction_data.arguments, session_info)
+            redacted_commands: list[str] = []
+            for unredacted_command in instruction_data.arguments.commands:
+                redacted_commands.append(redact_sensitive_information(unredacted_command, session_info.ssh_info))
+            print(f"Running commands: {"; ".join(redacted_commands)}")
+            if session_info.dry_run == False:
+                run_commands(instruction_data.arguments, session_info.ssh_info)
         case "UPLOAD_FILES:":
             print(
                 f"Uploading files: {"; ".join(instruction_data.arguments.local_files)} > {instruction_data.arguments.remote_directory}"
             )
-            upload_files(instruction_data.arguments, session_info)
+            if session_info.dry_run == False:
+                upload_files(instruction_data.arguments, session_info)
             print("Files uploaded successfully")
         case "CONFIRM:":
             input(instruction_data.arguments.message + " | Press ENTER to continue...")
@@ -296,23 +329,17 @@ def process_single_instruction_line(session_info: SessionInfo, instruction_line:
 
 
 def process_instruction_lines(session_info: SessionInfo) -> None:
-    with session_info.instructions_file_path.open("r") as file:
-        instruction_lines = file.readlines()
-        for instruction_line in instruction_lines:
-            process_single_instruction_line(session_info, instruction_line)
-
-
-def redact_sensitive_information(connection_output: str, ssh_info: SSHInfo) -> str:
-    redacted_output = connection_output
-    ssh_info.outputs_redacted_values.sort(key=len, reverse=True)
-    for redact_value in ssh_info.outputs_redacted_values:
-        if len(redact_value) > 0:
-            redacted_output = redacted_output.replace(redact_value, ssh_info.outputs_redacted_replacement)
-    return redacted_output
+    try:
+        with session_info.instructions_file_path.open("r") as file:
+            instruction_lines = file.readlines()
+            for instruction_line in instruction_lines:
+                process_single_instruction_line(instruction_line, session_info)
+    except FileNotFoundError:
+        print("Error: File not found")
 
 
 def save_outputs(ssh_info: SSHInfo) -> None:
-    with open(ssh_info.outputs_file_path, mode="a") as outputs_file:
+    with open(ssh_info.output_file_path, mode="a") as outputs_file:
         for connection_output in ssh_info.connection_outputs:
             outputs_file.write("-\n\n" + redact_sensitive_information(connection_output.strip(), ssh_info) + "\n\n")
         if len(ssh_info.connection_outputs) > 0:
@@ -322,7 +349,10 @@ def save_outputs(ssh_info: SSHInfo) -> None:
 def parse_arguments() -> argparse.Namespace:
     argument_parser = argparse.ArgumentParser(description="Automate router configuration via SSH")
     argument_parser.add_argument(
-        "--instructions_file", type=pathlib.Path, help="Path to the instructions file to be processed", required=True
+        "--instructions-file", type=pathlib.Path, help="Path to the instructions file to be processed", required=True
+    )
+    argument_parser.add_argument(
+        "--dry-run", action="store_true", help="Dry run of the instructions without connecting to the router"
     )
     return argument_parser.parse_args()
 
@@ -330,18 +360,21 @@ def parse_arguments() -> argparse.Namespace:
 def main() -> None:
     arguments = parse_arguments()
     session_info: SessionInfo = SessionInfo(
-        instructions_file_path=arguments.instructions_file,
+        instructions_file_path=pathlib.Path(arguments.instructions_file),
+        dry_run=bool(arguments.dry_run),
         is_active=False,
         instruction_prefix=INSTRUCTION_PREFIX,
         comment_prefix=COMMENT_PREFIX,
-        prompt_ready_markers=PROMPT_READY_MARKERS,
-        prompt_wait_time_step=PROMPT_WAIT_TIME_STEP,
-        prompt_output_chunk_size=PROMPT_OUTPUT_CHUNK_SIZE,
         environment=Environment(),
         ssh_info=SSHInfo(
             is_connected=False,
-            outputs_file_path=OUTPUTS_FILE_PATH,
-            outputs_redacted_replacement=OUTPUTS_REDACTED_REPLACEMENT,
+            connect_timeout=SSH_CONNECT_TIMEOUT,
+            connect_wait_before_retry=SSH_CONNECT_WAIT_BEFORE_RETRY,
+            output_file_path=OUTPUT_FILE_PATH,
+            output_width=OUTPUT_WIDTH,
+            output_chunk_size=OUTPUT_CHUNK_SIZE,
+            output_wait_time_step=OUTPUT_WAIT_TIME_STEP,
+            prompt_ready_markers=PROMPT_READY_MARKERS,
         ),
     )
     process_instruction_lines(session_info)
