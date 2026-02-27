@@ -39,7 +39,7 @@ Password: **password767865354**
 * management_https.crt
 * management_https.key
 
-Follow the steps at **[Keys and certificates](../keys_and_certificates)** to create the keys and certificates
+Follow the steps at **[Keys and certificates creation](../procedures/keys_and_certificates_creation)** to create the required keys and certificates
 
 ## Configuration commands
 
@@ -148,7 +148,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
-/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0 ntp-none=yes
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-vlan-10-lan lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 ```
@@ -414,7 +414,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 ### Connection tracking configuration
 
 ```
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s liberal-tcp-tracking=no loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 ```
 
 ### Disabling of unneeded NAT helpers
@@ -505,7 +505,7 @@ Follow the steps at **[Keys and certificates](../keys_and_certificates)** to cre
 ### Upload of additional files
 
 ```
-$ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@192.168.103.254:/
+$ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key username920169077@192.168.103.254:/
 ```
 
 ### Configuration of management via HTTPS
@@ -563,7 +563,7 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /interface bridge port add bridge=bridge broadcast-flood=yes comment="eth7 - Bridge - VLAN 10" frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth7 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 /interface bridge port add bridge=bridge broadcast-flood=yes comment="eth8 - Bridge - VLAN 10" frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth8 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 /interface bridge settings set allow-fast-path=yes use-ip-firewall=no
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s liberal-tcp-tracking=no loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
@@ -576,7 +576,7 @@ $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_ce
 /ip address add address=192.168.103.254/24 interface=bridge-vlan-10-lan network=192.168.103.0
 /ip address add address=192.168.237.2/30 interface=eth1-modem network=192.168.237.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
-/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0 ntp-none=yes
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
 /ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
 /ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A

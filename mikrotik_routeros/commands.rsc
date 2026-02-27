@@ -62,7 +62,7 @@
 /ip dhcp-server option add code=23 force=no name=ipv4-vlan-10-dhcp-server-option-23 value="'64'"
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
-/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0 ntp-none=yes
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-vlan-10-lan lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 
@@ -268,7 +268,7 @@
 /system ntp client set enabled=yes mode=unicast
 
 # Connection tracking configuration
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s liberal-tcp-tracking=no loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 
 # Disabling of unneeded NAT helpers
 /ip firewall service-port set ftp disabled=yes
@@ -326,7 +326,7 @@
 /queue interface set sfpplus1 queue=only-hardware-queue
 
 # Upload of additional files
-# $ scp -P 36518 ../keys_and_certificates/certificate_authority.crt ../keys_and_certificates/management_https.crt ../keys_and_certificates/management_https.key username920169077@192.168.103.254:/
+# $ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key username920169077@192.168.103.254:/
 
 # Configuration of management via HTTPS
 /certificate import file-name=certificate_authority.crt name=certificate_authority trusted=yes

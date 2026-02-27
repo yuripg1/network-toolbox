@@ -41,7 +41,7 @@
 /interface bridge port add bridge=bridge broadcast-flood=yes comment="eth7 - Bridge - VLAN 10" frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth7 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 /interface bridge port add bridge=bridge broadcast-flood=yes comment="eth8 - Bridge - VLAN 10" frame-types=admit-only-untagged-and-priority-tagged hw=yes ingress-filtering=yes interface=eth8 learn=yes pvid=10 unknown-multicast-flood=yes unknown-unicast-flood=yes
 /interface bridge settings set allow-fast-path=yes use-ip-firewall=no
-/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
+/ip firewall connection tracking set enabled=yes generic-timeout=10m icmp-timeout=30s liberal-tcp-tracking=no loose-tcp-tracking=no tcp-close-timeout=10s tcp-close-wait-timeout=1m tcp-established-timeout=5d tcp-fin-wait-timeout=2m tcp-last-ack-timeout=30s tcp-max-retrans-timeout=5m tcp-syn-received-timeout=1m tcp-syn-sent-timeout=2m tcp-time-wait-timeout=2m tcp-unacked-timeout=5m udp-stream-timeout=3m udp-timeout=30s
 /ip neighbor discovery-settings set discover-interface-list=none
 /ip settings set accept-redirects=no accept-source-route=no allow-fast-path=yes ip-forward=yes rp-filter=no secure-redirects=yes send-redirects=yes tcp-syncookies=yes tcp-timestamps=random-offset
 /ipv6 settings set accept-redirects=no accept-router-advertisements=yes allow-fast-path=yes disable-ipv6=no disable-link-local-address=no forward=yes
@@ -54,7 +54,7 @@
 /ip address add address=192.168.103.254/24 interface=bridge-vlan-10-lan network=192.168.103.0
 /ip address add address=192.168.237.2/30 interface=eth1-modem network=192.168.237.0
 /ip cloud set back-to-home-vpn=revoked-and-disabled ddns-enabled=auto update-time=no
-/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0
+/ip dhcp-server network add address=192.168.103.0/24 dhcp-option=ipv4-vlan-10-dhcp-server-option-23,ipv4-vlan-10-dhcp-server-option-26,ipv4-vlan-10-dhcp-server-option-28 dns-server=192.168.167.1 gateway=192.168.103.254 netmask=0 ntp-none=yes
 /ip dns set allow-remote-requests=yes cache-size=20480KiB max-udp-packet-size=1232 servers=2001:4860:4860::8888,2001:4860:4860::8844
 /ip dns static add address=192.168.167.1 name=router.internal ttl=5m type=A
 /ip dns static add address=192.168.167.1 name=ipv4.router.internal ttl=5m type=A
