@@ -103,7 +103,7 @@ Be aware that scapy requires root privileges to send packets. Make sure you are 
 
 ### Setup
 
-```
+```shell
 $ sudo apt update
 $ sudo apt install -y python3-dev python3-pip python3-venv
 $ chmod +x ./run.sh
@@ -111,7 +111,23 @@ $ chmod +x ./run.sh
 
 ### Run
 
-```
-$ run.sh
+```shell
+$ ./run.sh
 ```
 
+### Manual
+
+```
+usage: run.sh [-h] [--dns-only] [--protocol {ipv4,ipv6}] [--test-type {ping,ntp}] [--ntp-version {3,4}]
+
+Test NTP servers connectivity
+
+options:
+  -h, --help            show this help message and exit
+  --dns-only            Only perform DNS resolution
+  --protocol {ipv4,ipv6}
+                        Specify the protocol: ipv4 or ipv6
+  --test-type {ping,ntp}
+                        Specify the test type: ping or ntp
+  --ntp-version {3,4}   Specify the NTP version: 3 or 4
+```
