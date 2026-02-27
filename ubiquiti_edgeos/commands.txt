@@ -3,6 +3,7 @@
 #ROUTER_SETUP:CONFIRM:{"message":"Connect to eth0"}
 #ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.1.1","port":22,"username":"ubnt","password":"ubnt"}
 #ROUTER_SETUP:CONNECT:
+#ROUTER_SETUP:SET_ENVIRONMENT:{"username":"username920169077","password":"password767865354"}
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
 # New credential configuration
@@ -11,7 +12,6 @@ set system login user username920169077 level admin
 
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","exit"]}
 #ROUTER_SETUP:DISCONNECT:
-#ROUTER_SETUP:SET_ENVIRONMENT:{"username":"username920169077","password":"password767865354"}
 #ROUTER_SETUP:CONNECT:
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
@@ -622,6 +622,11 @@ set service gui http-port 45631
 set service gui https-port 18856
 set service gui older-ciphers disable
 
-#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","save","exit"]}
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","save"]}
+
+# Delete default user directory
+sudo rm -rf /home/ubnt
+
+#ROUTER_SETUP:RUN_COMMANDS:{"commands":["exit"]}
 #ROUTER_SETUP:DISCONNECT:
 #ROUTER_SETUP:END

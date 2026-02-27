@@ -540,7 +540,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo iptables --match comment --comment IPV4_MANGLE_1 --table mangle --append PREROUTING --in-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --jump TCPMSS --set-mss 1452
 $ sudo iptables --match comment --comment IPV4_MANGLE_2 --table mangle --append POSTROUTING --out-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --jump TCPMSS --set-mss 1452
 ```
@@ -549,7 +549,7 @@ $ sudo iptables --match comment --comment IPV4_MANGLE_2 --table mangle --append 
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ip6tables --match comment --comment IPV6_MANGLE_1 --table mangle --append PREROUTING --in-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432
 $ sudo ip6tables --match comment --comment IPV6_MANGLE_2 --table mangle --append POSTROUTING --out-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432
 ```
@@ -558,7 +558,7 @@ $ sudo ip6tables --match comment --comment IPV6_MANGLE_2 --table mangle --append
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ipset create DNS_SERVER_PORT_2 bitmap:port range 53-53
 $ sudo ipset add DNS_SERVER_PORT_2 53 -exist
 $ sudo ipset create IPV4_DNS_ADDRESS hash:net family inet hashsize 64 maxelem 1
@@ -571,7 +571,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_2 --table nat --append PREROU
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ipset create IPV6_DNS_ADDRESS hash:net family inet6 hashsize 64 maxelem 1
 $ sudo ipset add IPV6_DNS_ADDRESS fd45:1e52:2abe:4c85::1/128 -exist
 $ sudo ip6tables --match comment --comment IPV6_NAT_1 --table nat --append PREROUTING --in-interface switch0.10 --match set ! --match-set IPV6_DNS_ADDRESS dst --protocol udp --match set --match-set DNS_SERVER_PORT_2 dst --jump REDIRECT
@@ -582,7 +582,7 @@ $ sudo ip6tables --match comment --comment IPV6_NAT_2 --table nat --append PRERO
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ipset create IPV4_WAN_NAT_SOURCES hash:net family inet
 $ sudo ipset add IPV4_WAN_NAT_SOURCES 192.168.103.0/24 -exist
 $ sudo iptables --match comment --comment IPV4_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --match set --match-set IPV4_WAN_NAT_SOURCES src --protocol tcp --jump MASQUERADE --to-ports 8081-51004
@@ -594,7 +594,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_5 --table nat --append POSTRO
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ipset create NTP_CLIENT_PORT bitmap:port range 123-123
 $ sudo ipset add NTP_CLIENT_PORT 123 -exist
 $ sudo iptables --match comment --comment IPV4_NAT_6 --table nat --append POSTROUTING --out-interface pppoe0 --protocol udp --match set --match-set NTP_CLIENT_PORT src --jump SNAT --to-source :8081-65535
@@ -604,7 +604,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_6 --table nat --append POSTRO
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ip6tables --match comment --comment IPV6_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --protocol udp --match set --match-set NTP_CLIENT_PORT src --jump SNAT --to-source :8081-65535
 ```
 
@@ -612,7 +612,7 @@ $ sudo ip6tables --match comment --comment IPV6_NAT_3 --table nat --append POSTR
 
 See **[firewall.sh](./scripts/firewall.sh)**
 
-```
+```shell
 $ sudo ipset create IPV4_MODEM_NAT_SOURCES hash:net family inet
 $ sudo ipset add IPV4_MODEM_NAT_SOURCES 192.168.103.0/24 -exist
 $ sudo ipset create IPV4_MODEM_ADDRESS hash:net family inet hashsize 64 maxelem 1
@@ -694,13 +694,13 @@ set system traffic-analysis dpi disable
 
 ### Upload of additional files
 
-```
+```shell
 $ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key ./scripts/firewall.sh username920169077@192.168.103.254:/home/username920169077
 ```
 
 ### File location, permission and ownership changes, and firewall rules application
 
-```
+```shell
 $ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
 $ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
 $ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
@@ -718,6 +718,12 @@ set service gui cert-file /config/auth/management_https.pem
 set service gui http-port 45631
 set service gui https-port 18856
 set service gui older-ciphers disable
+```
+
+### Delete default user directory
+
+```shell
+$ sudo rm -rf /home/ubnt
 ```
 
 ## Final configuration
@@ -1115,7 +1121,9 @@ set zone-policy zone WAN from LAN firewall name IPV4_ALLOW_ALL_TRAFFIC
 set zone-policy zone WAN from LOCAL firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC
 set zone-policy zone WAN from LOCAL firewall name IPV4_ALLOW_ALL_TRAFFIC
 set zone-policy zone WAN interface pppoe0
+```
 
+```shell
 $ sudo iptables --match comment --comment IPV4_MANGLE_1 --table mangle --append PREROUTING --in-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --jump TCPMSS --set-mss 1452
 $ sudo iptables --match comment --comment IPV4_MANGLE_2 --table mangle --append POSTROUTING --out-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --jump TCPMSS --set-mss 1452
 $ sudo ip6tables --match comment --comment IPV6_MANGLE_1 --table mangle --append PREROUTING --in-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432
@@ -1150,7 +1158,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_7 --table nat --append POSTRO
 
 ### IPv4 addresses
 
-```
+```shell
 $ sudo ip -brief -4 address
 lo                 UNKNOWN        127.0.0.1/8 192.168.167.1/32
 eth0@itf0          UP             192.168.237.2/30
@@ -1160,7 +1168,7 @@ pppoe0             UNKNOWN        187.90.225.151 peer 189.97.102.55/32
 
 ### IPv4 routes
 
-```
+```shell
 $ sudo ip -4 route
 default dev pppoe0 scope link
 187.90.225.151 dev pppoe0 proto kernel scope link
@@ -1172,7 +1180,7 @@ default dev pppoe0 scope link
 
 ### IPv6 addresses
 
-```
+```shell
 $ sudo ip -brief -6 address
 lo                 UNKNOWN        fd45:1e52:2abe:4c85::1/128 ::1/128
 itf0               UNKNOWN        fe80::d221:f9ff:fee1:353/64
@@ -1190,7 +1198,7 @@ pppoe0             UNKNOWN        2804:7f4:c02f:38d7:70fb:ac42:873:11f5/64 fe80:
 
 ### IPv6 routes
 
-```
+```shell
 $ sudo ip -6 route
 2804:7f4:c02f:38d7::/64 dev pppoe0 proto kernel metric 256 expires 259032sec pref medium
 2804:7f4:ca01:6229::/64 dev switch0.10 proto kernel metric 256 pref medium
