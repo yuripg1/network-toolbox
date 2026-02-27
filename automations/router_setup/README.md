@@ -8,7 +8,7 @@ This automation implements an interpreter that, given a file containing instruct
 
 ### Basics
 
-* All the interpreted instructions lines begin with **#ROUTER_SETUP:**
+* All the interpreted instruction lines begin with **#ROUTER_SETUP:**
 * All lines that begin with **#** (excepting **#ROUTER_SETUP:**, of course) are considered comments and ignored by the interpreter
 * All empty lines are ignored
 * Some instructions are accompanied by arguments in JSON format
@@ -32,13 +32,21 @@ This automation implements an interpreter that, given a file containing instruct
 
 ```
 #ROUTER_SETUP:START:
+
 #ROUTER_SETUP:END:
+
 #ROUTER_SETUP:CONNECT:
+
 #ROUTER_SETUP:END:
+
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","save"]}
+
 #ROUTER_SETUP:UPLOAD_FILES:{"local_files":["../procedures/keys_and_certificates_creation/certificate_authority.crt","../procedures/keys_and_certificates_creation/management_https.crt","../procedures/keys_and_certificates_creation/management_https.key","./scripts/firewall.sh"],"remote_directory":"/home/username920169077"}
+
 #ROUTER_SETUP:CONFIRM:{"message":"Connect to eth0"}
+
 #ROUTER_SETUP:WAIT:{"time_in_seconds":15}
+
 #ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.1.1","port":22,"username":"ubnt","password":"ubnt"}
 ```
 
