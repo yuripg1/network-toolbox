@@ -6,9 +6,9 @@ import glob
 import os
 import sys
 
-outage_max_success_tolerance_in_seconds = float(2)
-min_outage_loss_rate_percentage = float(10)
-min_outage_duration_in_seconds = float(2)
+OUTAGE_MAX_SUCCESS_TOLERANCE_IN_SECONDS = 2
+MIN_OUTAGE_LOSS_RATE_PERCENTAGE = 10
+MIN_OUTAGE_DURATION_IN_SECONDS = 2
 
 
 @dataclasses.dataclass
@@ -36,20 +36,14 @@ class Outage:
 
 
 def print_outages_csv(outages: list[Outage]) -> None:
-    csv_writer = csv.writer(
-        sys.stdout, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL
-    )
+    csv_writer = csv.writer(sys.stdout, delimiter=",", quotechar='"', quoting=csv.QUOTE_ALL)
     csv_writer.writerow(["Loss rate (%)", "Start", "End", "Duration (seconds)"])
     for outage in outages:
         csv_writer.writerow(
             [
                 f"{outage.loss_rate_percentage:.3f}",
-                datetime.datetime.fromtimestamp(
-                    outage.timestamp_of_first_failure
-                ).isoformat(),
-                datetime.datetime.fromtimestamp(
-                    outage.timestamp_of_last_failure
-                ).isoformat(),
+                datetime.datetime.fromtimestamp(outage.timestamp_of_first_failure).isoformat(),
+                datetime.datetime.fromtimestamp(outage.timestamp_of_last_failure).isoformat(),
                 f"{outage.duration_in_seconds:.3f}",
             ]
         )
@@ -66,8 +60,7 @@ def process_current_outage(
         / ((current_outage.id_of_last_failure - current_outage.id_of_first_failure) + 1)
     ) * 100
     current_outage.duration_in_seconds = (
-        current_outage.timestamp_of_last_failure
-        - current_outage.timestamp_of_first_failure
+        current_outage.timestamp_of_last_failure - current_outage.timestamp_of_first_failure
     )
     if (
         current_outage.loss_rate_percentage >= min_outage_loss_rate_percentage
@@ -78,8 +71,8 @@ def process_current_outage(
 
 def create_new_outage(event: Event) -> Outage:
     return Outage(
-        loss_rate_percentage=0.0,
-        duration_in_seconds=0.0,
+        loss_rate_percentage=0,
+        duration_in_seconds=0,
         id_of_first_failure=event.id,
         id_of_last_failure=event.id,
         timestamp_of_first_failure=event.timestamp,
@@ -105,14 +98,10 @@ def get_outages(
         else:
             if event.is_success is True:
                 if event.timestamp > (
-                    current_outage.timestamp_of_last_failure
-                    + outage_max_success_tolerance_in_seconds
+                    current_outage.timestamp_of_last_failure + outage_max_success_tolerance_in_seconds
                 ):
                     process_current_outage(
-                        current_outage,
-                        outages,
-                        min_outage_loss_rate_percentage,
-                        min_outage_duration_in_seconds,
+                        current_outage, outages, min_outage_loss_rate_percentage, min_outage_duration_in_seconds
                     )
                     current_outage = None
             else:
@@ -120,12 +109,7 @@ def get_outages(
                 current_outage.timestamp_of_last_failure = event.timestamp
                 current_outage.number_of_failures += 1
     if current_outage is not None:
-        process_current_outage(
-            current_outage,
-            outages,
-            min_outage_loss_rate_percentage,
-            min_outage_duration_in_seconds,
-        )
+        process_current_outage(current_outage, outages, min_outage_loss_rate_percentage, min_outage_duration_in_seconds)
     return outages
 
 
@@ -206,9 +190,7 @@ def get_options_from_arguments(arguments: argparse.Namespace) -> Options:
 
 def parse_arguments() -> argparse.Namespace:
     argument_parser = argparse.ArgumentParser(description="Analyze ping results")
-    argument_parser.add_argument(
-        "--input", type=str, required=True, help="Path to the input file(s)"
-    )
+    argument_parser.add_argument("--input", type=str, required=True, help="Path to the input file(s)")
     return argument_parser.parse_args()
 
 
@@ -219,9 +201,9 @@ def main() -> None:
     events = get_events_from_files(files)
     outages = get_outages(
         events,
-        outage_max_success_tolerance_in_seconds,
-        min_outage_loss_rate_percentage,
-        min_outage_duration_in_seconds,
+        OUTAGE_MAX_SUCCESS_TOLERANCE_IN_SECONDS,
+        MIN_OUTAGE_LOSS_RATE_PERCENTAGE,
+        MIN_OUTAGE_DURATION_IN_SECONDS,
     )
     print_outages_csv(outages)
 

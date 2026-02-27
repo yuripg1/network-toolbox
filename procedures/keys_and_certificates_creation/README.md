@@ -1,10 +1,10 @@
-## Keys and certificates
+# Keys and certificates
 
-### Summary
+## Summary
 
 This procedure creates the keys and certificates needed for securing the HTTPS management portal of the router
 
-### Certificate Authority (CA)
+## Certificate Authority (CA)
 
 The first step creates the following files:
 
@@ -18,7 +18,7 @@ $ openssl req -new -x509 -key ./certificate_authority.key -out ./certificate_aut
 $ printf '%X\n' 4096 > ./certificate_authority.srl
 ```
 
-### Management via HTTPS
+## Management via HTTPS
 
 The second step creates the following files:
 

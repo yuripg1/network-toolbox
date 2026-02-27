@@ -28,10 +28,24 @@ The second step is to run the ping analysis script pointing to one or more files
 
 Here's an example of how to run it:
 
-```
+```shell
 $ python3 ./ping_analyzer.py --input ./inputs
+```
+
+### Manual
+
+```
+usage: ping_analyzer.py [-h] --input INPUT
+
+Analyze ping results
+
+options:
+  -h, --help     show this help message and exit
+  --input INPUT  Path to the input file(s)
 ```
 
 ## Example
 
-In the **[test_output.txt](./test_output.txt)** you can see the example of an output
+In the **[pings.txt](./inputs/pings.txt)** file you can see the example of an input
+
+In the **[test_output.txt](./test_output.txt)** file you can see the example of an output
