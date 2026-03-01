@@ -248,6 +248,11 @@ set firewall name IPV4_LAN_TO_MODEM rule 30 action accept
 set firewall name IPV4_LAN_TO_MODEM rule 30 description 'Accept management via HTTP'
 set firewall name IPV4_LAN_TO_MODEM rule 30 destination group port-group MANAGEMENT_HTTP_PORT
 set firewall name IPV4_LAN_TO_MODEM rule 30 protocol tcp
+set firewall name IPV4_LAN_TO_MODEM rule 40 action accept
+set firewall name IPV4_LAN_TO_MODEM rule 40 description 'Accept ICMP Echo Request packets'
+set firewall name IPV4_LAN_TO_MODEM rule 40 icmp code 0
+set firewall name IPV4_LAN_TO_MODEM rule 40 icmp type 8
+set firewall name IPV4_LAN_TO_MODEM rule 40 protocol icmp
 set firewall name IPV4_WAN_TO_LAN default-action drop
 set firewall name IPV4_WAN_TO_LAN description 'Check packets going from WAN to LAN'
 set firewall name IPV4_WAN_TO_LAN rule 10 action accept

@@ -107,6 +107,7 @@
 /ip firewall filter add action=accept chain=ipv4-lan-to-modem comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-lan-to-modem comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-lan-to-modem comment="Accept management via HTTP" dst-port=45631 protocol=tcp
+/ip firewall filter add action=accept chain=ipv4-lan-to-modem comment="Accept ICMP Echo Request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-lan-to-modem comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-wan-to-lan comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop INVALID packets" connection-state=invalid
