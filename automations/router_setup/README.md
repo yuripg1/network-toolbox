@@ -41,7 +41,7 @@ This automation implements an interpreter that, given a file containing instruct
 
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","save"]}
 
-#ROUTER_SETUP:UPLOAD_FILES:{"local_files":["../procedures/keys_and_certificates_creation/certificate_authority.crt","../procedures/keys_and_certificates_creation/management_https.crt","../procedures/keys_and_certificates_creation/management_https.key","./scripts/firewall.sh"],"remote_directory":"/home/username920169077"}
+#ROUTER_SETUP:UPLOAD_FILES:{"local_files":["../procedures/keys_and_certificates_creation/certificate_authority.crt","../procedures/keys_and_certificates_creation/management_https.crt","../procedures/keys_and_certificates_creation/management_https.key","../procedures/keys_and_certificates_creation/openvpn_server.crt","../procedures/keys_and_certificates_creation/openvpn_server.key","../procedures/keys_and_certificates_creation/openvpn_server_dh.pem","./firewall.sh"],"remote_directory":"/home/username920169077"}
 
 #ROUTER_SETUP:CONFIRM:{"message":"Connect to eth0"}
 

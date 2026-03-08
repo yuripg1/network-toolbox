@@ -1,34 +1,82 @@
+# Ubiquiti EdgeOS
+
+---
+
 ## Router management
 
-### Protocols and ports
+### Local accesses
 
-* HTTPS: TCP/18856 (**[https://router.internal:18856/](https://router.internal:18856/)**)
+* HTTPS: TCP/18856
+  * **[https://router.internal:18856/](https://router.internal:18856/)**
 * SSH: TCP/36518
+  * `$ ssh -p 36518 username920169077@router.internal`
 
-### Credential
+### Remote VPN
 
-Username: **username920169077**</br>
-Password: **password767865354**
+* OpenVPN: UDP/23029
+
+The VPN tunnel provides remote access to the following routes:
+
+* 192.168.167.1/32
+
+Take the template available in **[openvpn_client.ovpn](./openvpn_client.ovpn)** and replace the following values:
+
+* `{{ENTER_OPENVPN_SERVER_ADDRESS}}`: Address of the OpenVPN server
+* `{{ENTER_CERTIFICATE_AUTHORITY}}`: Base64-encoded Certificate Authority
+* `{{ENTER_OPENVPN_CLIENT_CERTIFICATE}}`: Base64-encoded OpenVPN client certificate
+* `{{ENTER_OPENVPN_CLIENT_PRIVATE_KEY}}`: Base64-encoded OpenVPN client private key
+
+### Remote accesses via VPN
+
+* HTTPS: TCP/18856
+  * **[https://192.168.167.1:18856/](https://192.168.167.1:18856/)**
+* SSH: TCP/36518
+  * `$ ssh -p 36518 username920169077@192.168.167.1`
+
+### Credentials
+
+* Username: **username920169077**
+* Password: **password767865354**
+
+---
+
+## Interfaces
+
+* eth0: **Modem**
+  * VLAN 600
+    * PPPoE client: **WAN**
+* Switch
+  * eth1: **Trunk port**
+  * VLAN 10: **LAN**
+    * eth2: **Access port**
+    * eth3: **Access port**
+    * eth4: **Access port**
+
+---
 
 ## Zone-based firewall policies
 
 ### IPv4
 
-| <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                                  | LAN                                    | WAN                                 | Modem                               |
-|----------------------------------:|:--------------------------------------:|:--------------------------------------:|:-----------------------------------:|:-----------------------------------:|
-| Local                             | ✅                                     | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr>    | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> |
-| LAN                               | <nobr>IPV4_LAN_TO_LOCAL</nobr>         | ✅                                     | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV4_LAN_TO_MODEM</nobr>      |
-| WAN                               | <nobr>IPV4_WAN_TO_LOCAL</nobr>         | <nobr>IPV4_WAN_TO_LAN</nobr>           | ✅                                  | ❌                                  |
-| Modem                             | <nobr>IPV4_ALLOW_RETURN_TRAFFIC</nobr> | <nobr>IPV4_ALLOW_RETURN_TRAFFIC</nobr> | ❌                                  | ✅                                  |
+| <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                                  | LAN                                    | WAN                                 | VPN                                    | Modem                               |
+|----------------------------------:|:--------------------------------------:|:--------------------------------------:|:-----------------------------------:|:--------------------------------------:|:-----------------------------------:|
+| Local                             | ✅                                     | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr>    | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr>    | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> |
+| LAN                               | <nobr>IPV4_LAN_TO_LOCAL</nobr>         | ✅                                     | <nobr>IPV4_ALLOW_ALL_TRAFFIC</nobr> | ❌                                     | <nobr>IPV4_LAN_TO_MODEM</nobr>      |
+| WAN                               | <nobr>IPV4_WAN_TO_LOCAL</nobr>         | <nobr>IPV4_WAN_TO_LAN</nobr>           | ✅                                  | ❌                                     | ❌                                  |
+| VPN                               | <nobr>IPV4_VPN_TO_LOCAL</nobr>         | ❌                                     | ❌                                  | ✅                                     | ❌                                  |
+| Modem                             | <nobr>IPV4_ALLOW_RETURN_TRAFFIC</nobr> | <nobr>IPV4_ALLOW_RETURN_TRAFFIC</nobr> | ❌                                  | ❌                                     | ✅                                  |
 
 ### IPv6
 
-| <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                          | LAN                                 | WAN                                 | Modem |
-|----------------------------------:|:------------------------------:|:-----------------------------------:|:-----------------------------------:|:-----:|
-| Local                             | ✅                             | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | ❌    |
-| LAN                               | <nobr>IPV6_LAN_TO_LOCAL</nobr> | ✅                                  | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | ❌    |
-| WAN                               | <nobr>IPV6_WAN_TO_LOCAL</nobr> | <nobr>IPV6_WAN_TO_LAN</nobr>        | ✅                                  | ❌    |
-| Modem                             | ❌                             | ❌                                  | ❌                                  | ✅    |
+| <nobr>From&nbsp;\\&nbsp;To</nobr> | Local                          | LAN                                 | WAN                                 | VPN | Modem |
+|----------------------------------:|:------------------------------:|:-----------------------------------:|:-----------------------------------:|:---:|:-----:|
+| Local                             | ✅                             | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | ❌  | ❌    |
+| LAN                               | <nobr>IPV6_LAN_TO_LOCAL</nobr> | ✅                                  | <nobr>IPV6_ALLOW_ALL_TRAFFIC</nobr> | ❌  | ❌    |
+| WAN                               | <nobr>IPV6_WAN_TO_LOCAL</nobr> | <nobr>IPV6_WAN_TO_LAN</nobr>        | ✅                                  | ❌  | ❌    |
+| VPN                               | ❌                             | ❌                                  | ❌                                  | ✅  | ❌    |
+| Modem                             | ❌                             | ❌                                  | ❌                                  | ❌  | ✅    |
+
+---
 
 ## Required files
 
@@ -37,8 +85,13 @@ Password: **password767865354**
 * certificate_authority.crt
 * management_https.crt
 * management_https.key
+* openvpn_server.crt
+* openvpn_server.key
+* openvpn_server_dh.pem
 
 Follow the steps at **[Keys and certificates creation](../procedures/keys_and_certificates_creation)** to create the required keys and certificates
+
+---
 
 ## Configuration commands
 
@@ -224,11 +277,13 @@ set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.167.1
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.103.0/24
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.237.0/30
 set firewall group address-group IPV4_LAN_SOURCES address 192.168.103.0/24
+set firewall group address-group IPV4_VPN_SOURCES address 192.168.114.0/24
 set firewall group port-group DHCP_SERVER_PORT port 67
 set firewall group port-group DNS_SERVER_PORT port 53
 set firewall group port-group MANAGEMENT_HTTPS_PORT port 18856
 set firewall group port-group MANAGEMENT_HTTP_PORT port 45631
 set firewall group port-group MANAGEMENT_SSH_PORT port 36518
+set firewall group port-group OPENVPN_SERVER_PORT port 23029
 set firewall name IPV4_ALLOW_ALL_TRAFFIC default-action accept
 set firewall name IPV4_ALLOW_ALL_TRAFFIC description 'Allow all traffic'
 set firewall name IPV4_ALLOW_ALL_TRAFFIC rule 10 action accept
@@ -305,6 +360,31 @@ set firewall name IPV4_LAN_TO_MODEM rule 40 description 'Accept ICMP Echo Reques
 set firewall name IPV4_LAN_TO_MODEM rule 40 icmp code 0
 set firewall name IPV4_LAN_TO_MODEM rule 40 icmp type 8
 set firewall name IPV4_LAN_TO_MODEM rule 40 protocol icmp
+set firewall name IPV4_VPN_TO_LOCAL default-action drop
+set firewall name IPV4_VPN_TO_LOCAL description 'Check packets going from VPN to Local'
+set firewall name IPV4_VPN_TO_LOCAL rule 10 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 10 description 'Accept ESTABLISHED,RELATED packets'
+set firewall name IPV4_VPN_TO_LOCAL rule 10 state established enable
+set firewall name IPV4_VPN_TO_LOCAL rule 10 state related enable
+set firewall name IPV4_VPN_TO_LOCAL rule 20 action drop
+set firewall name IPV4_VPN_TO_LOCAL rule 20 description 'Drop INVALID packets'
+set firewall name IPV4_VPN_TO_LOCAL rule 20 state invalid enable
+set firewall name IPV4_VPN_TO_LOCAL rule 30 action drop
+set firewall name IPV4_VPN_TO_LOCAL rule 30 description 'Drop packets with spoofed source addresses'
+set firewall name IPV4_VPN_TO_LOCAL rule 30 source group address-group '!IPV4_VPN_SOURCES'
+set firewall name IPV4_VPN_TO_LOCAL rule 40 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 40 description 'Accept management via HTTPS'
+set firewall name IPV4_VPN_TO_LOCAL rule 40 destination group port-group MANAGEMENT_HTTPS_PORT
+set firewall name IPV4_VPN_TO_LOCAL rule 40 protocol tcp
+set firewall name IPV4_VPN_TO_LOCAL rule 50 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 50 description 'Accept management via SSH'
+set firewall name IPV4_VPN_TO_LOCAL rule 50 destination group port-group MANAGEMENT_SSH_PORT
+set firewall name IPV4_VPN_TO_LOCAL rule 50 protocol tcp
+set firewall name IPV4_VPN_TO_LOCAL rule 60 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 60 description 'Accept ICMP Echo Request packets'
+set firewall name IPV4_VPN_TO_LOCAL rule 60 icmp code 0
+set firewall name IPV4_VPN_TO_LOCAL rule 60 icmp type 8
+set firewall name IPV4_VPN_TO_LOCAL rule 60 protocol icmp
 set firewall name IPV4_WAN_TO_LAN default-action drop
 set firewall name IPV4_WAN_TO_LAN description 'Check packets going from WAN to LAN'
 set firewall name IPV4_WAN_TO_LAN rule 10 action accept
@@ -330,10 +410,14 @@ set firewall name IPV4_WAN_TO_LOCAL rule 30 action drop
 set firewall name IPV4_WAN_TO_LOCAL rule 30 description 'Drop packets with spoofed source addresses'
 set firewall name IPV4_WAN_TO_LOCAL rule 30 source group address-group IPV4_INVALID_WAN_SOURCES
 set firewall name IPV4_WAN_TO_LOCAL rule 40 action accept
-set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept ICMP Echo Request packets'
-set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp code 0
-set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp type 8
-set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol icmp
+set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept connection to the OpenVPN server'
+set firewall name IPV4_WAN_TO_LOCAL rule 40 destination group port-group OPENVPN_SERVER_PORT
+set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol udp
+set firewall name IPV4_WAN_TO_LOCAL rule 50 action accept
+set firewall name IPV4_WAN_TO_LOCAL rule 50 description 'Accept ICMP Echo Request packets'
+set firewall name IPV4_WAN_TO_LOCAL rule 50 icmp code 0
+set firewall name IPV4_WAN_TO_LOCAL rule 50 icmp type 8
+set firewall name IPV4_WAN_TO_LOCAL rule 50 protocol icmp
 ```
 
 ### IPv6 firewall rule sets
@@ -543,7 +627,7 @@ set interfaces ethernet eth0 vif 600 pppoe 0 dhcpv6-pd rapid-commit enable
 
 ### IPv4 TCP MSS clamping
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo iptables --match comment --comment IPV4_MANGLE_1 --table mangle --append PREROUTING --in-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1453:65535 --jump TCPMSS --set-mss 1452
@@ -552,7 +636,7 @@ $ sudo iptables --match comment --comment IPV4_MANGLE_2 --table mangle --append 
 
 ### IPv6 TCP MSS clamping
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ip6tables --match comment --comment IPV6_MANGLE_1 --table mangle --append PREROUTING --in-interface pppoe0 --protocol tcp --tcp-flags SYN SYN --match tcpmss --mss 1433:65535 --jump TCPMSS --set-mss 1432
@@ -561,7 +645,7 @@ $ sudo ip6tables --match comment --comment IPV6_MANGLE_2 --table mangle --append
 
 ### IPv4 DNAT to redirect all DNS queries
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ipset create DNS_SERVER_PORT_2 bitmap:port range 53-53
@@ -574,7 +658,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_2 --table nat --append PREROU
 
 ### IPv6 DNAT to redirect all DNS queries
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ipset create IPV6_DNS_ADDRESS hash:net family inet6 hashsize 64 maxelem 1
@@ -585,7 +669,7 @@ $ sudo ip6tables --match comment --comment IPV6_NAT_2 --table nat --append PRERO
 
 ### IPv4 SNAT of private addresses for internet access
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ipset create IPV4_WAN_NAT_SOURCES hash:net family inet
@@ -597,7 +681,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_5 --table nat --append POSTRO
 
 ### IPv4 SNAT to bypass ISP blocking of incoming UDP packets on port 123
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ipset create NTP_CLIENT_PORT bitmap:port range 123-123
@@ -607,7 +691,7 @@ $ sudo iptables --match comment --comment IPV4_NAT_6 --table nat --append POSTRO
 
 ### IPv6 SNAT to bypass ISP blocking of incoming UDP packets on port 123
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ip6tables --match comment --comment IPV6_NAT_3 --table nat --append POSTROUTING --out-interface pppoe0 --protocol udp --match set --match-set NTP_CLIENT_PORT src --jump SNAT --to-source :8081-65535
@@ -615,7 +699,7 @@ $ sudo ip6tables --match comment --comment IPV6_NAT_3 --table nat --append POSTR
 
 ### IPv4 SNAT of private addresses for modem access
 
-See **[firewall.sh](./scripts/firewall.sh)**
+See **[firewall.sh](./firewall.sh)**
 
 ```shell
 $ sudo ipset create IPV4_MODEM_NAT_SOURCES hash:net family inet
@@ -700,18 +784,19 @@ set system traffic-analysis dpi disable
 ### Upload of additional files
 
 ```shell
-$ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key ./scripts/firewall.sh username920169077@192.168.103.254:/home/username920169077
+$ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key ../procedures/keys_and_certificates_creation/openvpn_server.crt ../procedures/keys_and_certificates_creation/openvpn_server.key ../procedures/keys_and_certificates_creation/openvpn_server_dh.pem ./firewall.sh username920169077@192.168.103.254:/home/username920169077
 ```
 
-### File location, permission and ownership changes, and firewall rules application
+### File locations, permissions, ownerships, and firewall rules
 
 ```shell
-$ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /config/auth
+$ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /home/username920169077/openvpn_server.crt /home/username920169077/openvpn_server.key /home/username920169077/openvpn_server_dh.pem /config/auth
 $ sudo mv /home/username920169077/firewall.sh /config/scripts/post-config.d
 $ sudo cat /config/auth/management_https.crt /config/auth/management_https.key > /config/auth/management_https.pem
-$ sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem /config/scripts/post-config.d/firewall.sh
-$ sudo chmod 0600 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem
-$ sudo chmod 0700 /config/scripts/post-config.d/firewall.sh
+$ sudo chown root:root /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/management_https.key /config/auth/management_https.pem /config/auth/openvpn_server.crt /config/auth/openvpn_server.key /config/auth/openvpn_server_dh.pem /config/scripts/post-config.d/firewall.sh
+$ sudo chmod 0600 /config/auth/management_https.key /config/auth/management_https.pem /config/auth/openvpn_server.key
+$ sudo chmod 0644 /config/auth/certificate_authority.crt /config/auth/management_https.crt /config/auth/openvpn_server.crt /config/auth/openvpn_server_dh.pem
+$ sudo chmod 0744 /config/scripts/post-config.d/firewall.sh
 $ sudo /config/scripts/post-config.d/firewall.sh
 ```
 
@@ -725,11 +810,40 @@ set service gui https-port 18856
 set service gui older-ciphers disable
 ```
 
+### OpenVPN server configuration
+
+```
+set interfaces openvpn vtun0 description OpenVPN
+set interfaces openvpn vtun0 encryption aes256
+set interfaces openvpn vtun0 hash sha256
+set interfaces openvpn vtun0 local-port 23029
+set interfaces openvpn vtun0 mode server
+set interfaces openvpn vtun0 protocol udp
+set interfaces openvpn vtun0 server push-route 192.168.167.1/32
+set interfaces openvpn vtun0 server subnet 192.168.114.0/24
+set interfaces openvpn vtun0 tls ca-cert-file /config/auth/certificate_authority.crt
+set interfaces openvpn vtun0 tls cert-file /config/auth/openvpn_server.crt
+set interfaces openvpn vtun0 tls dh-file /config/auth/openvpn_server_dh.pem
+set interfaces openvpn vtun0 tls key-file /config/auth/openvpn_server.key
+```
+
+### IPv4 firewall zone policies for VPN
+
+```
+set zone-policy zone LOCAL from VPN firewall name IPV4_VPN_TO_LOCAL
+set zone-policy zone VPN default-action drop
+set zone-policy zone VPN description 'VPN zone'
+set zone-policy zone VPN from LOCAL firewall name IPV4_ALLOW_ALL_TRAFFIC
+set zone-policy zone VPN interface vtun0
+```
+
 ### Delete default user directory
 
 ```shell
 $ sudo rm -rf /home/ubnt
 ```
+
+---
 
 ## Final configuration
 
@@ -741,6 +855,7 @@ set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.167.1
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.103.0/24
 set firewall group address-group IPV4_INVALID_WAN_SOURCES address 192.168.237.0/30
 set firewall group address-group IPV4_LAN_SOURCES address 192.168.103.0/24
+set firewall group address-group IPV4_VPN_SOURCES address 192.168.114.0/24
 set firewall group ipv6-address-group IPV6_INVALID_LAN_SOURCES ipv6-address '::1'
 set firewall group ipv6-address-group IPV6_INVALID_LAN_SOURCES ipv6-address 'fd45:1e52:2abe:4c85::1'
 set firewall group ipv6-address-group IPV6_INVALID_WAN_SOURCES ipv6-address '::1'
@@ -755,6 +870,7 @@ set firewall group port-group DNS_SERVER_PORT port 53
 set firewall group port-group MANAGEMENT_HTTPS_PORT port 18856
 set firewall group port-group MANAGEMENT_HTTP_PORT port 45631
 set firewall group port-group MANAGEMENT_SSH_PORT port 36518
+set firewall group port-group OPENVPN_SERVER_PORT port 23029
 set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC default-action accept
 set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC description 'Allow all traffic'
 set firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC rule 10 action accept
@@ -940,6 +1056,31 @@ set firewall name IPV4_LAN_TO_MODEM rule 40 description 'Accept ICMP Echo Reques
 set firewall name IPV4_LAN_TO_MODEM rule 40 icmp code 0
 set firewall name IPV4_LAN_TO_MODEM rule 40 icmp type 8
 set firewall name IPV4_LAN_TO_MODEM rule 40 protocol icmp
+set firewall name IPV4_VPN_TO_LOCAL default-action drop
+set firewall name IPV4_VPN_TO_LOCAL description 'Check packets going from VPN to Local'
+set firewall name IPV4_VPN_TO_LOCAL rule 10 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 10 description 'Accept ESTABLISHED,RELATED packets'
+set firewall name IPV4_VPN_TO_LOCAL rule 10 state established enable
+set firewall name IPV4_VPN_TO_LOCAL rule 10 state related enable
+set firewall name IPV4_VPN_TO_LOCAL rule 20 action drop
+set firewall name IPV4_VPN_TO_LOCAL rule 20 description 'Drop INVALID packets'
+set firewall name IPV4_VPN_TO_LOCAL rule 20 state invalid enable
+set firewall name IPV4_VPN_TO_LOCAL rule 30 action drop
+set firewall name IPV4_VPN_TO_LOCAL rule 30 description 'Drop packets with spoofed source addresses'
+set firewall name IPV4_VPN_TO_LOCAL rule 30 source group address-group '!IPV4_VPN_SOURCES'
+set firewall name IPV4_VPN_TO_LOCAL rule 40 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 40 description 'Accept management via HTTPS'
+set firewall name IPV4_VPN_TO_LOCAL rule 40 destination group port-group MANAGEMENT_HTTPS_PORT
+set firewall name IPV4_VPN_TO_LOCAL rule 40 protocol tcp
+set firewall name IPV4_VPN_TO_LOCAL rule 50 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 50 description 'Accept management via SSH'
+set firewall name IPV4_VPN_TO_LOCAL rule 50 destination group port-group MANAGEMENT_SSH_PORT
+set firewall name IPV4_VPN_TO_LOCAL rule 50 protocol tcp
+set firewall name IPV4_VPN_TO_LOCAL rule 60 action accept
+set firewall name IPV4_VPN_TO_LOCAL rule 60 description 'Accept ICMP Echo Request packets'
+set firewall name IPV4_VPN_TO_LOCAL rule 60 icmp code 0
+set firewall name IPV4_VPN_TO_LOCAL rule 60 icmp type 8
+set firewall name IPV4_VPN_TO_LOCAL rule 60 protocol icmp
 set firewall name IPV4_WAN_TO_LAN default-action drop
 set firewall name IPV4_WAN_TO_LAN description 'Check packets going from WAN to LAN'
 set firewall name IPV4_WAN_TO_LAN rule 10 action accept
@@ -965,10 +1106,14 @@ set firewall name IPV4_WAN_TO_LOCAL rule 30 action drop
 set firewall name IPV4_WAN_TO_LOCAL rule 30 description 'Drop packets with spoofed source addresses'
 set firewall name IPV4_WAN_TO_LOCAL rule 30 source group address-group IPV4_INVALID_WAN_SOURCES
 set firewall name IPV4_WAN_TO_LOCAL rule 40 action accept
-set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept ICMP Echo Request packets'
-set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp code 0
-set firewall name IPV4_WAN_TO_LOCAL rule 40 icmp type 8
-set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol icmp
+set firewall name IPV4_WAN_TO_LOCAL rule 40 description 'Accept connection to the OpenVPN server'
+set firewall name IPV4_WAN_TO_LOCAL rule 40 destination group port-group OPENVPN_SERVER_PORT
+set firewall name IPV4_WAN_TO_LOCAL rule 40 protocol udp
+set firewall name IPV4_WAN_TO_LOCAL rule 50 action accept
+set firewall name IPV4_WAN_TO_LOCAL rule 50 description 'Accept ICMP Echo Request packets'
+set firewall name IPV4_WAN_TO_LOCAL rule 50 icmp code 0
+set firewall name IPV4_WAN_TO_LOCAL rule 50 icmp type 8
+set firewall name IPV4_WAN_TO_LOCAL rule 50 protocol icmp
 set firewall receive-redirects disable
 set firewall send-redirects enable
 set firewall source-validation disable
@@ -1017,6 +1162,18 @@ set interfaces ethernet eth4 speed auto
 set interfaces loopback lo address 192.168.167.1/32
 set interfaces loopback lo address 'fd45:1e52:2abe:4c85::1/128'
 set interfaces loopback lo description 'Loopback (Local)'
+set interfaces openvpn vtun0 description OpenVPN
+set interfaces openvpn vtun0 encryption aes256
+set interfaces openvpn vtun0 hash sha256
+set interfaces openvpn vtun0 local-port 23029
+set interfaces openvpn vtun0 mode server
+set interfaces openvpn vtun0 protocol udp
+set interfaces openvpn vtun0 server push-route 192.168.167.1/32
+set interfaces openvpn vtun0 server subnet 192.168.114.0/24
+set interfaces openvpn vtun0 tls ca-cert-file /config/auth/certificate_authority.crt
+set interfaces openvpn vtun0 tls cert-file /config/auth/openvpn_server.crt
+set interfaces openvpn vtun0 tls dh-file /config/auth/openvpn_server_dh.pem
+set interfaces openvpn vtun0 tls key-file /config/auth/openvpn_server.key
 set interfaces switch switch0 description Switch
 set interfaces switch switch0 mtu 1500
 set interfaces switch switch0 switch-port interface eth1 vlan pvid 1
@@ -1116,6 +1273,7 @@ set zone-policy zone LOCAL description 'Local zone'
 set zone-policy zone LOCAL from LAN firewall ipv6-name IPV6_LAN_TO_LOCAL
 set zone-policy zone LOCAL from LAN firewall name IPV4_LAN_TO_LOCAL
 set zone-policy zone LOCAL from MODEM firewall name IPV4_ALLOW_RETURN_TRAFFIC
+set zone-policy zone LOCAL from VPN firewall name IPV4_VPN_TO_LOCAL
 set zone-policy zone LOCAL from WAN firewall ipv6-name IPV6_WAN_TO_LOCAL
 set zone-policy zone LOCAL from WAN firewall name IPV4_WAN_TO_LOCAL
 set zone-policy zone LOCAL local-zone
@@ -1124,6 +1282,10 @@ set zone-policy zone MODEM description 'Modem zone'
 set zone-policy zone MODEM from LAN firewall name IPV4_LAN_TO_MODEM
 set zone-policy zone MODEM from LOCAL firewall name IPV4_ALLOW_ALL_TRAFFIC
 set zone-policy zone MODEM interface eth0
+set zone-policy zone VPN default-action drop
+set zone-policy zone VPN description 'VPN zone'
+set zone-policy zone VPN from LOCAL firewall name IPV4_ALLOW_ALL_TRAFFIC
+set zone-policy zone VPN interface vtun0
 set zone-policy zone WAN default-action drop
 set zone-policy zone WAN description 'WAN zone'
 set zone-policy zone WAN from LAN firewall ipv6-name IPV6_ALLOW_ALL_TRAFFIC
@@ -1164,6 +1326,8 @@ $ sudo ipset add IPV4_MODEM_ADDRESS 192.168.237.1/32 -exist
 $ sudo iptables --match comment --comment IPV4_NAT_7 --table nat --append POSTROUTING --match set --match-set IPV4_MODEM_NAT_SOURCES src --match set --match-set IPV4_MODEM_ADDRESS dst --jump SNAT --to-source 192.168.237.2
 ```
 
+---
+
 ## End result
 
 ### IPv4 addresses
@@ -1173,19 +1337,22 @@ $ sudo ip -brief -4 address
 lo                 UNKNOWN        127.0.0.1/8 192.168.167.1/32
 eth0@itf0          UP             192.168.237.2/30
 switch0.10@switch0 UP             192.168.103.254/24
-pppoe0             UNKNOWN        187.90.225.151 peer 189.97.102.55/32
+pppoe0             UNKNOWN        201.1.26.26 peer 189.97.102.55/32
+vtun0              UNKNOWN        192.168.114.1/24
 ```
 
 ### IPv4 routes
 
 ```shell
 $ sudo ip -4 route
+0.0.0.0/24 dev vtun0 proto kernel scope link
 default dev pppoe0 scope link
-187.90.225.151 dev pppoe0 proto kernel scope link
-189.97.102.55 dev pppoe0 proto kernel scope link src 187.90.225.151
+189.97.102.55 dev pppoe0 proto kernel scope link src 201.1.26.26
 192.168.103.0/24 dev switch0.10 proto kernel scope link src 192.168.103.254
+192.168.114.0/24 dev vtun0 proto kernel scope link src 192.168.114.1
 192.168.167.1 dev lo proto kernel scope link
 192.168.237.0/30 dev eth0 proto kernel scope link src 192.168.237.2
+201.1.26.26 dev pppoe0 proto kernel scope link
 ```
 
 ### IPv6 addresses
@@ -1201,35 +1368,40 @@ eth3@itf0          UP             fe80::d221:f9ff:fe0e:6eda/64
 eth4@itf0          UP             fe80::d221:f9ff:fe76:b733/64
 switch0@itf0       UP             fe80::d221:f9ff:fee1:353/64
 eth0.600@eth0      UP             fe80::d221:f9ff:fe90:67bd/64
-switch0.10@switch0 UP             2804:7f4:ca01:6229:6e86:3d5b:dc42:add2/64 fe80::d221:f9ff:fee1:353/64
+switch0.10@switch0 UP             2804:7f4:ca01:d42:6e86:3d5b:dc42:add2/64 fe80::d221:f9ff:fee1:353/64
 switch0.1@switch0  UP             fe80::d221:f9ff:fee1:353/64
-pppoe0             UNKNOWN        2804:7f4:c02f:38d7:70fb:ac42:873:11f5/64 fe80::70fb:ac42:873:11f5/10
+pppoe0             UNKNOWN        2804:7f4:c02f:f71e:597d:c25:3d19:3ff7/64 fe80::597d:c25:3d19:3ff7/10
+vtun0              UNKNOWN        fe80::2cdf:c85c:65d5:6377/64
 ```
 
 ### IPv6 routes
 
 ```shell
 $ sudo ip -6 route
-2804:7f4:c02f:38d7::/64 dev pppoe0 proto kernel metric 256 expires 259032sec pref medium
-2804:7f4:ca01:6229::/64 dev switch0.10 proto kernel metric 256 pref medium
+2804:7f4:c02f:f71e::/64 dev pppoe0 proto kernel metric 256 expires 259027sec pref medium
+2804:7f4:ca01:d42::/64 dev switch0.10 proto kernel metric 256 pref medium
 unreachable fd45:1e52:2abe:4c85::1 dev lo proto kernel metric 256 error -128 pref medium
 fe80::/64 dev itf0 proto kernel metric 256 pref medium
 fe80::/64 dev switch0 proto kernel metric 256 pref medium
-fe80::/64 dev eth3 proto kernel metric 256 pref medium
 fe80::/64 dev eth0 proto kernel metric 256 pref medium
 fe80::/64 dev eth1 proto kernel metric 256 pref medium
 fe80::/64 dev eth2 proto kernel metric 256 pref medium
 fe80::/64 dev eth4 proto kernel metric 256 pref medium
+fe80::/64 dev eth3 proto kernel metric 256 pref medium
 fe80::/64 dev eth0.600 proto kernel metric 256 pref medium
 fe80::/64 dev switch0.10 proto kernel metric 256 pref medium
 fe80::/64 dev switch0.1 proto kernel metric 256 pref medium
+fe80::/64 dev vtun0 proto kernel metric 256 pref medium
 fe80::/10 dev pppoe0 metric 1 pref medium
 fe80::/10 dev pppoe0 proto kernel metric 256 pref medium
-default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1632sec pref medium
+default via fe80::a21c:8dff:fef1:1934 dev pppoe0 proto ra metric 1024 expires 1627sec pref medium
 ```
+
+---
 
 ## Resources
 
 * [commands.txt](./commands.txt)
 * [configuration.txt](./configuration.txt)
-* [firewall.sh](./scripts/firewall.sh)
+* [firewall.sh](./firewall.sh)
+* [openvpn_client.ovpn](./openvpn_client.ovpn)
