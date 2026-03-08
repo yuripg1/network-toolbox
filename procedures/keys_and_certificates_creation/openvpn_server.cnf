@@ -4,26 +4,16 @@ distinguished_name=dn
 req_extensions=req_ext
 
 [dn]
-CN=router.internal
+CN=OpenVPN-Server
 
 [req_ext]
 basicConstraints=critical,CA:FALSE
 keyUsage=critical,digitalSignature,keyEncipherment
 extendedKeyUsage=serverAuth
-subjectAltName=@alt_names
 
 [cert_ext]
 basicConstraints=critical,CA:FALSE
 keyUsage=critical,digitalSignature,keyEncipherment
 extendedKeyUsage=serverAuth
-subjectAltName=@alt_names
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid:always,issuer
-
-[alt_names]
-DNS.1=router.internal
-DNS.2=ipv4.router.internal
-DNS.3=ipv6.router.internal
-IP.1=192.168.167.1
-IP.2=fd45:1e52:2abe:4c85::1
-IP.3=192.168.103.254

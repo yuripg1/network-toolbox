@@ -1,14 +1,13 @@
 [req]
 prompt=no
-default_md=sha512
 distinguished_name=dn
-x509_extensions=v3_ca
+x509_extensions=cert_ext
 
 [dn]
 CN=Home-Network-CA
 
-[v3_ca]
-basicConstraints=critical,CA:TRUE
+[cert_ext]
+basicConstraints=critical,CA:TRUE,pathlen:0
 keyUsage=critical,keyCertSign,cRLSign
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid:always,issuer
