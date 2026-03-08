@@ -88,6 +88,7 @@
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-lan-dhcp-sources
 /ip firewall address-list add address=0.0.0.0/32 list=ipv4-lan-dhcp-sources
 /ip firewall address-list add address=192.168.103.0/24 list=ipv4-lan-sources
+/ip firewall address-list add address=192.168.114.0/24 list=ipv4-vpn-sources
 /ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept ESTABLISHED,NEW,RELATED packets" connection-state=established,related,new
 /ip firewall filter add action=drop chain=ipv4-allow-all-traffic comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=accept chain=ipv4-allow-all-traffic comment="Accept remaining packets"
@@ -109,6 +110,14 @@
 /ip firewall filter add action=accept chain=ipv4-lan-to-modem comment="Accept management via HTTP" dst-port=45631 protocol=tcp
 /ip firewall filter add action=accept chain=ipv4-lan-to-modem comment="Accept ICMP Echo Request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-lan-to-modem comment="Drop remaining packets"
+/ip firewall filter add action=accept chain=ipv4-vpn-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
+/ip firewall filter add action=drop chain=ipv4-vpn-to-local comment="Drop INVALID packets" connection-state=invalid
+/ip firewall filter add action=drop chain=ipv4-vpn-to-local comment="Drop packets with spoofed source addresses" src-address-list=!ipv4-vpn-sources
+/ip firewall filter add action=accept chain=ipv4-vpn-to-local comment="Accept management via HTTPS" dst-port=18856 protocol=tcp
+/ip firewall filter add action=accept chain=ipv4-vpn-to-local comment="Accept management via WinBox" dst-port=24639 protocol=tcp
+/ip firewall filter add action=accept chain=ipv4-vpn-to-local comment="Accept management via SSH" dst-port=36518 protocol=tcp
+/ip firewall filter add action=accept chain=ipv4-vpn-to-local comment="Accept ICMP Echo Request packets" icmp-options=8:0 protocol=icmp
+/ip firewall filter add action=drop chain=ipv4-vpn-to-local comment="Drop remaining packets"
 /ip firewall filter add action=accept chain=ipv4-wan-to-lan comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-wan-to-lan comment="Drop packets with spoofed source addresses" src-address-list=ipv4-invalid-wan-sources
@@ -116,6 +125,7 @@
 /ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept ESTABLISHED,RELATED packets" connection-state=established,related
 /ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop INVALID packets" connection-state=invalid
 /ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv4-invalid-wan-sources
+/ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept connection to the OpenVPN server" dst-port=23029 protocol=udp
 /ip firewall filter add action=accept chain=ipv4-wan-to-local comment="Accept ICMP Echo Request packets" icmp-options=8:0 protocol=icmp
 /ip firewall filter add action=drop chain=ipv4-wan-to-local comment="Drop remaining packets"
 
@@ -152,15 +162,17 @@
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept DHCPv6 packets" dst-port=546 protocol=udp src-address-list=ipv6-link-local-sources src-port=547
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Router Advertisement packets" icmp-options=134:0 protocol=icmpv6 src-address-list=ipv6-link-local-sources
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop packets with spoofed source addresses" src-address-list=ipv6-invalid-wan-sources
+/ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept connection to the OpenVPN server" dst-port=23029 protocol=udp
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Echo Request packets" icmp-options=128:0 protocol=icmpv6
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Neighbor Solicitation packets" icmp-options=135:0 protocol=icmpv6
 /ipv6 firewall filter add action=accept chain=ipv6-wan-to-local comment="Accept ICMPv6 Neighbor Advertisement packets" icmp-options=136:0 protocol=icmpv6
 /ipv6 firewall filter add action=drop chain=ipv6-wan-to-local comment="Drop remaining packets"
 
-# IPv4 firewall zone policies for LAN, Local, Modem and WAN
+# IPv4 firewall zone policies for LAN, Local, Modem, VPN and WAN
 /interface list add comment="LAN" name=lan-interface
 /interface list add comment="Local" name=local-interface
 /interface list add comment="Modem" name=modem-interface
+/interface list add comment="VPN" name=vpn-interfaces
 /interface list add comment="WAN" name=wan-interface
 /interface list member add interface=bridge-vlan-10-lan list=lan-interface
 /interface list member add interface=lo list=local-interface
@@ -172,21 +184,26 @@
 /ip firewall filter add action=jump chain=ipv4-wan-zone comment="Check packets going from LAN to WAN" in-interface-list=lan-interface jump-target=ipv4-allow-all-traffic
 /ip firewall filter add action=accept chain=ipv4-wan-zone comment="Accept packets going from WAN to WAN" in-interface-list=wan-interface
 /ip firewall filter add action=drop chain=ipv4-wan-zone comment="Drop remaining packets going to WAN"
+/ip firewall filter add action=accept chain=ipv4-vpn-zone comment="Accept packets going from VPN to VPN" in-interface-list=vpn-interfaces
+/ip firewall filter add action=drop chain=ipv4-vpn-zone comment="Drop remaining packets going to VPN"
 /ip firewall filter add action=jump chain=ipv4-modem-zone comment="Check packets going from LAN to Modem" in-interface-list=lan-interface jump-target=ipv4-lan-to-modem
 /ip firewall filter add action=accept chain=ipv4-modem-zone comment="Accept packets going from Modem to Modem" in-interface-list=modem-interface
 /ip firewall filter add action=drop chain=ipv4-modem-zone comment="Drop remaining packets going to Modem"
 /ip firewall filter add action=jump chain=ipv4-local-input-zone comment="Check packets going from WAN to Local" in-interface-list=wan-interface jump-target=ipv4-wan-to-local
 /ip firewall filter add action=jump chain=ipv4-local-input-zone comment="Check packets going from LAN to Local" in-interface-list=lan-interface jump-target=ipv4-lan-to-local
+/ip firewall filter add action=jump chain=ipv4-local-input-zone comment="Check packets going from VPN to Local" in-interface-list=vpn-interfaces jump-target=ipv4-vpn-to-local
 /ip firewall filter add action=jump chain=ipv4-local-input-zone comment="Check packets going from Modem to Local" in-interface-list=modem-interface jump-target=ipv4-allow-return-traffic
 /ip firewall filter add action=accept chain=ipv4-local-input-zone comment="Accept packets going from Local to Local" in-interface-list=local-interface
 /ip firewall filter add action=drop chain=ipv4-local-input-zone comment="Drop remaining packets going to Local"
 /ip firewall filter add action=jump chain=ipv4-local-output-zone comment="Check packets going from Local to WAN" jump-target=ipv4-allow-all-traffic out-interface-list=wan-interface
 /ip firewall filter add action=jump chain=ipv4-local-output-zone comment="Check packets going from Local to LAN" jump-target=ipv4-allow-all-traffic out-interface-list=lan-interface
+/ip firewall filter add action=jump chain=ipv4-local-output-zone comment="Check packets going from Local to VPN" jump-target=ipv4-allow-all-traffic out-interface-list=vpn-interfaces
 /ip firewall filter add action=jump chain=ipv4-local-output-zone comment="Check packets going from Local to Modem" jump-target=ipv4-allow-all-traffic out-interface-list=modem-interface
 /ip firewall filter add action=accept chain=ipv4-local-output-zone comment="Accept packets going from Local to Local" out-interface-list=local-interface
 /ip firewall filter add action=drop chain=ipv4-local-output-zone comment="Drop remaining packets coming from Local"
 /ip firewall filter add action=jump chain=forward comment="LAN zone" jump-target=ipv4-lan-zone out-interface-list=lan-interface
 /ip firewall filter add action=jump chain=forward comment="WAN zone" jump-target=ipv4-wan-zone out-interface-list=wan-interface
+/ip firewall filter add action=jump chain=forward comment="VPN zone" jump-target=ipv4-vpn-zone out-interface-list=vpn-interfaces
 /ip firewall filter add action=jump chain=forward comment="Modem zone" jump-target=ipv4-modem-zone out-interface-list=modem-interface
 /ip firewall filter add action=jump chain=input comment="Local zone (input)" jump-target=ipv4-local-input-zone
 /ip firewall filter add action=jump chain=output comment="Local zone (output)" jump-target=ipv4-local-output-zone
@@ -198,6 +215,8 @@
 /ipv6 firewall filter add action=jump chain=ipv6-wan-zone comment="Check packets going from LAN to WAN" in-interface-list=lan-interface jump-target=ipv6-allow-all-traffic
 /ipv6 firewall filter add action=accept chain=ipv6-wan-zone comment="Accept packets going from WAN to WAN" in-interface-list=wan-interface
 /ipv6 firewall filter add action=drop chain=ipv6-wan-zone comment="Drop remaining packets going to WAN"
+/ipv6 firewall filter add action=accept chain=ipv6-vpn-zone comment="Accept packets going from VPN to VPN" in-interface-list=vpn-interfaces
+/ipv6 firewall filter add action=drop chain=ipv6-vpn-zone comment="Drop remaining packets going to VPN"
 /ipv6 firewall filter add action=accept chain=ipv6-modem-zone comment="Accept packets going from Modem to Modem" in-interface-list=modem-interface
 /ipv6 firewall filter add action=drop chain=ipv6-modem-zone comment="Drop remaining packets going to Modem"
 /ipv6 firewall filter add action=jump chain=ipv6-local-input-zone comment="Check packets going from WAN to Local" in-interface-list=wan-interface jump-target=ipv6-wan-to-local
@@ -210,6 +229,7 @@
 /ipv6 firewall filter add action=drop chain=ipv6-local-output-zone comment="Drop remaining packets coming from Local"
 /ipv6 firewall filter add action=jump chain=forward comment="LAN zone" jump-target=ipv6-lan-zone out-interface-list=lan-interface
 /ipv6 firewall filter add action=jump chain=forward comment="WAN zone" jump-target=ipv6-wan-zone out-interface-list=wan-interface
+/ipv6 firewall filter add action=jump chain=forward comment="VPN zone" jump-target=ipv6-vpn-zone out-interface-list=vpn-interfaces
 /ipv6 firewall filter add action=jump chain=forward comment="Modem zone" jump-target=ipv6-modem-zone out-interface-list=modem-interface
 /ipv6 firewall filter add action=jump chain=input comment="Local zone (input)" jump-target=ipv6-local-input-zone
 /ipv6 firewall filter add action=jump chain=output comment="Local zone (output)" jump-target=ipv6-local-output-zone
@@ -327,10 +347,22 @@
 /queue interface set sfpplus1 queue=only-hardware-queue
 
 # Upload of additional files
-# $ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key username920169077@192.168.103.254:/
+# $ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key ../procedures/keys_and_certificates_creation/openvpn_server.crt ../procedures/keys_and_certificates_creation/openvpn_server.key username920169077@192.168.103.254:/
+
+# Keys and certificates import
+/certificate import file-name=certificate_authority.crt name=certificate_authority trusted=yes
+:delay 1s;
+/certificate import file-name=management_https.crt name=management_https trusted=yes
+/certificate import file-name=openvpn_server.crt name=openvpn_server trusted=yes
+:delay 1s;
+/certificate import file-name=management_https.key name=management_https trusted=yes
+/certificate import file-name=openvpn_server.key name=openvpn_server trusted=yes
 
 # Configuration of management via HTTPS
-/certificate import file-name=certificate_authority.crt name=certificate_authority trusted=yes
-/certificate import file-name=management_https.crt name=management_https trusted=yes
-/certificate import file-name=management_https.key name=management_https trusted=yes
 /ip service set www-ssl certificate=management_https disabled=no port=18856 tls-version=only-1.2
+
+# OpenVPN server configuration
+/ip pool add name=ipv4-openvpn-pool ranges=192.168.114.1-192.168.114.253
+/ppp profile add change-tcp-mss=no interface-list=vpn-interfaces local-address=192.168.114.254 name=openvpn-profile only-one=no remote-address=ipv4-openvpn-pool use-ipv6=no use-mpls=no
+/interface ovpn-server server add auth=null certificate=openvpn_server cipher=aes256-gcm default-profile=openvpn-profile disabled=no max-mtu=1300 mode=ip name=openvpn-server netmask=24 port=23029 protocol=udp push-routes="192.168.167.1 255.255.255.255" redirect-gateway=disabled require-client-certificate=yes tls-version=only-1.2 user-auth-method=pap
+/ppp secret add name=username920169077 password=password767865354 service=ovpn
