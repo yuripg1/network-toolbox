@@ -1,16 +1,24 @@
 # Diagnostics
 
+A compilation of useful diagnostic tools
+
+---
+
 ## Scripts and commands
 
 * [Blocked ports](./blocked_ports)
 * [NTP servers](./ntp_servers)
 * [Ping analyzer](./ping_analyzer)
 
+---
+
 ## Connectivity
 
 ![Connectivity](./img/connectivity.png)
 
 Test done using **[ip6.biz](https://ip6.biz/)**
+
+---
 
 ## ICMP
 
@@ -35,6 +43,8 @@ Test done using **[icmpcheckv6.popcount.org](http://icmpcheckv6.popcount.org/)**
 ![DNSSEC](./img/dnssec.png)
 
 Test done using **[wander.science/projects/dns/dnssec-resolver-test](https://wander.science/projects/dns/dnssec-resolver-test/)**
+
+---
 
 ## Ping
 
@@ -80,6 +90,8 @@ PING 2001:4860:4860::8888 (2001:4860:4860::8888) 1444 data bytes
 rtt min/avg/max/mdev = 28.015/28.097/28.195/0.057 ms
 ```
 
+---
+
 ## Traceroute
 
 ### IPv4
@@ -121,6 +133,8 @@ HOST: laptop                                          Loss%   Snt   Last   Avg  
  10. AS15169  dns.google (2001:4860:4860::8888)        0.0%  1000   28.2  27.5  22.9  28.9   1.4
 ```
 
+---
+
 ## Speed test
 
 ```
@@ -153,6 +167,8 @@ Idle Latency:     2.59 ms   (jitter: 0.10ms, low: 2.39ms, high: 2.70ms)
 ```
 
 Test done using **[Speedtest CLI](https://www.speedtest.net/apps/cli)**
+
+---
 
 ## Extra online diagnostics
 

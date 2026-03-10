@@ -1,8 +1,8 @@
 # Ping analyzer
 
-## Summary
-
 This test provides a better view of outages detected by one or more ping commands by analyzing them all and outputting a CSV containing only the outage windows.
+
+---
 
 ## Instructions
 
@@ -43,6 +43,8 @@ options:
   -h, --help     show this help message and exit
   --input INPUT  Path to the input file(s)
 ```
+
+---
 
 ## Example
 

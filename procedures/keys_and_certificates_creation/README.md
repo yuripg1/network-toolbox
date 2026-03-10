@@ -1,8 +1,8 @@
 # Keys and certificates
 
-## Summary
-
 This procedure creates the keys and certificates needed for securing the HTTPS management portal of the router
+
+---
 
 ## Certificate Authority (CA)
 
@@ -20,6 +20,8 @@ $ chmod 600 ./certificate_authority.key
 $ chmod 644 ./certificate_authority.crt ./certificate_authority.srl
 ```
 
+---
+
 ## Management via HTTPS
 
 This section creates the following files:
@@ -35,6 +37,8 @@ $ openssl x509 -req -sha256 -days 3653 -extensions cert_ext -in ./management_htt
 $ chmod 0600 ./management_https.key
 $ chmod 0644 ./management_https.csr ./management_https.crt
 ```
+
+---
 
 ## OpenVPN Server
 
@@ -53,6 +57,8 @@ $ openssl dhparam -out ./openvpn_server_dh.pem -2 2048
 $ chmod 0600 ./openvpn_server.key
 $ chmod 0644 ./openvpn_server.csr ./openvpn_server.crt ./openvpn_server_dh.pem
 ```
+
+---
 
 ## OpenVPN Client
 

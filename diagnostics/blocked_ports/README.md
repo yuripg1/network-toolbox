@@ -1,7 +1,5 @@
 # Blocked ports
 
-## Summary
-
 This test served to show that the ISP (Vivo) blocks inbound packets to the customer under the following scenarios:
 
 | Layer 3 protocol | Layer 4 protocol | Destination port |
@@ -81,6 +79,8 @@ This test served to show that the ISP (Vivo) blocks inbound packets to the custo
 | IPv6             | UDP              | 6588             |
 | IPv6             | UDP              | 8080             |
 
+---
+
 ## Methodology
 
 The testing methodology involved the use of two different environments and the definition of how the blocked ports were going to be assessed.
@@ -103,9 +103,13 @@ And as to avoid having the regular outbound traffic of the router interfere with
 
 Finally, any ports that upon being scanned didn't produce any reply were deemed to be blocked by the ISP. The rest of them, which sent back replies as expected by the **[nmap](https://nmap.org/)** tool, were considered as not suffering from any blocking by the ISP.
 
+---
+
 ## Level of confidence
 
 With all the assurances involved in the testing scenarios, the results were considered worthy of confidence. No known potential problems were left unaddressed.
+
+---
 
 ## Raw testing results
 
