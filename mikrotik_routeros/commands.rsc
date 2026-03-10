@@ -362,7 +362,7 @@
 /ip service set www-ssl certificate=management_https disabled=no port=18856 tls-version=only-1.2
 
 # OpenVPN server configuration
-/ip pool add name=ipv4-openvpn-pool ranges=192.168.114.1-192.168.114.253
-/ppp profile add change-tcp-mss=no interface-list=vpn-interfaces local-address=192.168.114.254 name=openvpn-profile only-one=no remote-address=ipv4-openvpn-pool use-ipv6=no use-mpls=no
-/interface ovpn-server server add auth=null certificate=openvpn_server cipher=aes256-gcm default-profile=openvpn-profile disabled=no max-mtu=1300 mode=ip name=openvpn-server netmask=24 port=23029 protocol=udp push-routes="192.168.167.1 255.255.255.255" redirect-gateway=disabled require-client-certificate=yes tls-version=only-1.2 user-auth-method=pap
+/ip pool add name=ipv4-openvpn-server-pool ranges=192.168.114.1-192.168.114.253
+/ppp profile add change-tcp-mss=no interface-list=vpn-interfaces local-address=192.168.114.254 name=openvpn-server-profile only-one=no remote-address=ipv4-openvpn-server-pool use-ipv6=no use-mpls=no
+/interface ovpn-server server add auth=null certificate=openvpn_server cipher=aes256-gcm default-profile=openvpn-server-profile disabled=no max-mtu=1300 mode=ip name=openvpn-server netmask=24 port=23029 protocol=udp push-routes="192.168.167.1 255.255.255.255" redirect-gateway=disabled require-client-certificate=yes tls-version=only-1.2 user-auth-method=pap
 /ppp secret add name=username920169077 password=password767865354 service=ovpn

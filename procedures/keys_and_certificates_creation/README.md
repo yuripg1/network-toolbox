@@ -1,6 +1,6 @@
 # Keys and certificates
 
-This procedure creates the keys and certificates needed for securing the HTTPS management portal of the router
+This procedure creates the keys and certificates needed for securing the HTTPS management portal of the router and for the OpenVPN server and client
 
 ---
 

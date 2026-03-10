@@ -20,10 +20,10 @@
 /ip dhcp-server option add code=26 force=no name=ipv4-vlan-10-dhcp-server-option-26 value="'1492'"
 /ip dhcp-server option add code=28 force=no name=ipv4-vlan-10-dhcp-server-option-28 value="'192.168.103.255'"
 /ip pool add name=ipv4-vlan-10-dhcp-server-pool ranges=192.168.103.1-192.168.103.253
-/ip pool add name=ipv4-openvpn-pool ranges=192.168.114.1-192.168.114.253
+/ip pool add name=ipv4-openvpn-server-pool ranges=192.168.114.1-192.168.114.253
 /ip dhcp-server add add-arp=yes address-pool=ipv4-vlan-10-dhcp-server-pool always-broadcast=no authoritative=yes bootp-support=none conflict-detection=yes interface=bridge-vlan-10-lan lease-time=16h name=ipv4-vlan-10-dhcp-server use-reconfigure=no
 /ppp profile add change-tcp-mss=no interface-list=wan-interface name=pppoe-client-profile use-compression=no use-encryption=no use-ipv6=yes use-mpls=no
-/ppp profile add change-tcp-mss=no interface-list=vpn-interfaces local-address=192.168.114.254 name=openvpn-profile only-one=no remote-address=ipv4-openvpn-pool use-ipv6=no use-mpls=no
+/ppp profile add change-tcp-mss=no interface-list=vpn-interfaces local-address=192.168.114.254 name=openvpn-server-profile only-one=no remote-address=ipv4-openvpn-server-pool use-ipv6=no use-mpls=no
 /interface pppoe-client add add-default-route=yes allow=chap,mschap1,mschap2 comment="eth1 - VLAN 600 - PPPoE client (WAN)" default-route-distance=2 disabled=no interface=eth1-vlan-600 max-mru=1492 max-mtu=1492 name=eth1-vlan-600-pppoe-client-wan password=cliente profile=pppoe-client-profile use-peer-dns=no user=cliente@cliente
 /queue interface set eth1-modem queue=only-hardware-queue
 /queue interface set eth2 queue=only-hardware-queue
@@ -53,7 +53,7 @@
 /interface list member add interface=bridge-vlan-10-lan list=lan-interface
 /interface list member add interface=lo list=local-interface
 /interface list member add interface=eth1-modem list=modem-interface
-/interface ovpn-server server add auth=null certificate=openvpn_server cipher=aes256-gcm default-profile=openvpn-profile disabled=no max-mtu=1300 mode=ip name=openvpn-server netmask=24 port=23029 protocol=udp push-routes="192.168.167.1 255.255.255.255" redirect-gateway=disabled require-client-certificate=yes tls-version=only-1.2 user-auth-method=pap
+/interface ovpn-server server add auth=null certificate=openvpn_server cipher=aes256-gcm default-profile=openvpn-server-profile disabled=no max-mtu=1300 mode=ip name=openvpn-server netmask=24 port=23029 protocol=udp push-routes="192.168.167.1 255.255.255.255" redirect-gateway=disabled require-client-certificate=yes tls-version=only-1.2 user-auth-method=pap
 /ip address add address=192.168.167.1/32 interface=lo network=192.168.167.1
 /ip address add address=192.168.103.254/24 interface=bridge-vlan-10-lan network=192.168.103.0
 /ip address add address=192.168.237.2/30 interface=eth1-modem network=192.168.237.0

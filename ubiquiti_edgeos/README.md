@@ -1,5 +1,7 @@
 # Ubiquiti EdgeOS
 
+![Ubiquiti EdgeOS](../img/ubiquiti_edgeos.png)
+
 ---
 
 ## Router management
@@ -19,12 +21,9 @@ The VPN tunnel provides remote access to the following routes:
 
 * 192.168.167.1/32
 
-Take the template available in **[openvpn_client.ovpn](./openvpn_client.ovpn)** and replace the following values:
+For details on how to configure the OpenVPN client, refer to [OpenVPN client setup](../procedures/openvpn_client_setup/)
 
-* `{{ENTER_OPENVPN_SERVER_ADDRESS}}`: Address of the OpenVPN server
-* `{{ENTER_CERTIFICATE_AUTHORITY}}`: Base64-encoded Certificate Authority
-* `{{ENTER_OPENVPN_CLIENT_CERTIFICATE}}`: Base64-encoded OpenVPN client certificate
-* `{{ENTER_OPENVPN_CLIENT_PRIVATE_KEY}}`: Base64-encoded OpenVPN client private key
+This setup performs a certificate-based authentication and does not ask for username and password
 
 ### Remote accesses via VPN
 
@@ -82,14 +81,14 @@ Take the template available in **[openvpn_client.ovpn](./openvpn_client.ovpn)** 
 
 ### Keys and certificates
 
+Follow the steps at **[Keys and certificates creation](../procedures/keys_and_certificates_creation)** to create the required keys and certificates
+
 * certificate_authority.crt
 * management_https.crt
 * management_https.key
 * openvpn_server.crt
 * openvpn_server.key
 * openvpn_server_dh.pem
-
-Follow the steps at **[Keys and certificates creation](../procedures/keys_and_certificates_creation)** to create the required keys and certificates
 
 ---
 

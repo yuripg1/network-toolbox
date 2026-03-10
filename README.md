@@ -12,6 +12,7 @@
 ## Procedures
 
 * [Keys and certificates creation](./procedures/keys_and_certificates_creation)
+* [OpenVPN client setup](./procedures/openvpn_client_setup)
 
 ## Diagnostics
 
