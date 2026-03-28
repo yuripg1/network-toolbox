@@ -9,12 +9,14 @@ import typing
 
 INSTRUCTION_PREFIX = "#ROUTER_SETUP:"
 COMMENT_PREFIX = "#"
+MULTI_LINE_INSTRUCTION_START = "{"
+MULTI_LINE_INSTRUCTION_END = "}"
 SSH_CONNECT_TIMEOUT = 15
 SSH_CONNECT_WAIT_BEFORE_RETRY = 2
 OUTPUT_FILE_PATH = "./output.txt"
 OUTPUT_WIDTH = 120
 OUTPUT_CHUNK_SIZE = 4096
-OUTPUT_WAIT_TIME_STEP = 0.2
+OUTPUT_WAIT_TIME_STEP = 0.25
 OUTPUT_IMPORTANT_STRINGS = ["error", "warning"]
 PROMPT_READY_MARKERS = ("$", "#", ">")
 
@@ -48,6 +50,8 @@ class InstructionArguments:
 class Instruction:
     type: InstructionType
     arguments: InstructionArguments
+    raw: str
+    incomplete: bool = False
 
 
 @dataclasses.dataclass
@@ -83,6 +87,8 @@ class SessionInfo:
     is_active: bool
     instruction_prefix: str
     comment_prefix: str
+    multi_line_instruction_start: str
+    multi_line_instruction_end: str
     environment: Environment
     ssh_info: SSHInfo
 
@@ -151,8 +157,7 @@ def run_commands(instruction_arguments: InstructionArguments, ssh_info: SSHInfo)
     return outputs
 
 
-def prompt_if_important(outputs: list[str], output_important_strings: list[str]) -> None:
-    prompt: bool = False
+def prompt_if_important(outputs: list[str], output_important_strings: list[str]) -> str:
     normalized_output_important_strings: list[str] = []
     important_strings_found: list[str] = []
     for output_important_string in output_important_strings:
@@ -162,9 +167,9 @@ def prompt_if_important(outputs: list[str], output_important_strings: list[str])
         for normalized_output_important_string in normalized_output_important_strings:
             if normalized_output_important_string in normalized_output:
                 important_strings_found.append(normalized_output_important_string)
-                prompt = True
-    if prompt:
-        input(f"Output contains \"{"\", \"".join(important_strings_found)}\" | Press ENTER to continue...")
+    if len(important_strings_found) > 0:
+        return f"Output contains \"{"\", \"".join(important_strings_found)}\""
+    return ""
 
 
 def upload_files(instruction_arguments: InstructionArguments, session_info: SessionInfo) -> None:
@@ -256,7 +261,9 @@ def get_instruction_type(instruction_line: str, prefix: str) -> InstructionType 
     return None
 
 
-def decode_instruction_line(instruction_line: str, session_info: SessionInfo) -> Instruction | None:
+def decode_instruction_line(
+    instruction_line: str, session_info: SessionInfo, incomplete_instruction: Instruction | None
+) -> Instruction | None:
     trimmed_instruction_line = instruction_line.strip()
     if len(trimmed_instruction_line) == 0:
         return None
@@ -264,45 +271,65 @@ def decode_instruction_line(instruction_line: str, session_info: SessionInfo) ->
         instruction_type = get_instruction_type(trimmed_instruction_line, session_info.instruction_prefix)
         if instruction_type is None:
             return None
-        instruction_arguments = get_instruction_arguments(
-            trimmed_instruction_line, session_info.instruction_prefix + instruction_type
-        )
+        instruction_arguments: InstructionArguments = InstructionArguments()
+        incomplete_instruction: bool = False
+        if trimmed_instruction_line.endswith(session_info.multi_line_instruction_start):
+            incomplete_instruction = True
+        else:
+            instruction_arguments = get_instruction_arguments(
+                trimmed_instruction_line, session_info.instruction_prefix + instruction_type
+            )
         return Instruction(
             type=instruction_type,
             arguments=instruction_arguments,
+            raw=instruction_line,
+            incomplete=incomplete_instruction,
         )
     elif trimmed_instruction_line.startswith(session_info.comment_prefix):
+        if incomplete_instruction is not None:
+            incomplete_instruction.raw += f"\n{instruction_line.removeprefix(session_info.comment_prefix)}"
+            if trimmed_instruction_line.endswith(session_info.multi_line_instruction_end):
+                incomplete_instruction.arguments = get_instruction_arguments(
+                    incomplete_instruction.raw.strip(), session_info.instruction_prefix + incomplete_instruction.type
+                )
+                incomplete_instruction.incomplete = False
+            return incomplete_instruction
         return None
     elif session_info.is_active:
         return Instruction(
             type="RUN_COMMANDS:",
             arguments=InstructionArguments(commands=[trimmed_instruction_line]),
+            raw=instruction_line,
         )
     return None
 
 
-def process_single_instruction_line(instruction_line: str, session_info: SessionInfo) -> None:
-    instruction_data = decode_instruction_line(instruction_line, session_info)
+def process_single_instruction_line(
+    instruction_line: str, session_info: SessionInfo, incomplete_instruction: Instruction | None
+) -> Instruction | None:
+    instruction_data = decode_instruction_line(instruction_line, session_info, incomplete_instruction)
     if instruction_data is None:
-        return
+        return None
+    if instruction_data.incomplete:
+        return instruction_data
     match instruction_data.type:
         case "START:":
             if session_info.is_active:
                 print("Warning: Could not start | Reason: Automation already started")
-                return
+                return None
             session_info.is_active = True
         case "END:":
             if not session_info.is_active:
                 print("Warning: Could not end | Reason: Automation already ended or never started")
-                return
+                return None
             session_info.is_active = False
         case "CONNECT:":
             if not session_info.is_active:
                 print("Warning: Could not connect | Reason: Automation not started")
-                return
+                return None
             if session_info.ssh_info.is_connected:
                 print("Warning: Could not connect | Reason: Automation already connected")
-                return
+                return None
             while True:
                 print(f"Connecting to {session_info.environment.username}@{session_info.environment.hostname}")
                 if session_info.dry_run:
@@ -317,10 +344,10 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
         case "DISCONNECT:":
             if not session_info.is_active:
                 print("Warning: Could not disconnect | Reason: Automation not started")
-                return
+                return None
             if not session_info.ssh_info.is_connected:
                 print("Warning: Could not disconnect | Reason: Automation not connected")
-                return
+                return None
             if not session_info.dry_run:
                 disconnect(session_info.ssh_info)
             print("Disconnected")
@@ -329,18 +356,23 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
         case "RUN_COMMANDS:":
             if not session_info.is_active:
                 print("Warning: Could not run commands | Reason: Automation not started")
-                return
+                return None
             if not session_info.ssh_info.is_connected:
                 print("Warning: Could not run commands | Reason: Automation not connected")
-                return
+                return None
             redacted_commands: list[str] = []
             for unredacted_command in instruction_data.arguments.commands:
                 redacted_commands.append(redact_sensitive_information(unredacted_command, session_info.ssh_info))
             print(f"Running commands: {"; ".join(redacted_commands)}")
             if not session_info.dry_run:
                 command_outputs = run_commands(instruction_data.arguments, session_info.ssh_info)
-                print(f"\n{"\n\n".join(command_outputs)}\n")
-                prompt_if_important(command_outputs, session_info.ssh_info.output_important_strings)
+                trimmed_outputs: list[str] = []
+                for command_output in command_outputs:
+                    trimmed_outputs.append(command_output.strip().replace("\r\n", "\n").replace("\r", "\n"))
+                print(f"\n{"\n\n".join(trimmed_outputs)}\n")
+                prompt_to_show = prompt_if_important(command_outputs, session_info.ssh_info.output_important_strings)
+                if len(prompt_to_show) > 0:
+                    input(f"{prompt_to_show} | Press ENTER to continue...")
         case "UPLOAD_FILES:":
             print(
                 f"Uploading files: {"; ".join(instruction_data.arguments.local_files)} > {instruction_data.arguments.remote_directory}"
@@ -349,20 +381,24 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
                 upload_files(instruction_data.arguments, session_info)
             print("Files uploaded successfully")
         case "CONFIRM:":
-            input(instruction_data.arguments.message + " | Press ENTER to continue...")
+            input(f"{instruction_data.arguments.message} | Press ENTER to continue...")
         case "WAIT:":
             print(f"Waiting for {instruction_data.arguments.time_in_seconds} seconds...")
             time.sleep(instruction_data.arguments.time_in_seconds)
         case "SET_ENVIRONMENT:":
             set_environment(instruction_data.arguments, session_info)
+    return None
 
 
 def process_instruction_lines(session_info: SessionInfo) -> None:
     try:
         with session_info.instructions_file_path.open("r") as file:
             instruction_lines = file.readlines()
+            incomplete_instruction: Instruction | None = None
             for instruction_line in instruction_lines:
-                process_single_instruction_line(instruction_line, session_info)
+                incomplete_instruction = process_single_instruction_line(
+                    instruction_line, session_info, incomplete_instruction
+                )
     except FileNotFoundError:
         print("Error: File not found")
 
@@ -394,6 +430,8 @@ def main() -> None:
         is_active=False,
         instruction_prefix=INSTRUCTION_PREFIX,
         comment_prefix=COMMENT_PREFIX,
+        multi_line_instruction_start=MULTI_LINE_INSTRUCTION_START,
+        multi_line_instruction_end=MULTI_LINE_INSTRUCTION_END,
         environment=Environment(),
         ssh_info=SSHInfo(
             is_connected=False,

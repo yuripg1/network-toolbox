@@ -1,9 +1,17 @@
 #ROUTER_SETUP:START:
 #ROUTER_SETUP:CONFIRM:{"message":"Configure IP address 192.168.1.2/24"}
 #ROUTER_SETUP:CONFIRM:{"message":"Connect to eth0"}
-#ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.1.1","port":22,"username":"ubnt","password":"ubnt"}
+#ROUTER_SETUP:SET_ENVIRONMENT:{
+#    "hostname": "192.168.1.1",
+#    "port": 22,
+#    "username": "ubnt",
+#    "password":"ubnt"
+#}
 #ROUTER_SETUP:CONNECT:
-#ROUTER_SETUP:SET_ENVIRONMENT:{"username":"username920169077","password":"password767865354"}
+#ROUTER_SETUP:SET_ENVIRONMENT:{
+#    "username": "username920169077",
+#    "password": "password767865354"
+#}
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
 # New credential configuration
@@ -438,7 +446,10 @@ set firewall ipv6-name IPV6_WAN_TO_LOCAL rule 80 protocol icmpv6
 #ROUTER_SETUP:CONFIRM:{"message":"Disconnect from eth0"}
 #ROUTER_SETUP:CONFIRM:{"message":"Configure DHCP client"}
 #ROUTER_SETUP:CONFIRM:{"message":"Connect to eth2"}
-#ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.103.254","port":36518}
+#ROUTER_SETUP:SET_ENVIRONMENT:{
+#    "hostname": "192.168.103.254",
+#    "port": 36518
+#}
 #ROUTER_SETUP:CONNECT:
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["configure"]}
 
@@ -637,7 +648,18 @@ set system traffic-analysis dpi disable
 
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","exit"]}
 #ROUTER_SETUP:DISCONNECT:
-#ROUTER_SETUP:UPLOAD_FILES:{"local_files":["../procedures/keys_and_certificates_creation/certificate_authority.crt","../procedures/keys_and_certificates_creation/management_https.crt","../procedures/keys_and_certificates_creation/management_https.key","../procedures/keys_and_certificates_creation/openvpn_server.crt","../procedures/keys_and_certificates_creation/openvpn_server.key","../procedures/keys_and_certificates_creation/openvpn_server_dh.pem","./firewall.sh"],"remote_directory":"/home/username920169077"}
+#ROUTER_SETUP:UPLOAD_FILES:{
+#    "local_files": [
+#        "../procedures/keys_and_certificates_creation/certificate_authority.crt",
+#        "../procedures/keys_and_certificates_creation/management_https.crt",
+#        "../procedures/keys_and_certificates_creation/management_https.key",
+#        "../procedures/keys_and_certificates_creation/openvpn_server.crt",
+#        "../procedures/keys_and_certificates_creation/openvpn_server.key",
+#        "../procedures/keys_and_certificates_creation/openvpn_server_dh.pem",
+#        "./firewall.sh"
+#    ],
+#    "remote_directory": "/home/username920169077"
+#}
 #ROUTER_SETUP:CONNECT:
 
 # File locations, permissions, ownerships, and firewall rules

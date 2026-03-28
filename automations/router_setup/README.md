@@ -41,13 +41,29 @@ This automation implements an interpreter that, given a file containing instruct
 
 #ROUTER_SETUP:RUN_COMMANDS:{"commands":["commit","save"]}
 
-#ROUTER_SETUP:UPLOAD_FILES:{"local_files":["../procedures/keys_and_certificates_creation/certificate_authority.crt","../procedures/keys_and_certificates_creation/management_https.crt","../procedures/keys_and_certificates_creation/management_https.key","../procedures/keys_and_certificates_creation/openvpn_server.crt","../procedures/keys_and_certificates_creation/openvpn_server.key","../procedures/keys_and_certificates_creation/openvpn_server_dh.pem","./firewall.sh"],"remote_directory":"/home/username920169077"}
+#ROUTER_SETUP:UPLOAD_FILES:{
+#    "local_files": [
+#        "../procedures/keys_and_certificates_creation/certificate_authority.crt",
+#        "../procedures/keys_and_certificates_creation/management_https.crt",
+#        "../procedures/keys_and_certificates_creation/management_https.key",
+#        "../procedures/keys_and_certificates_creation/openvpn_server.crt",
+#        "../procedures/keys_and_certificates_creation/openvpn_server.key",
+#        "../procedures/keys_and_certificates_creation/openvpn_server_dh.pem",
+#        "./firewall.sh"
+#    ],
+#    "remote_directory": "/home/username920169077"
+#}
 
 #ROUTER_SETUP:CONFIRM:{"message":"Connect to eth0"}
 
 #ROUTER_SETUP:WAIT:{"time_in_seconds":15}
 
-#ROUTER_SETUP:SET_ENVIRONMENT:{"hostname":"192.168.1.1","port":22,"username":"ubnt","password":"ubnt"}
+#ROUTER_SETUP:SET_ENVIRONMENT:{
+#    "hostname": "192.168.1.1",
+#    "port": 22,
+#    "username": "ubnt",
+#    "password":"ubnt"
+#}
 ```
 
 A fully functioning example can be seen in this **[commands.txt](../../ubiquiti_edgeos/commands.txt)** file
