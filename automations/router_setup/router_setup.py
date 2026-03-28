@@ -15,6 +15,7 @@ OUTPUT_FILE_PATH = "./output.txt"
 OUTPUT_WIDTH = 120
 OUTPUT_CHUNK_SIZE = 4096
 OUTPUT_WAIT_TIME_STEP = 0.2
+OUTPUT_IMPORTANT_STRINGS = ["error", "warning"]
 PROMPT_READY_MARKERS = ("$", "#", ">")
 
 InstructionType = typing.Literal[
@@ -58,6 +59,7 @@ class SSHInfo:
     output_width: int
     output_chunk_size: int
     output_wait_time_step: float
+    output_important_strings: list[str]
     prompt_ready_markers: tuple[str]
     connection_index: int = 0
     connection_outputs: list[str] = dataclasses.field(default_factory=list)
@@ -86,13 +88,20 @@ class SessionInfo:
 
 
 def wait_for_ready_prompt(ssh_info: SSHInfo) -> str:
+    return_on_next_check: bool = False
     output = ""
     while True:
         time.sleep(ssh_info.output_wait_time_step)
+        changed_output: bool = False
         if ssh_info.shell.recv_ready():
             output += ssh_info.shell.recv(ssh_info.output_chunk_size).decode(errors="ignore")
+            changed_output = True
+            return_on_next_check = False
+        if changed_output or return_on_next_check:
             if output.rstrip().endswith(ssh_info.prompt_ready_markers):
-                return output
+                if return_on_next_check:
+                    return output
+                return_on_next_check = True
 
 
 def get_ssh_client(session_info: SessionInfo) -> paramiko.SSHClient | None:
@@ -136,8 +145,25 @@ def run_commands(instruction_arguments: InstructionArguments, ssh_info: SSHInfo)
     outputs: list[str] = []
     for command in instruction_arguments.commands:
         ssh_info.shell.send(command + "\n")
-        ssh_info.connection_outputs[ssh_info.connection_index] += wait_for_ready_prompt(ssh_info)
+        output = wait_for_ready_prompt(ssh_info)
+        outputs.append(output)
+        ssh_info.connection_outputs[ssh_info.connection_index] += output
     return outputs
+
+def prompt_if_important(outputs: list[str], output_important_strings: list[str]) -> None:
+    prompt: bool = False
+    normalized_output_important_strings: list[str] = []
+    important_strings_found: list[str] = []
+    for output_important_string in output_important_strings:
+        normalized_output_important_strings.append(output_important_string.lower())
+    for output in outputs:
+        normalized_output = output.lower()
+        for normalized_output_important_string in normalized_output_important_strings:
+            if normalized_output_important_string in normalized_output:
+                important_strings_found.append(normalized_output_important_string)
+                prompt = True
+    if prompt:
+        input(f"Output contains \"{"\", \"".join(important_strings_found)}\" | Press ENTER to continue...")
 
 
 def upload_files(instruction_arguments: InstructionArguments, session_info: SessionInfo) -> None:
@@ -311,7 +337,9 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
                 redacted_commands.append(redact_sensitive_information(unredacted_command, session_info.ssh_info))
             print(f"Running commands: {"; ".join(redacted_commands)}")
             if session_info.dry_run == False:
-                run_commands(instruction_data.arguments, session_info.ssh_info)
+                command_outputs = run_commands(instruction_data.arguments, session_info.ssh_info)
+                print(f"\n{"\n\n".join(command_outputs)}\n")
+                prompt_if_important(command_outputs, session_info.ssh_info.output_important_strings)
         case "UPLOAD_FILES:":
             print(
                 f"Uploading files: {"; ".join(instruction_data.arguments.local_files)} > {instruction_data.arguments.remote_directory}"
@@ -374,6 +402,7 @@ def main() -> None:
             output_width=OUTPUT_WIDTH,
             output_chunk_size=OUTPUT_CHUNK_SIZE,
             output_wait_time_step=OUTPUT_WAIT_TIME_STEP,
+            output_important_strings=OUTPUT_IMPORTANT_STRINGS,
             prompt_ready_markers=PROMPT_READY_MARKERS,
         ),
     )
