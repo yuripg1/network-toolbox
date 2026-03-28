@@ -89,7 +89,7 @@ class SessionInfo:
 
 def wait_for_ready_prompt(ssh_info: SSHInfo) -> str:
     return_on_next_check: bool = False
-    output = ""
+    output: str = ""
     while True:
         time.sleep(ssh_info.output_wait_time_step)
         changed_output: bool = False
@@ -149,6 +149,7 @@ def run_commands(instruction_arguments: InstructionArguments, ssh_info: SSHInfo)
         outputs.append(output)
         ssh_info.connection_outputs[ssh_info.connection_index] += output
     return outputs
+
 
 def prompt_if_important(outputs: list[str], output_important_strings: list[str]) -> None:
     prompt: bool = False
@@ -272,7 +273,7 @@ def decode_instruction_line(instruction_line: str, session_info: SessionInfo) ->
         )
     elif trimmed_instruction_line.startswith(session_info.comment_prefix):
         return None
-    elif session_info.is_active == True:
+    elif session_info.is_active:
         return Instruction(
             type="RUN_COMMANDS:",
             arguments=InstructionArguments(commands=[trimmed_instruction_line]),
@@ -286,25 +287,25 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
         return
     match instruction_data.type:
         case "START:":
-            if session_info.is_active == True:
+            if session_info.is_active:
                 print("Warning: Could not start | Reason: Automation already started")
                 return
             session_info.is_active = True
         case "END:":
-            if session_info.is_active == False:
+            if not session_info.is_active:
                 print("Warning: Could not end | Reason: Automation already ended or never started")
                 return
             session_info.is_active = False
         case "CONNECT:":
-            if session_info.is_active == False:
+            if not session_info.is_active:
                 print("Warning: Could not connect | Reason: Automation not started")
                 return
-            if session_info.ssh_info.is_connected == True:
+            if session_info.ssh_info.is_connected:
                 print("Warning: Could not connect | Reason: Automation already connected")
                 return
             while True:
                 print(f"Connecting to {session_info.environment.username}@{session_info.environment.hostname}")
-                if session_info.dry_run == True:
+                if session_info.dry_run:
                     break
                 connect(session_info)
                 if session_info.ssh_info.client is not None:
@@ -314,29 +315,29 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
             print("Connected")
             session_info.ssh_info.is_connected = True
         case "DISCONNECT:":
-            if session_info.is_active == False:
+            if not session_info.is_active:
                 print("Warning: Could not disconnect | Reason: Automation not started")
                 return
-            if session_info.ssh_info.is_connected == False:
+            if not session_info.ssh_info.is_connected:
                 print("Warning: Could not disconnect | Reason: Automation not connected")
                 return
-            if session_info.dry_run == False:
+            if not session_info.dry_run:
                 disconnect(session_info.ssh_info)
             print("Disconnected")
             session_info.ssh_info.is_connected = False
             session_info.ssh_info.connection_index += 1
         case "RUN_COMMANDS:":
-            if session_info.is_active == False:
+            if not session_info.is_active:
                 print("Warning: Could not run commands | Reason: Automation not started")
                 return
-            if session_info.ssh_info.is_connected == False:
+            if not session_info.ssh_info.is_connected:
                 print("Warning: Could not run commands | Reason: Automation not connected")
                 return
             redacted_commands: list[str] = []
             for unredacted_command in instruction_data.arguments.commands:
                 redacted_commands.append(redact_sensitive_information(unredacted_command, session_info.ssh_info))
             print(f"Running commands: {"; ".join(redacted_commands)}")
-            if session_info.dry_run == False:
+            if not session_info.dry_run:
                 command_outputs = run_commands(instruction_data.arguments, session_info.ssh_info)
                 print(f"\n{"\n\n".join(command_outputs)}\n")
                 prompt_if_important(command_outputs, session_info.ssh_info.output_important_strings)
@@ -344,7 +345,7 @@ def process_single_instruction_line(instruction_line: str, session_info: Session
             print(
                 f"Uploading files: {"; ".join(instruction_data.arguments.local_files)} > {instruction_data.arguments.remote_directory}"
             )
-            if session_info.dry_run == False:
+            if not session_info.dry_run:
                 upload_files(instruction_data.arguments, session_info)
             print("Files uploaded successfully")
         case "CONFIRM:":

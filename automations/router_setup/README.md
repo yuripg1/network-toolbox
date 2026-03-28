@@ -52,6 +52,8 @@ This automation implements an interpreter that, given a file containing instruct
 
 A fully functioning example can be seen in this **[commands.txt](../../ubiquiti_edgeos/commands.txt)** file
 
+---
+
 ## How to run
 
 ### Setup

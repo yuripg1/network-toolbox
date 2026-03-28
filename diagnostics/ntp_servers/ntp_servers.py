@@ -129,7 +129,7 @@ def export_test_results_to_csv(
                 type_string = "NTP"
             elif type_string == "ping":
                 type_string = "Ping"
-            result_string = "Success" if result.success == True else "Failure"
+            result_string = "Success" if result.success else "Failure"
             writer.writerow(
                 [
                     result.ntp_server,
@@ -204,7 +204,7 @@ def test_ntp_server(
     if response is not None and response.haslayer(scapy.all.NTP):
         current_test_result.success = True
     test_results.append(current_test_result)
-    if current_test_result.success != True and attempt_number < test_behavior.max_attempts:
+    if not current_test_result.success and attempt_number < test_behavior.max_attempts:
         time.sleep(test_behavior.sleep_after_failure)
         return test_ntp_server(
             ntp_scenario, test_results, min_random_port, max_random_port, test_behavior, timeout, attempt_number + 1
@@ -261,7 +261,7 @@ def test_ntp_servers(
         current_test_result = test_ntp_server(
             ntp_scenario, test_results, min_random_port, max_random_port, test_behavior, timeout
         )
-        result_string = "Success" if current_test_result.success == True else "Failure"
+        result_string = "Success" if current_test_result.success else "Failure"
         print(
             f"        {result_string} | {current_test_result.datetime} | {current_ntp_scenario}/{total_ntp_scenarios} completed"
         )
@@ -305,7 +305,7 @@ def ping_ntp_server(
             if icmpv6_response.type == 129 and icmpv6_response.code == 0:
                 current_test_result.success = True
     test_results.append(current_test_result)
-    if current_test_result.success != True and attempt_number < test_behavior.max_attempts:
+    if not current_test_result.success and attempt_number < test_behavior.max_attempts:
         time.sleep(test_behavior.sleep_after_failure)
         return ping_ntp_server(ping_scenario, test_results, test_behavior, timeout, attempt_number + 1)
     return current_test_result
@@ -335,7 +335,7 @@ def ping_ntp_servers(
     for current_ping_scenario, ping_scenario in enumerate(ping_scenarios, start=1):
         print(f"    Pinging {ping_scenario.address} ({ping_scenario.ntp_server})")
         current_test_result = ping_ntp_server(ping_scenario, test_results, test_behavior, timeout)
-        result_string = "Success" if current_test_result.success == True else "Failure"
+        result_string = "Success" if current_test_result.success else "Failure"
         print(
             f"        {result_string} | {current_test_result.datetime} | {current_ping_scenario}/{total_ping_scenarios} completed"
         )

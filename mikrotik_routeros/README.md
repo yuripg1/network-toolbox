@@ -25,7 +25,7 @@ The VPN tunnel provides remote access to the following routes:
 
 For details on how to configure the OpenVPN client, refer to [OpenVPN client setup](../procedures/openvpn_client_setup/)
 
-Besides the certificate-based authentication, this setup also asks for username and password.
+Besides the certificate-based authentication, this setup also asks for username and password
 
 ### Remote accesses via VPN
 
