@@ -112,13 +112,12 @@ Be aware that scapy requires root privileges to send packets. Make sure you are 
 ```shell
 $ sudo apt update
 $ sudo apt install -y python3-dev python3-pip python3-venv
-$ chmod +x ./run.sh
 ```
 
 ### Run
 
 ```shell
-$ ./run.sh
+$ bash ./run.sh
 ```
 
 ### Manual

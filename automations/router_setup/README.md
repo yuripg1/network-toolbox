@@ -1,8 +1,8 @@
 # Router setup
 
-## Summary
-
 This automation implements an interpreter that, given a file containing instructions to configure a router, processes it, connects to the router via SSH and configures it. It supports variable addresses, variable authentication credentials, multiple connections/disconnections and file uploads via SCP.
+
+---
 
 ## Syntax
 
@@ -77,15 +77,13 @@ A fully functioning example can be seen in this **[commands.txt](../../ubiquiti_
 ```shell
 $ sudo apt update
 $ sudo apt install -y python3-dev python3-pip python3-venv
-$ chmod +x ./setup.sh
-$ ./setup.sh
-$ chmod +x ./run.sh
+$ bash ./setup.sh
 ```
 
 ### Run
 
 ```shell
-$ ./run.sh --instructions-file ../../ubiquiti_edgeos/commands.txt
+$ bash ./run.sh --instructions-file ../../ubiquiti_edgeos/commands.txt
 ```
 
 ### Manual
