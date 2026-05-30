@@ -16,8 +16,8 @@ This section creates the following files:
 $ openssl genpkey -aes256 -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out ./certificate_authority.key
 $ openssl req -new -sha512 -x509 -days 3653 -key ./certificate_authority.key -config ./certificate_authority.cnf -out ./certificate_authority.crt
 $ printf '%X\n' 4096 > ./certificate_authority.srl
-$ chmod 600 ./certificate_authority.key
-$ chmod 644 ./certificate_authority.crt ./certificate_authority.srl
+$ chmod 0600 ./certificate_authority.key
+$ chmod 0644 ./certificate_authority.crt ./certificate_authority.srl
 ```
 
 ---

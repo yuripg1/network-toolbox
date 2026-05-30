@@ -786,7 +786,7 @@ set system traffic-analysis dpi disable
 $ scp -P 36518 ../procedures/keys_and_certificates_creation/certificate_authority.crt ../procedures/keys_and_certificates_creation/management_https.crt ../procedures/keys_and_certificates_creation/management_https.key ../procedures/keys_and_certificates_creation/openvpn_server.crt ../procedures/keys_and_certificates_creation/openvpn_server.key ../procedures/keys_and_certificates_creation/openvpn_server_dh.pem ./firewall.sh username920169077@192.168.103.254:/home/username920169077
 ```
 
-### File locations, permissions, ownerships, and firewall rules
+### File locations, permissions, ownership, and firewall rules
 
 ```shell
 $ sudo mv /home/username920169077/certificate_authority.crt /home/username920169077/management_https.crt /home/username920169077/management_https.key /home/username920169077/openvpn_server.crt /home/username920169077/openvpn_server.key /home/username920169077/openvpn_server_dh.pem /config/auth

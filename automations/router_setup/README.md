@@ -25,7 +25,7 @@ This automation implements an interpreter that, given a file containing instruct
 | RUN_COMMANDS:    | Sends one or more commands to the router via SSH |
 | UPLOAD_FILES:    | Uploads one or more files to a directory in the router |
 | CONFIRM:         | Shows a custom message and waits for the user to press ENTER before continuing. Useful when you want to instruct the person running the automation to do things like plug a cable in |
-| WAIT:            | Sleeps for a defined time of seconds. Useful when you need to wait for background changes, like the establishment of a tunnel, before proceeding with the rest of the automation |
+| WAIT:            | Sleeps for a defined time in seconds. Useful when you need to wait for background changes, like the establishment of a tunnel, before proceeding with the rest of the automation |
 | SET_ENVIRONMENT: | Sets the environment variables. Mainly used to define what authentication credentials to use when connecting via SSH |
 
 ### Examples

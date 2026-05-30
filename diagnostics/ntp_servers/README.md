@@ -2,7 +2,7 @@
 
 This test served to show that the ISP (Vivo), although blocking (for the most part) inbound UDP packets with destination port 123 to the customer, still allows traffic from certain well known NTP servers.
 
-While the full extent of the allowed NTP servers it not publicly known, the test was able to demonstrate that some servers from **[NTP.br](https://ntp.br/)** are in this list, most notably **a.ntp.br**, **b.ntp.br**, **c.ntp.br**, **a.st1.ntp.br** and **d.st1.ntp.br**. The **gps.ntp.br** endpoint was observed to have only half of its addresses allowed. Lastly, it was not possible to draw any conclusions about the **b.st1.ntp.br** and **c.st1.ntp.br** servers due to them being offline at the time of the testing.
+While the full extent of the allowed NTP servers is not publicly known, the test was able to demonstrate that some servers from **[NTP.br](https://ntp.br/)** are in this list, most notably **a.ntp.br**, **b.ntp.br**, **c.ntp.br**, **a.st1.ntp.br** and **d.st1.ntp.br**. The **gps.ntp.br** endpoint was observed to have only half of its addresses allowed. Lastly, it was not possible to draw any conclusions about the **b.st1.ntp.br** and **c.st1.ntp.br** servers due to them being offline at the time of the testing.
 
 | NTP Server   | Address            | Type | Source Port | Result     |
 |-------------:|:------------------:|:----:|:-----------:|:----------:|
@@ -91,7 +91,7 @@ It was possible to discover allowed NTP servers through the scenarios that used 
 
 The essence of the test only required the evaluation of NTP request scenarios using source port 123. But in order to strengthen the confidence in the obtained results, additional tests were done, including tests for reachability (using ping), different NTP versions and source ports other than 123.
 
-In the end, considering the tests done by the script and the proper configuration of the infrastructure, the results were deemed representative of the reality without any known oversights that could have introduced imprecisions.
+In the end, considering the tests done by the script and the proper configuration of the infrastructure, the results were deemed representative of the reality without any known oversights that could have introduced imprecision.
 
 ---
 
